@@ -1,0 +1,11 @@
+.smof-repeatable  ul > li > div{
+	display: inline-block;
+}
+
+.smof-repeatable ul li{
+	margin-bottom: 10px;
+}
+
+.smof-repeatable-wide ul li{
+	margin-bottom: 20px;
+}

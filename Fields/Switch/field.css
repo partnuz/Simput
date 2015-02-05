@@ -1,0 +1,27 @@
+/*-------------------------------------------------------------------------------------------*/
+/* Switch
+/*-------------------------------------------------------------------------------------------*/
+.smof-field-switch-enable, .smof-field-switch-disable, .smof-field-switch-enable span, .smof-field-switch-disable span { background: url('images/switch.gif') repeat-x; display: block; float: left; }
+	.smof-field-switch-enable span, .smof-field-switch-disable span { line-height: 30px; display: block; background-repeat: no-repeat; font-weight: bold; }
+	.smof-field-switch-enable span { background-position: left -90px; padding: 0 10px; }
+	.smof-field-switch-disable span { background-position: right -180px;padding: 0 10px; }
+	.smof-field-switch-disable.selected { background-position: 0 -30px; }
+	.smof-field-switch-disable.selected span { background-position: right -210px; color: #fff; }
+	.smof-field-switch-enable.selected { background-position: 0 -60px; }
+	.smof-field-switch-enable.selected span { background-position: left -150px; color: #fff; }
+	.smof-type-switch label { cursor: pointer; }
+	.smof-type-switch input { display: none; }
+	.smof-field-switch-enable span, .smof-field-switch-disable span{
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-o-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}/*disable text selection*/
+	.switch-options{
+		margin: 0;
+	}
+	body .smof-field-switch-checkbox{
+		display: none;
+	}
