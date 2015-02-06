@@ -10,10 +10,12 @@ class Smof_Framework{
 	public $data_sources = '';
 	public $field_class_names = array();
 	public $fields_properties;
+	protected $theme_data;
 	
 	function __construct( $options, $args ){
 	
 		$this -> defaultArgs( $args );
+		$this -> themeData();
 	
 		$this -> setPaths();
 		$this -> setUris();
@@ -31,6 +33,44 @@ class Smof_Framework{
 		
 		add_action( 'in_admin_footer' , array( $this , 'printDataSources' ) );
 		
+	}
+	
+	public function setThemeData( $theme_data ){
+		
+		$this -> theme_data = $theme_data;
+		
+	}
+	
+	public function getThemeData( $key = '' ){
+		
+		if( $key ){
+			return $this -> theme_data[ $key ];
+		}else{
+			return $this -> theme_data;
+		}
+		
+	}
+	
+	protected function themeData(){
+		if( function_exists( 'wp_get_theme' ) ) {
+
+			$theme_obj = wp_get_theme();    
+
+			$theme[ 'parent' ] = $theme_obj -> get('Template');
+			$theme[ 'version' ] = $theme_obj -> get('Version');
+			$theme[ 'name' ]  = $theme_obj -> get('Name');
+			$theme[ 'uri'] = $theme_obj -> get('ThemeURI');
+			$theme[ 'author_uri' ] = $theme_obj -> get('AuthorURI');
+			
+		} else {
+			$theme_data = get_theme_data( get_template_directory().'/style.css' );
+			$theme[ 'version' ] = $theme_data['Version'];
+			$theme[ 'name' ] = $theme_data['Name'];
+			$theme[ 'uri'] = $theme_data['ThemeURI'];
+			$theme[ 'author_uri' ] = $theme_data['AuthorURI'];
+		}
+		
+		$this -> setThemeData( $theme );
 	}
 	
 	public function getSubframework(){
@@ -85,16 +125,21 @@ class Smof_Framework{
 	
 		$file_dir = plugin_dir_path( __FILE__ );
 		$file_dir = str_replace( '\\' , '/',  $file_dir );
-		
-		if( !empty( $this -> theme_data[ 'parent' ] ) && strpos( $file_dir , $this -> theme_data[ 'parent' ] ) ){
-			$uri = get_template_directory_uri();
+
+		if( $this -> getThemeData( 'parent' ) ){
+			// for child
+			$directory_dir = str_replace( '\\' , '/',  get_template_directory() );
+			$uri = str_replace( $directory_dir , get_template_directory_uri() . '/',  $directory_dir );
+			var_dump( $file_dir );
 		}elseif( strpos( $file_dir , 'plugins' ) ){
 			// for future reference
 		}else{
-			$uri = get_stylesheet_directory_uri();
+			// for parent
+			$directory_dir = str_replace( '\\' , '/',  get_stylesheet_directory() );
+			$uri = str_replace( $directory_dir , get_stylesheet_directory_uri() ,  $file_dir );
 		}
 		
-		$this -> uri[ 'main' ] = $uri ."/". $this -> args[ 'dir' ];
+		$this -> uri[ 'main' ] = $uri;
 		$this -> uri[ 'assets' ][ 'main' ] = $this -> uri[ 'main' ] . 'Assets/';
 		$this -> uri[ 'assets' ][ 'css' ] = $this -> uri[ 'assets' ][ 'main' ] . 'Css/';
 		$this -> uri[ 'assets' ][ 'scripts' ] = $this -> uri[ 'assets' ][ 'main' ] . 'Scripts/';
@@ -122,17 +167,16 @@ class Smof_Framework{
 		
 		$defaults = array(
 			'mode' => 'Options',
-			'prefix' => 'Smof_',
-			'subframework_args' => array(),
-			'dir' => 'smof/',
+			'subframework_args' => array()
 		);
 		 
 		$this -> args = wp_parse_args( $args , $defaults );
 		$this -> args[ 'subframework_args' ][ 'framework' ] = $this;
+		$this -> args[ 'prefix' ] = 'Smof';
 	}
 	
 	function setSubframeworkName(){
-		$this -> subframework_name =  $this -> args[ 'prefix' ] . 'Subframeworks_' . ucfirst( $this -> args[ 'mode' ] ) . '_Subframework';
+		$this -> subframework_name =  $this -> args[ 'prefix' ] .'_'. 'Subframeworks_' . ucfirst( $this -> args[ 'mode' ] ) . '_Subframework';
 	}
 	
 	function mode( $options ){

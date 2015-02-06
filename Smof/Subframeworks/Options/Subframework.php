@@ -16,7 +16,6 @@ class Smof_Subframeworks_Options_Subframework{
 
 	function __construct( $options , $args ){
 	
-		$this -> getThemeData();
 		$this -> defaultArgs( $args );
 	
 		$this -> setPaths();
@@ -94,8 +93,6 @@ class Smof_Subframeworks_Options_Subframework{
 		
 		$defaults = array(
 			'mode' => 'options',
-			'prefix' => 'Smof',
-			'dir' => '',
 			'debug_mode' => true
 		);
 		 
@@ -103,27 +100,7 @@ class Smof_Subframeworks_Options_Subframework{
 
 	}
 	
-	protected function getThemeData(){
-		if( function_exists( 'wp_get_theme' ) ) {
 
-			$theme_obj = wp_get_theme();    
-
-			$theme[ 'parent' ] = $theme_obj -> get('Template');
-			$theme[ 'version' ] = $theme_obj -> get('Version');
-			$theme[ 'name' ]  = $theme_obj -> get('Name');
-			$theme[ 'uri'] = $theme_obj -> get('ThemeURI');
-			$theme[ 'author_uri' ] = $theme_obj -> get('AuthorURI');
-			
-		} else {
-			$theme_data = get_theme_data( get_template_directory().'/style.css' );
-			$theme[ 'version' ] = $theme_data['Version'];
-			$theme[ 'name' ] = $theme_data['Name'];
-			$theme[ 'uri'] = $theme_data['ThemeURI'];
-			$theme[ 'author_uri' ] = $theme_data['AuthorURI'];
-		}
-		
-		$this -> theme_data = $theme;
-	}
 	
 	protected function getDbData(){
 		$this -> setData( get_theme_mods() );

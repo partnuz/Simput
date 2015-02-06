@@ -27,6 +27,12 @@ class Smof_Subframeworks_Options_Views_Main{
 		$this -> menu .= $menu_item_ob;
 	}
 	
+	public function saveButtonView(){
+		?>
+		<button id ="of_save" type="submit" name="smof[action]" value="save" class="button-primary"><?php _e('Save All Changes');?></button>
+		<?php
+	}
+	
 	function view(){
 	
 	?>
@@ -54,8 +60,8 @@ class Smof_Subframeworks_Options_Views_Main{
 			<div id="header">
 			
 				<div class="logo">
-					<h2><?php echo $this -> subframework -> theme_data[ 'name' ]; ?></h2>
-					<span><?php echo ('v'. $this -> subframework -> theme_data[ 'version' ]); ?></span>
+					<h2><?php echo $this -> subframework -> args[ 'framework' ] -> getThemeData( 'name' ); ?></h2>
+					<span><?php echo ('v'. $this -> subframework -> args[ 'framework' ] -> getThemeData( 'version' ) ); ?></span>
 				</div>
 			
 				<div id="js-warning">Warning- This options panel will not work properly without javascript!</div>
@@ -72,9 +78,7 @@ class Smof_Subframeworks_Options_Views_Main{
 							
 				<img style="display:none" src="<?php /* echo ADMIN_DIR; */ ?>assets/images/loading-bottom.gif" class="ajax-loading-img ajax-loading-img-bottom" alt="Working..." />
 
-				<button id="of_save" type="button" class="button-primary">
-					<?php _e('Save All Changes');?>
-				</button>
+				<?php $this -> saveButtonView(); ?>
 				
 			</div><!--.info_bar--> 	
 			
@@ -102,7 +106,7 @@ class Smof_Subframeworks_Options_Views_Main{
 			
 			<div class="save_bar"> 
 			
-				<button id ="of_save" type="submit" name="smof[action]" value="save" class="button-primary"><?php _e('Save All Changes');?></button>			
+				<?php $this -> saveButtonView(); ?>			
 				<button id ="of_reset" type="submit" name="smof[action]" value="reset" class="button submit-button reset-button" ><?php _e('Options Reset');?></button>
 				
 			</div><!--.save_bar--> 
