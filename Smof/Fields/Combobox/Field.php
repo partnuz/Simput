@@ -2,7 +2,7 @@
 
 class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => true
@@ -11,8 +11,8 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => '',
 			'options' => array(),
 			'data_source_format' => false,
@@ -41,9 +41,10 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 								
 							}else{
 								$attributes = $field_data;
-								unset( $attributes[ 'value' ] );
+								unset( $attributes[ 'key' ] );
+								unset( $attributes[ 'val' ] );
 								?>
-								<option type="text" <?php selected( $this -> data  , $field_key ); ?> value="<?php echo $field_key; ?>" <?php $this -> addAttributes( $attributes ); ?> ><?php echo $field_data[ 'value' ]; ?></option>
+								<option type="text" <?php selected( $this -> data  , $field_data[ 'key' ] ); ?> value="<?php echo $field_data[ 'key' ]; ?>" <?php $this -> addAttributes( $attributes , array( 'typography' ) ); ?> ><?php echo $field_data[ 'val' ]; ?></option>
 								<?php
 							}
 
@@ -59,29 +60,50 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 							// printScripts with id
 							foreach( $this -> options[ 'options' ] as $data_source_name => $data_source_data ){
 
-								$this -> args[ 'subframework' ] -> args[ 'framework' ] -> addToPrintDataSources( $data_source_name , $data_source_data , array( 'before' => '<select id="smof-data-source-'.$data_source_name.'">' , 'after' => '</select>' ) );
+								$this -> args[ 'subframework' ] -> args[ 'framework' ] -> addToPrintDataSources( 
+									$data_source_name , 
+									$data_source_data , 
+									array( 
+										'before' => '<select id="smof-data-source-'.$data_source_name.'">' , 
+										 'after' => '</select>' 
+									) 
+								);
 								
-								// append current combobox NOT FINISHED
-								$this -> addPrintScriptsContent( 'jQuery(function(){
-									jQuery("#smof-container'. $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ).' .smof-field-helper-combobox").append(jQuery("#smof-data-source-'.$data_source_name.' option"));
-								});' );
+								$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction( 
+									$this , 
+									$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
+									array( 
+										'actions' => array( 'append' ) ,
+										'data_source_name' => $data_source_name 
+									) 
+								);					
 								
 							}
 							
 							// select it
-							$this -> addPrintScriptsContent( 'jQuery(function(){
-								jQuery("#smof-container'. $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ).' .smof-field-combobox option[value=\''.$this -> data.'\']").attr("selected", "selected");
-							});' );
+							
+							$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction(
+								$this , 
+								$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
+								array( 
+									'actions' => array( 'select' ) ,
+									'data' => $this -> data 
+								) 
+							);
+	
 						}else{
 							foreach( $this -> options[ 'options' ] as $data_source_key => $data_source_data ){
 								echo $data_source_data;
 							}
 							
-							$this -> addPrintScriptsContent( 'jQuery(function(){
-								jQuery("#smof-container'. $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ).' .smof-field-combobox option[value=\''.$this -> data.'\']").attr("selected", "selected");
-								
-	
-							});' );
+							$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction(
+								$this , 
+								$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
+								array( 
+									'actions' => array( 'select' ) ,
+									'data' => $this -> data 
+								) 
+							);
 						}
 
 					break;
@@ -98,7 +120,7 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 	
 	function enqueueStyles(){
 	
-		wp_enqueue_style( 'smof-field-combobox', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'combobox/field.css'  );
+		wp_enqueue_style( 'smof-field-combobox', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'combobox/field.css' )  ;
 	
 	}
 	
@@ -111,7 +133,7 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 		wp_enqueue_script( 'jquery-ui-dialog' );	
 		wp_enqueue_script( 'jquery-ui-tooltip' );		
 		
-		wp_register_script( 'smof-field-combobox', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'combobox/script.js', array( 'jquery' ) );
+		wp_register_script( 'smof-field-combobox', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'combobox/script.js', array( 'jquery' ) );
 		wp_enqueue_script( 'smof-field-combobox' );
 	
 	}

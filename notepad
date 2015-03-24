@@ -1,0 +1,153 @@
+<NotepadPlus>
+    <Project name="smof">
+        <Folder name="Smof">
+            <Folder name="Assets">
+                <Folder name="Css">
+                    <File name="Smof\Assets\Css\style.css" />
+                </Folder>
+                <Folder name="Images">
+                    <File name="Smof\Assets\Images\smof_icons.png" />
+                </Folder>
+                <Folder name="Scripts">
+                    <File name="Smof\Assets\Scripts\smof.js" />
+                </Folder>
+            </Folder>
+            <Folder name="Data">
+                <File name="Smof\Data\empty.array.php" />
+                <File name="Smof\Data\empty.html" />
+                <File name="Smof\Data\google_fonts.html" />
+                <File name="Smof\Data\google_fonts.json" />
+                <File name="Smof\Data\google_fonts.php" />
+                <File name="Smof\Data\standard_fonts.html" />
+                <File name="Smof\Data\standard_fonts.php" />
+            </Folder>
+            <Folder name="Fields">
+                <Folder name="Backup">
+                    <File name="Smof\Fields\Backup\field.css" />
+                    <File name="Smof\Fields\Backup\Field.php" />
+                </Folder>
+                <Folder name="Checkbox">
+                    <File name="Smof\Fields\Checkbox\Field.php" />
+                </Folder>
+                <Folder name="Checkboxes">
+                    <File name="Smof\Fields\Checkboxes\field.css" />
+                    <File name="Smof\Fields\Checkboxes\Field.php" />
+                </Folder>
+                <Folder name="Color">
+                    <File name="Smof\Fields\Color\field.css" />
+                    <File name="Smof\Fields\Color\Field.php" />
+                    <File name="Smof\Fields\Color\script.js" />
+                </Folder>
+                <Folder name="Combobox">
+                    <File name="Smof\Fields\Combobox\field.css" />
+                    <File name="Smof\Fields\Combobox\Field.php" />
+                    <File name="Smof\Fields\Combobox\script.js" />
+                </Folder>
+                <Folder name="Editor">
+                    <File name="Smof\Fields\Editor\field.css" />
+                    <File name="Smof\Fields\Editor\Field.php" />
+                </Folder>
+                <Folder name="Group">
+                    <File name="Smof\Fields\Group\Field.php" />
+                </Folder>
+                <Folder name="Hidden">
+                    <File name="Smof\Fields\Hidden\Field.php" />
+                </Folder>
+                <Folder name="ImageSelect">
+                    <File name="Smof\Fields\ImageSelect\field.css" />
+                    <File name="Smof\Fields\ImageSelect\Field.php" />
+                    <File name="Smof\Fields\ImageSelect\script.js" />
+                </Folder>
+                <Folder name="Parent">
+                    <File name="Smof\Fields\Parent\Field.php" />
+                </Folder>
+                <Folder name="ParentMulti">
+                    <File name="Smof\Fields\ParentMulti\Field.php" />
+                </Folder>
+                <Folder name="ParentRepeatable">
+                    <File name="Smof\Fields\ParentRepeatable\Field.php" />
+                    <File name="Smof\Fields\ParentRepeatable\script.js" />
+                    <File name="Smof\Fields\ParentRepeatable\style.css" />
+                </Folder>
+                <Folder name="Radio">
+                    <File name="Smof\Fields\Radio\Field.php" />
+                </Folder>
+                <Folder name="Repeatable">
+                    <File name="Smof\Fields\Repeatable\Field.php" />
+                </Folder>
+                <Folder name="Section">
+                    <File name="Smof\Fields\Section\Field.php" />
+                </Folder>
+                <Folder name="Select">
+                    <File name="Smof\Fields\Select\Field.php" />
+                </Folder>
+                <Folder name="Slider">
+                    <File name="Smof\Fields\Slider\Field.php" />
+                </Folder>
+                <Folder name="Sliderui">
+                    <Folder name="images">
+                        <File name="Smof\Fields\Sliderui\images\slider-control.png" />
+                    </Folder>
+                    <File name="Smof\Fields\Sliderui\field.css" />
+                    <File name="Smof\Fields\Sliderui\Field.php" />
+                    <File name="Smof\Fields\Sliderui\script.js" />
+                </Folder>
+                <Folder name="Switch">
+                    <Folder name="images">
+                        <File name="Smof\Fields\Switch\images\switch.gif" />
+                    </Folder>
+                    <File name="Smof\Fields\Switch\field.css" />
+                    <File name="Smof\Fields\Switch\Field.php" />
+                    <File name="Smof\Fields\Switch\script.js" />
+                </Folder>
+                <Folder name="Text">
+                    <File name="Smof\Fields\Text\Field.php" />
+                </Folder>
+                <Folder name="Textarea">
+                    <File name="Smof\Fields\Textarea\Field.php" />
+                </Folder>
+                <Folder name="Typography">
+                    <File name="Smof\Fields\Typography\field.css" />
+                    <File name="Smof\Fields\Typography\Field.php" />
+                    <File name="Smof\Fields\Typography\script.js" />
+                </Folder>
+                <Folder name="Upload">
+                    <File name="Smof\Fields\Upload\field.css" />
+                    <File name="Smof\Fields\Upload\Field.php" />
+                    <File name="Smof\Fields\Upload\script.js" />
+                </Folder>
+            </Folder>
+            <Folder name="Includes">
+                <File name="Smof\Includes\php_compatibility.php" />
+            </Folder>
+            <Folder name="Subframeworks">
+                <Folder name="Metaboxes" />
+                <Folder name="Options">
+                    <Folder name="Assets">
+                        <Folder name="Css">
+                            <File name="Smof\Subframeworks\Options\Assets\Css\jquery-ui-custom.css" />
+                            <File name="Smof\Subframeworks\Options\Assets\Css\style.css" />
+                        </Folder>
+                        <Folder name="Images" />
+                        <Folder name="Scripts">
+                            <File name="Smof\Subframeworks\Options\Assets\Scripts\cookie.js" />
+                            <File name="Smof\Subframeworks\Options\Assets\Scripts\smof.js" />
+                        </Folder>
+                    </Folder>
+                    <Folder name="Views">
+                        <File name="Smof\Subframeworks\Options\Views\Main.php" />
+                    </Folder>
+                    <File name="Smof\Subframeworks\Options\Subframework.php" />
+                </Folder>
+                <Folder name="plugins" />
+                <Folder name="widgets" />
+            </Folder>
+            <File name="Smof\Framework.php" />
+            <File name="Smof\load.php" />
+            <File name="Smof\Validation.php" />
+        </Folder>
+        <File name=".gitattributes" />
+        <File name=".gitignore" />
+        <File name="README.md" />
+    </Project>
+</NotepadPlus>

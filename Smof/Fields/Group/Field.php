@@ -13,16 +13,16 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 	
 	function __construct( $options , array $args ){
 		parent :: __construct( $options, $args );
-		$this -> argsModeNotRepeatable();
-		$this -> initiateFields();
+		$this -> childFieldsModeNotRepeatable();
 	}
 	
-	protected function argsModeNotRepeatable(){
+	// args passed to field cannot be repeatable
+	protected function childFieldsModeNotRepeatable(){
 		$this -> args[ 'mode' ] = 'nonrepeatable';
 	}
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array()
 		);
 	}
@@ -35,13 +35,13 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 	
 	public function validateData(){
 		
-		$this -> data = $this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+		$this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
 	}
 	
 	
 	function bodyView(){
-	
-			$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
+		
+		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
 			
 	}
 

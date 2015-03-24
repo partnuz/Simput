@@ -10,38 +10,35 @@ class Smof_Fields_Checkbox_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'type' => 'checkbox'
 		);
 	}
 	
-	function setNameSuffix(){
-	
-		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+	function assignNameSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
+				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':	
-				$this -> args[ 'name_suffix' ][] =  $this -> args[ 'name_order' ] ;
+				$this -> args[ 'name_suffix' ] =  array( $this -> args[ 'name_order' ] ) ;
 			break;
 		}
 	
 	}
 	
-	function setIdSuffix(){
-	
-		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
+	function assignIdSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
-				
+				$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':
 				
-				$this -> args[ 'id_suffix' ][] = $this -> args[ 'name_order' ] ;
+				$this -> args[ 'id_suffix' ] = array( $this -> args[ 'id_order' ] ) ;
 			break;
 		}
 	
@@ -49,27 +46,11 @@ class Smof_Fields_Checkbox_Field extends Smof_Fields_Parent_Field{
 	
 	function bodyView(){
 	
-
-		
 		?>
 		
-			<?php
-			
-			$hidden = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
-				0 ,
-				array(
-					'id' => $this -> options [ 'id' ],
-					'type' => 'hidden'
-				),
-				array(
-					'subframework' => $this -> args[ 'subframework' ],
-					'name' => $this -> args[ 'name' ],
-					'show_data_name' => $this -> args[ 'show_data_name' ],
-					'args_name_only' => true
-				)
-			);
-			
-			$hidden -> view();
+		<input class="smof-field smof-field-hidden" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="0" />
+		
+		<?php
 
 			?>
 			<input class="smof-field smof-field-checkbox" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="checkbox" value="1" <?php checked( '1', $this -> data ); ?> /><?php echo $this -> options[ 'options' ]; ?>

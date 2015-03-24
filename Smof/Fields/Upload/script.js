@@ -1,119 +1,140 @@
 /* 
 -------------------------------------------------*/
-function adwf_add_file(event, selector) {
 
-	var upload = jQuery(".uploaded-file"), frame;
-	var jQueryel = jQuery(this);
+var SmofUpload = function( $parent ){
+	
+	var obj = this;
+	this.$parent = $parent;
+	
+	this.addFile = function( event ){
+		
+		var upload = jQuery(".uploaded-file"), frame;
+		var jQueryel = jQuery(this);
 
-	event.preventDefault();
+		event.preventDefault();
 
-	// If the media frame already exists, reopen it.
-	if ( frame ) {
-		frame.open();
-		return;
-	}
-
-	// Create the media frame.
-	frame = wp.media({
-		// Set the title of the modal.
-		title: jQueryel.data('choose'),
-		/* add this in future
-		frame: 'post',
-		*/
-
-		// Customize the submit button.
-		button: {
-			// Set the text of the button.
-			text: jQueryel.data('update'),
-			// Tell the button not to close the modal, since we're
-			// going to refresh the page when the image is selected.
-			close: false
+		// If the media frame already exists, reopen it.
+		if ( frame ) {
+			frame.open();
+			return;
 		}
-	});
 
-	// When an image is selected, run a callback.
-	frame.on( 'select', function() {
-		// Grab the selected attachment.
-		var attachment = frame.state().get('selection').first();
-		frame.close();
-		selector.find('.smof-field-upload-url').val(attachment.attributes.url);
-		selector.find('.smof-field-upload-id').val(attachment.attributes.id);
-		
-		selector.find('.smof-field-upload-width').val('');
-		selector.find('.smof-field-upload-height').val('');
-		
-		selector.find('.smof-field-upload-sizes-thumbnail').val('');
-		selector.find('.smof-field-upload-sizes-medium').val('');
-		
-		if (typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined') {
-			screenshotUrl = attachment.attributes.sizes.thumbnail.url;
-			selector.find('.smof-field-upload-width').val( attachment.attributes.width );
-			selector.find('.smof-field-upload-height').val( attachment.attributes.height );
-		} else if ( typeof attachment.attributes.sizes !== 'undefined' ) {
-			var height = attachment.attributes.height;
-			for (var key in attachment.attributes.sizes) {
-				var object = attachment.attributes.sizes[key];
-				if (object.height < height) {
-					height = object.height;
-					screenshotUrl = object.url;
-				}
+		// Create the media frame.
+		frame = wp.media({
+			// Set the title of the modal.
+			title: jQueryel.data('choose'),
+			/* add this in future
+			frame: 'post',
+			*/
+
+			// Customize the submit button.
+			button: {
+				// Set the text of the button.
+				text: jQueryel.data('update'),
+				// Tell the button not to close the modal, since we're
+				// going to refresh the page when the image is selected.
+				close: false
 			}
-		} else {
-			screenshotUrl = attachment.attributes.icon;
-		}
+		});
+
+		// When an image is selected, run a callback.
+		frame.on( 'select', function() {
+			// Grab the selected attachment.
+			var attachment = frame.state().get('selection').first();
+			frame.close();
+			obj.$parent.find('.smof-field-upload-url').val(attachment.attributes.url);
+			obj.$parent.find('.smof-field-upload-id').val(attachment.attributes.id);
+			
+			obj.$parent.find('.smof-field-upload-width').val('');
+			obj.$parent.find('.smof-field-upload-height').val('');
+			
+			obj.$parent.find('.smof-field-upload-sizes-thumbnail').val('');
+			obj.$parent.find('.smof-field-upload-sizes-medium').val('');
+			
+			if (typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined') {
+				screenshotUrl = attachment.attributes.sizes.thumbnail.url;
+				obj.$parent.find('.smof-field-upload-width').val( attachment.attributes.width );
+				obj.$parent.find('.smof-field-upload-height').val( attachment.attributes.height );
+			} else if ( typeof attachment.attributes.sizes !== 'undefined' ) {
+				var height = attachment.attributes.height;
+				for (var key in attachment.attributes.sizes) {
+					var object = attachment.attributes.sizes[key];
+					if (object.height < height) {
+						height = object.height;
+						screenshotUrl = object.url;
+					}
+				}
+			} else {
+				screenshotUrl = attachment.attributes.icon;
+			}
+			
+
+			if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined' ){
+				obj.$parent.find('.smof-field-upload-sizes-thumbnail').val( attachment.attributes.sizes.thumbnail.url );
+			}
+			
+			if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.medium !== 'undefined' ){
+				obj.$parent.find('.smof-field-upload-sizes-medium').val( attachment.attributes.sizes.medium.url );
+			}
+
+			if( screenshotUrl !== '' ){
+			
+				obj.$parent.find('.smof-field-upload-screenshot').empty().hide().append('<img src="' + screenshotUrl + '">').slideDown('fast');
+			}
+
+			obj.$parent.find('.smof-field-upload-remove-url').show().removeClass('hide');//show "Remove" button
+
+		});
+
+		// Finally, open the modal.
+		frame.open();
 		
-
-		if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined' ){
-			selector.find('.smof-field-upload-sizes-thumbnail').val( attachment.attributes.sizes.thumbnail.url );
-		}
-		
-		if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.medium !== 'undefined' ){
-			selector.find('.smof-field-upload-sizes-medium').val( attachment.attributes.sizes.medium.url );
-		}
-
-		if( screenshotUrl !== '' ){
-		
-			selector.find('.smof-field-upload-screenshot').empty().hide().append('<img src="' + screenshotUrl + '">').slideDown('fast');
-		}
-		selector.find('.smof-field-upload-upload-button').unbind();
-		selector.find('.smof-field-upload-remove-url').show().removeClass('hide');//show "Remove" button
-		adwf_file_bindings();
-	});
-
-	// Finally, open the modal.
-	frame.open();
-}
-
-function adwf_remove_file(selector) {
-	selector.find('.smof-field-upload-remove-url').hide().addClass('hide');//hide "Remove" button
-	selector.find('.smof-field-upload-url').val('');
-	selector.find('.smof-field-upload-id').val('');
-	selector.find('.smof-field-upload-width').val('');
-	selector.find('.smof-field-upload-height').val('');
-	selector.find('.smof-field-upload-screenshot').slideUp();
-	/* selector.find('.remove-file').unbind(); */
-	adwf_file_bindings();
-}
-
-function adwf_file_bindings( container ) {
-
-	if( container !== undefined ){
-		container += ' ';
-	}else{
-		container = '';
 	}
-
-	jQuery( container + '.smof-field-upload-remove-url').on('click', function() {
-		adwf_remove_file( jQuery(this).parents('.smof-container-upload') );
-	});
-	jQuery( container + '.smof-field-upload-upload-button').unbind('click').click( function( event ) {
+	
+	this.removeFile = function(){
 		
-		adwf_add_file(event, jQuery(this).parents('.smof-container-upload'));
-	});
+		this.$parent.find('.smof-field-upload-remove-url').hide().addClass('hide');//hide "Remove" button
+		this.$parent.find('.smof-field-upload-url').val('');
+		this.$parent.find('.smof-field-upload-id').val('');
+		this.$parent.find('.smof-field-upload-width').val('');
+		this.$parent.find('.smof-field-upload-height').val('');
+		this.$parent.find('.smof-field-upload-screenshot').slideUp();
+		
+	}
+	
+	this.addEvents = function(){
+
+		this.$parent.find( '.smof-field-upload-remove-url').on('click', function(){
+			
+			obj.removeFile( );
+			
+		});
+		
+		this.$parent.find('.smof-field-upload-upload-button').unbind('click').click( function( event ) {
+			
+			obj.addFile( event );
+			
+		});
+		
+	}
+	
+	this.addEvents();
 }
 
-jQuery(document).ready(function($){
-    
-    adwf_file_bindings();
+SmofUpload.addEvent = function( prefix ){
+	
+	prefix = SmofEvents.getPrefix( prefix );
+	
+	prefix.find( ".smof-container-upload" ).each(function(index, value) {
+		
+		new SmofUpload( jQuery( this ) );
+
+	});
+	
+}
+
+jQuery(function() {
+
+	SmofUpload.addEvent();
 
 });

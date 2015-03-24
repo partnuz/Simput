@@ -2,7 +2,7 @@
 
 class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => true
@@ -11,8 +11,8 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single_multiple'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => '',
 			'type' => 'select',
 			'multiple' => false,
@@ -22,49 +22,53 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 
 	function __construct( $options , array $args ){
 	
-		$this -> setInstance();
+		$this -> assignInstance();
 		
-		$this -> setDefaultOptions();
+		$this -> assignDefaultOptions();
 		
 		if( isset( $options[ 'multiple' ] ) ){
 			$this -> default_options[ 'default' ] = array();
 		}
 		
-		$this -> setDefaultArgs();
+		$this -> assignDefaultArgs();
 	
-		$this -> setOptions( $options  );
+		$this -> assignOptions( $options  );
 
-		$this -> setArgs( $args  );
+		$this -> assignArgs( $args  );
 		
-		$this -> setNameSuffix();
+		$this -> assignNameSuffix();
 		
-		$this -> setName();
+		$this -> assignName();
 		
-		$this -> setIdSuffix();
+		$this -> assignIdSuffix();
 		
-		$this -> setId();
+		$this -> assignId();
 		
 		$this -> enqueueAll();
 
 	}
 	
-	function setNameSuffix(){
+	function assignNameSuffix(){
 	
-		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+		
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
+			
+				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+				
 				if( $this -> options[ 'multiple' ] !== false ){
-					$this -> args[ 'name_suffix' ][] = null;
+					$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] , null );
 				}
+				
 			break;
 			case 'repeatable':	
 				if( $this -> options[ 'multiple' ] !== false ){
-					$this -> args[ 'name_suffix' ][] =  $this -> args[ 'name_order' ] ;
+					$this -> args[ 'name_suffix' ][] =  $this -> args[ 'id_order' ] ;
 					$this -> args[ 'name_suffix' ][] = null;
 					
 				}else{
-					$this -> args[ 'name_suffix' ][] = null;
+					$this -> args[ 'name_suffix' ] = array( $this -> args[ 'id_order' ] );
 				}
 				
 			break;
@@ -72,29 +76,50 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function setIdSuffix(){
+	function assignIdSuffix(){
 	
-		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
+		
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
-				if( $this -> options[ 'multiple' ] !== false ){
-					$this -> args[ 'id_suffix' ][] = null;
-				}
+			
+				$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
+			
 			break;
 			case 'repeatable':
-				if( $this -> options[ 'multiple' ] !== false ){
-					$this -> args[ 'id_suffix' ][] = $this -> args[ 'id_order' ];
-				}else{
-					$this -> args[ 'id_suffix' ][] =  $this -> args[ 'name_order' ] ;
-					$this -> args[ 'id_suffix' ][] = $this -> args[ 'id_order' ];
-				}
+			
+				$this -> args[ 'id_suffix' ] = array( $this -> args[ 'id_order' ] );
 				
 			break;
 		}
-		
-		
 	
+	}
+	
+	function validateData(){
+		
+		if( $this -> options[ 'validate' ] ){
+		
+			if( $this -> options[ 'multiple' ] !== false ){
+				
+				$validate = new Smof_Validation();
+				
+				foreach( $this -> data as $field_key => $field ){
+						
+					$results[ $field_key ] = $validate -> validate( array( 'data' => $this -> data[ $field_key ]  , 'conditions' => $this -> options[ 'validate' ] ) );
+							
+				}
+				
+				if( !empty( $results ) ){
+					$this -> validation_results = $results;
+					$this -> data = $this -> options[ 'default' ];
+				}
+			}else{
+				
+				parent :: validateData();
+			}
+		
+		}
+		
 	}
 	
 	

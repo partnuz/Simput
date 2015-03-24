@@ -2,7 +2,7 @@
 
 class Smof_Fields_Backup_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 		),
 		'inheritance' => false,
@@ -14,8 +14,8 @@ class Smof_Fields_Backup_Field extends Smof_Fields_Parent_Field{
 			
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'id' => 'backup',
 			'default' => ''
 		);
@@ -34,7 +34,7 @@ class Smof_Fields_Backup_Field extends Smof_Fields_Parent_Field{
 	
 	function enqueueStyles(){
 	
-		wp_enqueue_style( 'smof-field-backup', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'Backup/field.css'  );
+		wp_enqueue_style( 'smof-field-backup', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'Backup/field.css' ) ;
 	
 	}
 

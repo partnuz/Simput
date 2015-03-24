@@ -2,7 +2,7 @@
 
 class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => false
@@ -10,17 +10,17 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => ''
 		);
 	}
-	function getDefaultArgs(){
-		return parent :: getDefaultArgs() + array(
+	function obtainDefaultArgs(){
+		return parent :: obtainDefaultArgs() + array(
 			'args_name_only' => false
 		);
 	}
-	function setNameSuffix(){
+	function assignNameSuffix(){
 		
 		if( $this -> args[ 'args_name_only' ] == true ){
 			$this -> args[ 'name_suffix' ] = array();
@@ -30,7 +30,7 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function setIdSuffix(){
+	function assignIdSuffix(){
 		if( $this -> args[ 'args_name_only' ] == true ){
 			$this -> args[ 'id_suffix' ] = array();
 		}else{
@@ -42,7 +42,7 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	function view(){
 	
 		?>
-			<input id="smof-field" class="smof-field smof-field-hidden <?php echo $this -> formFieldClass(); ?>" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="<?php echo $this -> data; ?>" />
+			<input class="smof-field smof-field-hidden <?php echo $this -> formFieldClass(); ?>" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="<?php echo $this -> data; ?>" />
 		<?php
 	}
 	

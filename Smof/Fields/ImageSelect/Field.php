@@ -2,7 +2,7 @@
 
 class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => false,
 			'group' => true
@@ -11,37 +11,34 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => ''
 		);
 	}
 	
-	function setNameSuffix(){
-	
-		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+	function assignNameSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
+				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':	
-				$this -> args[ 'name_suffix' ][] =  $this -> args[ 'name_order' ] ;
+				$this -> args[ 'name_suffix' ] =  array( $this -> args[ 'name_order' ] ) ;
 			break;
 		}
 	
 	}
 	
-	function setIdSuffix(){
-	
-		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
+	function assignIdSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
-				
+				$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':
 				
-				$this -> args[ 'id_suffix' ][] = $this -> args[ 'name_order' ] ;
+				$this -> args[ 'id_suffix' ] = array( $this -> args[ 'id_order' ] ) ;
 			break;
 		}
 	
@@ -60,7 +57,7 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 
 			$checked = '';
 			$selected = '';
-			if( NULL != checked( $this -> data, $field_key, false ) ) {
+			if( null != checked( $this -> data, $field_key, false ) ) {
 				$checked = checked( $this -> data , $field_key, false);
 				$selected = 'smof-field-image_select-selected';  
 			}
@@ -89,13 +86,13 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 	
 	protected function enqueueStyles(){
 	
-		wp_enqueue_style( 'smof-field-image-select', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'imageSelect/field.css'  );
+		wp_enqueue_style( 'smof-field-image-select', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'imageSelect/field.css'  );
 	
 	
 	}	
 	protected function enqueueScripts(){
 
-		wp_register_script( 'smof-field-image_select', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'ImageSelect/script.js', array( 'jquery' ) );
+		wp_register_script( 'smof-field-image_select', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'ImageSelect/script.js', array( 'jquery' ) );
 		wp_enqueue_script( 'smof-field-image_select' );
 	}
 

@@ -14,13 +14,11 @@
 	clear: both;
 }
 
-.smof-item{
-	vertical-align: middle;
-	display: inline-block;
-	width: 75%;
+.smof-table{
+	display: table;
 }
 
-.smof-hidden{
+#wpwrap .smof-hidden{
 	display: none;
 }
 

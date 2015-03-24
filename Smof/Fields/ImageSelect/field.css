@@ -8,6 +8,11 @@ body .smof-field-image_select-radio{
 	display: none;
 }
 
+.smof-field-image_select-image{
+	padding: 2px;
+}
+
 .smof-field-image_select-selected{
 	border: 2px solid gray;
+	padding: 0px;
 }

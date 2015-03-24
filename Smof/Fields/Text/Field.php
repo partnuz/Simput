@@ -2,7 +2,7 @@
 
 class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => true
@@ -11,8 +11,8 @@ class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => '',
 			'custom' => false
 		);
@@ -26,7 +26,7 @@ class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
 		}
 
 		?>
-		<input class="<?php echo $this -> formFieldClass(); ?>" id="smof-field<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> type="text" value="<?php echo htmlspecialchars($this -> data ); ?>" />
+		<input class="<?php echo $this -> formFieldClass(); ?>" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> type="text" value="<?php echo htmlspecialchars($this -> data ); ?>" />
 		<?php
 	}
 	

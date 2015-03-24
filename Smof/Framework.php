@@ -10,22 +10,22 @@ class Smof_Framework{
 	public $data_sources = '';
 	public $field_class_names = array();
 	public $fields_properties;
-	protected $theme_data;
+	public $theme_data;
 	
 	function __construct( $options, $args ){
 	
 		$this -> defaultArgs( $args );
-		$this -> themeData();
+		$this -> setThemeData( $this -> getThemeData() );
 	
-		$this -> setPaths();
-		$this -> setUris();
+		$this -> assignPath();
+		$this -> assignUris();
 
 		
 		if( is_admin() ){
 			$this -> loadFields();
 		}
 		
-		$this -> setSubframeworkName();
+		$this -> assignSubframeworkName();
 				
 		$this -> mode( $options );
 		
@@ -43,34 +43,36 @@ class Smof_Framework{
 	
 	public function getThemeData( $key = '' ){
 		
+		if( !$this -> theme_data ){
+			
+			if( function_exists( 'wp_get_theme' ) ) {
+
+				$theme_obj = wp_get_theme();    
+
+				$theme[ 'parent' ] = $theme_obj -> get('Template');
+				$theme[ 'version' ] = $theme_obj -> get('Version');
+				$theme[ 'name' ]  = $theme_obj -> get('Name');
+				$theme[ 'uri'] = $theme_obj -> get('ThemeURI');
+				$theme[ 'author_uri' ] = $theme_obj -> get('AuthorURI');
+				
+			} else {
+				$theme_data = get_theme_data( get_template_directory().'/style.css' );
+				$theme[ 'version' ] = $theme_data['Version'];
+				$theme[ 'name' ] = $theme_data['Name'];
+				$theme[ 'uri'] = $theme_data['ThemeURI'];
+				$theme[ 'author_uri' ] = $theme_data['AuthorURI'];
+			}
+			
+			return $theme;
+		}
+		
 		if( $key ){
 			return $this -> theme_data[ $key ];
 		}else{
 			return $this -> theme_data;
 		}
-		
-	}
-	
-	protected function themeData(){
-		if( function_exists( 'wp_get_theme' ) ) {
 
-			$theme_obj = wp_get_theme();    
-
-			$theme[ 'parent' ] = $theme_obj -> get('Template');
-			$theme[ 'version' ] = $theme_obj -> get('Version');
-			$theme[ 'name' ]  = $theme_obj -> get('Name');
-			$theme[ 'uri'] = $theme_obj -> get('ThemeURI');
-			$theme[ 'author_uri' ] = $theme_obj -> get('AuthorURI');
-			
-		} else {
-			$theme_data = get_theme_data( get_template_directory().'/style.css' );
-			$theme[ 'version' ] = $theme_data['Version'];
-			$theme[ 'name' ] = $theme_data['Name'];
-			$theme[ 'uri'] = $theme_data['ThemeURI'];
-			$theme[ 'author_uri' ] = $theme_data['AuthorURI'];
-		}
 		
-		$this -> setThemeData( $theme );
 	}
 	
 	public function getSubframework(){
@@ -111,7 +113,7 @@ class Smof_Framework{
 		return $array;
 	}
 	
-	function setPaths(){
+	function assignPath(){
 		
 		$this -> path[ 'main' ] = plugin_dir_path( __FILE__ );
 		$this -> path[ 'fields' ] = $this -> path[ 'main' ] . 'Fields/';
@@ -121,7 +123,7 @@ class Smof_Framework{
 		
 	}
 	
-	function setUris(){
+	protected function assignUris(){
 	
 		$file_dir = plugin_dir_path( __FILE__ );
 		$file_dir = str_replace( '\\' , '/',  $file_dir );
@@ -130,7 +132,7 @@ class Smof_Framework{
 			// for child
 			$directory_dir = str_replace( '\\' , '/',  get_template_directory() );
 			$uri = str_replace( $directory_dir , get_template_directory_uri() . '/',  $directory_dir );
-			var_dump( $file_dir );
+
 		}elseif( strpos( $file_dir , 'plugins' ) ){
 			// for future reference
 		}else{
@@ -145,8 +147,38 @@ class Smof_Framework{
 		$this -> uri[ 'assets' ][ 'scripts' ] = $this -> uri[ 'assets' ][ 'main' ] . 'Scripts/';
 		$this -> uri[ 'subframeworks' ] = $this -> uri[ 'main' ] . 'Subframeworks/';
 		$this -> uri[ 'fields' ] = $this -> uri[ 'main' ] . 'Fields/';
-		$this -> uri[ 'data_source' ] = $this -> uri[ 'main' ] . 'DataSource/';
+		$this -> uri[ 'data' ] = $this -> uri[ 'main' ] . 'Data/';
 	
+	}
+	
+	/*
+	public function setUri( array $uri ){
+		
+		if( isset( $this -> uri ) ){
+			$this -> uri +=  $uri;
+		}else{
+			$this -> uri = $uri;
+		}
+		
+	}
+	*/
+	
+	public function getUri(){
+		
+		$args = func_get_args() ;
+		
+		if( count( $args ) === 0 ){ return $this -> uri; } 
+		
+		$uri = $this->uri;
+		
+		foreach  ( $args as $arg ){
+			
+		$uri = $uri[$arg]; 
+
+		}		
+		
+		return $uri;  
+		
 	}
 	
 	function loadFields(){
@@ -175,7 +207,7 @@ class Smof_Framework{
 		$this -> args[ 'prefix' ] = 'Smof';
 	}
 	
-	function setSubframeworkName(){
+	function assignSubframeworkName(){
 		$this -> subframework_name =  $this -> args[ 'prefix' ] .'_'. 'Subframeworks_' . ucfirst( $this -> args[ 'mode' ] ) . '_Subframework';
 	}
 	
@@ -196,8 +228,8 @@ class Smof_Framework{
 	
 	function enqueueStyles(){
 	
-		wp_enqueue_style('smof-style', $this -> uri[ 'assets' ][ 'css' ] . 'style.css');
-		wp_enqueue_style('jquery-ui-custom-admin', $this -> uri[ 'assets' ][ 'css' ] .'jquery-ui-custom.css');
+		wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style.css' );
+		wp_enqueue_style('jquery-ui-custom-admin', $this -> getUri( 'assets' , 'css' ) .'jquery-ui-custom.css' );
 	
 	}
 	
@@ -209,7 +241,8 @@ class Smof_Framework{
 	
 		wp_enqueue_media();
 		
-		wp_enqueue_script( 'smof', $this -> uri[ 'assets' ][ 'scripts' ] . 'smof.js', array( 'jquery' ) );
+		wp_enqueue_script( 'smof', $this -> getUri( 'assets' , 'scripts' ) . 'smof.js', array( 'jquery' ) );
+		wp_enqueue_script( 'smof-data-events', $this -> getUri( 'data' ) . 'events.js', array( 'jquery' ) );
 	
 	}
 	
@@ -218,6 +251,11 @@ class Smof_Framework{
 		if( !array_search( $name , $names ) ){
 			$this -> data_sources .= $container[ 'before' ] . $data . $container[ 'after' ] ;
 		}
+	}
+	
+	function dataSourceAction( $caller , $id , array $args ){
+		
+		$caller -> addPrintScriptsContent( 'new SmofData(\'#smof-container' . $caller -> args[ 'subframework' ] -> setFieldId( $caller -> args[ 'id' ] ) . '\' , '.json_encode( $args ) .');' );
 	}
 	
 	function printDataSources(){

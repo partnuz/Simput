@@ -2,7 +2,7 @@
 
 class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => false,
 			'group' => true
@@ -11,14 +11,72 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 		'category' => 'repeatable'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return  array(
 			'default' => array(
 				'title' => '',
 				'upload' => array(), // if we base on multifield we don't need to specify details all over
-				'description' => ''
-			)
-		);
+				'description' => 'saSAsa'
+			),
+			'toggle' => true
+		) + parent :: obtainDefaultOptions();
+	}
+	
+	function initiateFields(){
+		
+		foreach( $this -> data as $field_key_num => $field_data ){
+			
+			$name = $this -> args[ 'name' ];
+			$name[] = $field_key_num;
+			
+			$id = $this -> args[ 'id' ];
+			$id[] = $field_key_num;
+			
+			$this -> fields[ $field_key_num ][ 'title' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+				$field_data[ 'title' ] ,
+				array(
+					'id' => 'title',
+					'type' => 'text',
+					'title' => __( 'Title' , 'smof' )
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $name,
+					'id' => $id
+				)
+			);
+			
+			
+			$this -> fields[ $field_key_num ][ 'upload' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+				$field_data[ 'upload' ] ,
+				array(
+					'id' => 'upload',
+					'type' => 'upload',
+					'title' => __( 'Upload' , 'smof' ) 
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $name,
+					'id' => $id
+				)
+			);
+			
+			$this -> fields[ $field_key_num ][ 'description' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+				$field_data[ 'description' ] ,
+				array(
+					'id' => 'description',
+					'type' => 'textarea',
+					'title' => __( 'Description' , 'smof' )
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $name,
+					'id' => $id
+				)
+			);
+			
+		}
+		
 	}
 	
 	
@@ -26,14 +84,13 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 	
 		?>
 			<ul>
-				<li class="smof-hidden">
+				<li class="smof-hidden smof-repeatable-pattern-item">
 				<?php
 				$this -> beforeListItemContentView();
+				$this -> beforeItemContentView();
 				?>
 
-					<div class="smof-toggle">
-						<div class="header">bla<div class="toggle">toggle</div></div>
-						<div class="body">
+
 						<?php
 						
 						$name = $this -> args[ 'name' ];
@@ -94,9 +151,9 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 						$description -> view();
 					
 						?>
-						</div>
-					</div>
+
 					<?php
+					$this -> afterItemContentView();
 					$this -> afterListItemContentView();
 					?>
 				</li>
@@ -104,75 +161,24 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 			
 			foreach( $this -> data as $field_key_num => $field_data ){
 			
-				$name = $this -> args[ 'name' ];
-				$name[] = $field_key_num;
-				
-				$id = $this -> args[ 'id' ];
-				$id[] = $field_key_num;
-			
-			
 				?>
 				<li>
 					<?php
 					$this -> beforeListItemContentView();
+					$this -> beforeItemContentView();
 					?>
-					<div class="smof-toggle">
-						<div class="header"><div class="toggle smof-icons"></div></div>
-						<div class="body">
 						<?php
 						
-						$title = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
-							$field_data[ 'title' ] ,
-							array(
-								'id' => 'title',
-								'type' => 'text',
-								'title' => __( 'Title' , 'smof' )
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id
-							)
-						);
+						$this -> fields[ $field_key_num ][ 'title' ] -> view();
 						
-						$title -> view();
+						$this -> fields[ $field_key_num ][ 'upload' ] -> view();
 						
-						$upload = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
-							$field_data[ 'upload' ] ,
-							array(
-								'id' => 'upload',
-								'type' => 'upload',
-								'title' => __( 'Upload' , 'smof' ) 
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id
-							)
-						);
-						
-						$upload -> view();
-						
-						$description = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
-							$field_data[ 'description' ] ,
-							array(
-								'id' => 'description',
-								'type' => 'textarea',
-								'title' => __( 'Description' , 'smof' )
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id
-							)
-						);
-						
-						$description -> view();
+						$this -> fields[ $field_key_num ][ 'description' ] -> view();
 
 						?>
-						</div>
-					</div>
+
 					<?php
+					$this -> afterItemContentView();
 					$this -> afterListItemContentView();
 					?>
 				</li>
@@ -180,13 +186,14 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 			}
 			?>
 			</ul>
+			<input type="button" value="<?php _e( 'Add new' , 'smof' ); ?>" class="button smof-field-repeatable-add-new">
 		<?php
 	}
 	
 	
 	function enqueueScripts(){
 	
-		wp_enqueue_script( 'smof-field-upload', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'upload/script.js', array( 'jquery' ) );
+		wp_enqueue_script( 'smof-field-upload', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'upload/script.js', array( 'jquery' ) );
 	
 	}
 

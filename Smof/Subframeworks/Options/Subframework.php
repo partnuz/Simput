@@ -4,30 +4,35 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	protected $default_options;
 	protected $options;
-	public $uri;
-	public $path;
+	protected $uri;
+	protected $path;
 	public $args;
-	public $theme_data;
+	protected $theme_data;
 	protected $data;
 	protected $default_data;
 	public $admin_print;
 	public $menu;
 	protected $fields = array();
+	protected $container_options;
 
 	function __construct( $options , $args ){
 	
 		$this -> defaultArgs( $args );
 	
-		$this -> setPaths();
-		$this -> setUris();
+		$this -> assignPath();
+		$this -> assignUris();
 		
-		$this -> getDbData();
-		$this -> setOptions( $options );
+		$this -> obtainDbData();
+		$this -> assignOptions( $options );
 		
 		$this -> setDefaultData( array() );
 		
-		$this -> setDefaultData( $this -> getOptionsDefaults( $this -> getOptions() ) );
+		$this -> setDefaultData( $this -> obtainOptionsDefaults( $this -> getOptions() ) );
 		$this -> setDefaultData ( $this -> decodeHtmlSpecialCharsLoop( $this -> getDefaultData() ) );
+		
+		$this -> assignContainerOptions();
+		$this -> wrapOptionsInsideContainer();
+		
 		
 		if( !is_admin() ){
 			$this -> mergeDataWithDefaults();
@@ -36,6 +41,30 @@ class Smof_Subframeworks_Options_Subframework{
 		if( is_admin() ){
 			add_action( 'admin_menu', array( $this , 'addAdminPage' ) );
 		}
+		
+		
+	}
+	
+	protected function containerOptions(){
+		
+		return array(
+			'id' => 'window',
+			'type' => 'window'
+			
+		);
+		
+	}
+	
+	protected function assignContainerOptions(){
+		
+		$this -> container_options = $this -> containerOptions();
+		
+	}
+	
+	protected function wrapOptionsInsideContainer(){
+		
+		$this -> container_options[ 'fields'] = $this -> getOptions();
+		$this -> assignOptions( array( $this -> container_options ) );
 		
 	}
 	
@@ -55,7 +84,7 @@ class Smof_Subframeworks_Options_Subframework{
 
 	} 
 	
-	protected function setOptions( $options ){
+	protected function assignOptions( $options ){
 		
 		$this -> options = $options;
 		
@@ -71,14 +100,14 @@ class Smof_Subframeworks_Options_Subframework{
 		$this -> fields = $fields;
 	}
 	
-	public function setPaths(){
+	public function assignPath(){
 	
 		$this -> path[ 'main' ] = plugin_dir_path( __FILE__ );
 		$this -> path[ 'views' ] = $this -> path[ 'main' ] . 'Views/';
 	
 	}
 	
-	public function setUris(){
+	public function assignUris(){
 		
 		$this -> uri[ 'main' ] = $this -> args[ 'framework' ] -> uri[ 'subframeworks' ] . 'Options/';
 		$this -> uri[ 'fields' ] = $this -> args[ 'framework' ] -> uri[ 'fields' ];
@@ -89,11 +118,52 @@ class Smof_Subframeworks_Options_Subframework{
 
 	}
 	
+	public function getUri(){
+		
+		$args = func_get_args() ;
+		
+		if( count( $args ) === 0 ){ return $this -> uri; } 
+		
+		$uri = $this -> uri;
+		
+		foreach  ( $args as $arg ){
+			
+		$uri = $uri[$arg]; 
+
+		}		
+		
+		return $uri;  
+		
+	}
+	
+	public function setUri( array $uri ){
+		
+		if( isset( $this -> uri ) ){
+			$this -> uri +=  $uri;
+		}else{
+			$this -> uri = $uri;
+		}
+		
+	}
+	
+	public function getArgs( $key = ''){
+		if( $key ){
+			return $this -> args[ $key ];
+		}else{
+			return $this -> args;
+		}
+	}
+	
+	public function assignArgs( $args ){
+		$this -> args = $args;
+	}
+	
 	protected function defaultArgs( $args ){
 		
 		$defaults = array(
 			'mode' => 'options',
-			'debug_mode' => true
+			'debug_mode' => true,
+			'container_field' => true
 		);
 		 
 		$this -> args = wp_parse_args( $args , $defaults );
@@ -102,15 +172,17 @@ class Smof_Subframeworks_Options_Subframework{
 	
 
 	
-	protected function getDbData(){
-		$this -> setData( get_theme_mods() );
+	protected function obtainDbData(){
+		$this -> assignData( get_theme_mods() );
 		if( !$this -> getData() ){
-			$this -> setData( array() );
+			$this -> assignData( array() );
 		}
 		
 	}
 	
 	protected function setDbData( $data ){
+		
+		var_dump( $data );
 	
 		foreach ( $data as $k => $v ) {
 
@@ -120,7 +192,7 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	}
 	
-	protected function setData( $data ){
+	protected function assignData( $data ){
 		$this -> data = $data;
 	}
 	
@@ -130,11 +202,11 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	protected function mergeDataWithDefaults(){
 	
-		$this -> setData( array_replace_recursive(  $this -> getDefaultData() , $this -> getData() ) ) ;
+		$this -> assignData( array_replace_recursive(  $this -> getDefaultData() , $this -> getData() ) ) ;
 		
 	}
 	
-	protected function getOptionsDefaults( $options ){
+	protected function obtainOptionsDefaults( $options ){
 
 		$options_defaults = array();
 		
@@ -161,7 +233,7 @@ class Smof_Subframeworks_Options_Subframework{
 				switch( $field_properties[ 'category' ] ){
 					case 'repeatable':
 						if( isset( $option[ 'default' ] ) ){
-							$options_defaults[ $id ] = $option[ 'default' ];
+							$options_defaults[ $id ] = array();
 						}else{
 							
 							continue;
@@ -181,12 +253,12 @@ class Smof_Subframeworks_Options_Subframework{
 			
 			}else{
 				// We DON'T create defaults for repeatable field
-				if( $option[ 'type' ] == 'repeatable' ){
-					continue;
-				}elseif( $field_properties[ 'inheritance' ] == 'children' ){
-					$options_defaults = $options_defaults + $this -> getOptionsDefaults( $option[ 'fields' ] );
-				}elseif( $field_properties[ 'inheritance' ] == 'parent_children' ){
-					$options_defaults[ $id ] = $this -> getOptionsDefaults( $option[ 'fields' ] );
+				if( $field_properties[ 'inheritance' ] === 'parent' ){
+					$options_defaults[ $id ] = array();
+				}elseif( $field_properties[ 'inheritance' ] === 'children' ){
+					$options_defaults = $options_defaults + $this -> obtainOptionsDefaults( $option[ 'fields' ] );
+				}elseif( $field_properties[ 'inheritance' ] === 'parent_children' ){
+					$options_defaults[ $id ] = $this -> obtainOptionsDefaults( $option[ 'fields' ] );
 				}
 			
 			}
@@ -249,11 +321,25 @@ class Smof_Subframeworks_Options_Subframework{
 		}
 	}
 	
-	public function fieldLoopValidate( $fields ){
+	function fieldLoopValidate( $fields ){
+
+		foreach( $fields as $field ){
+			
+			$field -> validateData();
+
+		}
+
+	}
+	
+	function fieldLoopSave( $fields ){
 		$data = array();
 		foreach( $fields as $field ){
-			$field -> validateData();
-			$data +=  $field -> getValidatedData();
+
+			$field_data = $field -> obtainData();
+			
+			if( is_array( $field_data ) ){
+				$data = array_merge_recursive( $data , $field_data );
+			}
 		}
 		return $data;
 	}
@@ -266,18 +352,13 @@ class Smof_Subframeworks_Options_Subframework{
 			$data_all = $this -> getData();
 		}
 		
-		
 		if( $args === false ){
 			$args = array( 'view' => $this -> view , 'subframework' => $this );
 		}
 		
 		foreach ( $options as $option ){
 			
-			if( !isset( $data_all[ $option[ 'id' ] ] ) ){
-				$data = false;
-			}else{
-				$data = $data_all[ $option[ 'id' ] ];
-			}
+			$data = ( !isset( $data_all[ $option[ 'id' ] ] ) ) ? false  : $data_all[ $option[ 'id' ] ];
 			
 			$field = $this -> singleFieldWithoutView( $data , $option , $args );
 			if( is_object( $field ) ){
@@ -297,9 +378,9 @@ class Smof_Subframeworks_Options_Subframework{
 		
 			$field = new $field_class_name( $options, $args );
 			
-			if( $field -> get( 'output' ) ){
+			if( $field -> getOutput() ){
 
-				$field -> setData( $data );
+				$field -> assignData( $data );
 				$field -> initiateFields();
 				
 				return $field;
@@ -340,10 +421,11 @@ class Smof_Subframeworks_Options_Subframework{
 					unset( $post_data[ 'backup' ] );
 				}
 				
-				$this -> setData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
+				$this -> assignData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
 				$this -> setFields( $this -> fieldLoopInitiate( $this -> getOptions() , $this -> getData() ) );
 				// validated data
-				$data = $this -> fieldLoopValidate( $this -> getFields() );
+				$this -> fieldLoopValidate( $this -> getFields() );
+				$data = $this -> fieldLoopSave( $this -> getFields() );
 			break;
 			case 'reset':
 				$data = $this -> getDefaultData() ;
@@ -366,12 +448,12 @@ class Smof_Subframeworks_Options_Subframework{
 		}
 		
 		// add filter to $data
-		/*
+
 		var_dump( $data );
-		*/
+
 		
 		$this -> setDbData( $data );
-		$this -> setData( $data );
+		$this -> assignData( $data );
 		
 	}
 	

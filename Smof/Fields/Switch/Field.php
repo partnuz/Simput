@@ -2,7 +2,7 @@
 
 class Smof_Fields_Switch_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => false,
 			'group' => true
@@ -11,8 +11,8 @@ class Smof_Fields_Switch_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'text' => array( 
 				'on' => __( 'On' , 'smof'),
@@ -42,12 +42,12 @@ class Smof_Fields_Switch_Field extends Smof_Fields_Parent_Field{
 	}
 	
 	function enqueueStyles(){
-		wp_enqueue_style( 'smof-field-switch', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'switch/field.css'  );
+		wp_enqueue_style( 'smof-field-switch', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'switch/field.css'  );
 	}
 	
 	function enqueueScripts(){
 	
-		wp_register_script( 'smof-field-switch', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'switch/script.js', array( 'jquery' ) );
+		wp_register_script( 'smof-field-switch', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'switch/script.js', array( 'jquery' ) );
 		wp_enqueue_script( 'smof-field-switch' );
 	
 	}

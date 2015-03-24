@@ -56,6 +56,7 @@ $.widget( "ui.combobox", {
 		})
 		.click(function() {
 		input.focus();
+		console.log( wasOpen );
 		// Close if already visible
 		if ( wasOpen ) {
 		return;
@@ -127,11 +128,29 @@ $.widget( "ui.combobox", {
 });
 })( jQuery );
 
+var SmofCombobox = function(){
+	
+}
+
+SmofCombobox.addEvent = function( prefix ){
+	
+	prefix = SmofEvents.getPrefix( prefix );
+	
+	prefix.find( ".smof-field-combobox" ).each(function(index, value) {
+		
+		if( jQuery( this ).parents( '.smof-repeatable-pattern-item' ).first().get( 0 ) ) {
+			
+		}else{
+			jQuery( this ).combobox();
+		}
+
+	});
+	
+}
+
 jQuery(function() {
 
-	jQuery( ".smof-field-combobox" ).each(function(index, value) {
-		jQuery( this ).combobox();
-	});
+	SmofCombobox.addEvent();
 
 });
 

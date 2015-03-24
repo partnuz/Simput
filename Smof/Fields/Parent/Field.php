@@ -19,23 +19,23 @@ abstract class Smof_Fields_Parent_Field{
 
 	function __construct( $options , array $args ){
 	
-		$this -> setInstance();
+		$this -> assignInstance();
 		
-		$this -> setDefaultOptions();
+		$this -> assignDefaultOptions();
 		
-		$this -> setDefaultArgs();
+		$this -> assignDefaultArgs();
 	
-		$this -> setOptions( $options  );
+		$this -> assignOptions( $options  );
 
-		$this -> setArgs( $args  );
+		$this -> assignArgs( $args  );
 		
-		$this -> setNameSuffix();
+		$this -> assignNameSuffix();
 		
-		$this -> setName();
+		$this -> assignName();
 		
-		$this -> setIdSuffix();
+		$this -> assignIdSuffix();
 		
-		$this -> setId();
+		$this -> assignId();
 		
 		$this -> enqueueAll();
 		
@@ -43,32 +43,32 @@ abstract class Smof_Fields_Parent_Field{
 		
 	}
 	
-	public static function getProperties(){
+	static function getProperties(){
 		return static :: $properties;
 	}
 	
-	public function appendArgs( array $args ){
+	function appendArgs( array $args ){
 		$this -> args = array_replace_recursive( $this -> args, $args );
 	}
 	
-	protected function setDefaultOptions(){
-		$this -> default_options = $this -> getDefaultOptions();
+	protected function assignDefaultOptions(){
+		$this -> default_options = $this -> obtainDefaultOptions();
 	}
 	
-	protected function getDefaultOptions(){
+	protected function obtainDefaultOptions(){
 		return array(
 			'id' => '',
 			'title' => '',
 			'form_field_class' => array(),
 			'class' => array(),
-			'desc' => ''
+			'desc' => '',
+			'validate' => false
 		);
 	}
 	
-	protected function getDefaultArgs(){
+	protected function obtainDefaultArgs(){
 		return array(
 			'show_data_name' => false,
-			'show_body_id' => true,
 			'show_description' => true,
 			'id' => array(),
 			'id_order' => false,
@@ -77,28 +77,27 @@ abstract class Smof_Fields_Parent_Field{
 			'form_field_class' => array(),
 			'name' => array(),
 			'name_suffix' => array(),
-			'mode' => 'nonrepeatable',
-			'validation' => false
+			'mode' => 'nonrepeatable'
 		);
 	}
 	
-	protected function setDefaultArgs(){
-		$this -> default_args = $this -> getDefaultArgs();
+	protected function assignDefaultArgs(){
+		$this -> default_args = $this -> obtainDefaultArgs();
 	}
 	
 	
-	protected function setOptions( $options ){
-	
+	protected function assignOptions( $options ){
+
 		$this -> options = array_replace_recursive( $this -> default_options, $options );
 		
 	}
 	
-	protected function setArgs( array $args ){
+	protected function assignArgs( array $args ){
 	
 		$this -> args = array_replace_recursive( $this -> default_args , $args );
 	}
 	
-	public function setData( $data ){
+	function assignData( $data ){
 
 		if( $data !== false && $data !== null ){ 
 			
@@ -110,44 +109,45 @@ abstract class Smof_Fields_Parent_Field{
 		}
 	}
 	
-	protected function setNameSuffix(){
-	
-		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+	protected function assignNameSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
+				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':	
-				$this -> args[ 'name_suffix' ][] =  null ;
+				$this -> args[ 'name_suffix' ] = array( null );
 			break;
 		}
 	
 	}
 	
-	protected function setName(){
+	protected function assignName(){
 
 		$this -> args[ 'name' ] = array_merge( $this -> args[ 'name' ] , $this -> args[ 'name_suffix' ] ) ;
 
 	}
 	
-	protected function setIdSuffix(){
+	protected function assignIdSuffix(){
 	
-		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
-		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
-				
+				$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':
+			
+				if( $this -> args[ 'id_order' ] !== false  ){
+					
+					$this -> args[ 'id_suffix' ] = array( $this -> args[ 'id_order' ] );
+					
+				}
 				
-				$id_order = ( $this -> args[ 'id_order' ] !== false ? $this -> args[ 'id_order' ] : false );	
-				if( $id_order !== false ){ $this -> args[ 'id_suffix' ][] = $id_order ; }
 			break;
 		}
 	
 	}
 	
-	protected function setId(){
+	protected function assignId(){
 		// id uses same pattern as name
 		$this -> args[ 'id' ] = array_merge( $this -> args[ 'id' ] , $this -> args[ 'id_suffix' ] ) ;
 
@@ -155,21 +155,17 @@ abstract class Smof_Fields_Parent_Field{
 	
 	protected function beforeBodyView(){
 	
-		if( $this -> args[ 'show_body_id' ] ){
-			?>
-			<div class="smof-field-body">
-			<?php
-		
-		}
+		?>
+		<div class="smof-field-body">
+		<?php
 	}
 	
 	protected function afterBodyView(){
-		if( $this -> args[ 'show_body_id' ] ){
-			?>
-			</div>
-			<?php
+
+		?>
+		</div>
+		<?php
 		
-		}
 	}
 	
 	protected function beforeContainerView(){
@@ -211,7 +207,7 @@ abstract class Smof_Fields_Parent_Field{
 		}
 	}
 	
-	public function view(){
+	function view(){
 	
 		$this -> beforeContainerView();
 		
@@ -260,12 +256,12 @@ abstract class Smof_Fields_Parent_Field{
 	
 	}
 	
-	protected function addPrintScriptsContent( $content ){
+	function addPrintScriptsContent( $content ){
 	
 		$this -> print_scripts_content .= $content;
 	
 	}
-	public function printScripts(){
+	function printScripts(){
 		
 		if( !empty( $this -> print_scripts_content ) ){
 		?>
@@ -286,7 +282,7 @@ abstract class Smof_Fields_Parent_Field{
 
 	}
 	
-	protected function setInstance(){
+	protected function assignInstance(){
 	
 		if( isset( self :: $class_names[ get_class( $this ) ] ) ){
 			self :: $class_names[ get_class( $this ) ] += 1; 
@@ -305,9 +301,9 @@ abstract class Smof_Fields_Parent_Field{
 		return false;
 	}
 	
-	public function enqueueAll(){
+	function enqueueAll(){
 		
-		if(  !$this -> isInstantiated() && ( $this -> args[ 'subframework' ] -> args[ 'debug_mode' ] || $this -> options[ 'custom' ] ) ){
+		if( !$this -> isInstantiated() && ( $this -> args[ 'subframework' ] -> getArgs( 'debug_mode' ) || $this -> options[ 'custom' ] ) ){
 
 			$this -> enqueueStyles();
 			$this -> enqueueScripts();
@@ -326,15 +322,17 @@ abstract class Smof_Fields_Parent_Field{
 		}
 	}
 	
-	protected function addAttributes( $attributes  ){
+	protected function addAttributes( $attributes, $prefix = array() ){
 	
 		if( empty( $attributes ) ){
 			return;
 		}
 	
 		$output = '';
-		foreach( $attributes as $attribute_prefix => $attribute ){
-			$output .= 'data-smof-'.$attribute_prefix . '=\'';
+		foreach( $attributes as $attribute_name => $attribute ){
+			$prefix_joined = ( $prefix ) ? implode( '-', $prefix ) . '-' : '';
+
+			$output .= 'data-smof-'. $prefix_joined .$attribute_name . '=\'';
 			
 			if( !is_array( $attribute ) ){
 				$output .=  $attribute ;
@@ -351,22 +349,17 @@ abstract class Smof_Fields_Parent_Field{
 		
 	}
 	
-	public function get( $property_name ){
-
-		if( property_exists( __CLASS__ , $property_name ) ){
-			return $this -> $property_name;
-		}
-				
+	function getOutput(){
+		
+		return $this -> output;
 	}
 	
-	public function set( $property_name, $property_value ){
-		if( property_exists( __CLASS__ , $property_name ) ){
-			$this -> $property_name = $property_value;
-		}
+	function setOutput( $output ){
+		$this -> output = $output;
 	}
 	
-	public function validateData(){
-		if( !empty( $this -> options[ 'validate' ] ) ){
+	function validateData(){
+		if( $this -> options[ 'validate' ] ){
 		
 			$validate = new Smof_Validation();
 			$results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
@@ -379,12 +372,7 @@ abstract class Smof_Fields_Parent_Field{
 		}
 	}
 	
-	public function getValidatedData(){
-
-		return array( $this -> options[ 'id' ] => $this -> data );
-	}
-	
-	public function initiateFields(){
+	function initiateFields(){
 	
 	}
 	
@@ -393,6 +381,11 @@ abstract class Smof_Fields_Parent_Field{
 			return implode( ' ' , array_merge( $this -> options[ 'class' ] , $this -> args[ 'form_field_class' ] ) );
 		}
 		
+	}
+	
+	function obtainData(){
+		
+		return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
 	}
 	
 

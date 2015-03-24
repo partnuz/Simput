@@ -2,7 +2,7 @@
 
 class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => true
@@ -11,38 +11,37 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'type' => 'radio'
 		);
 	}
 	
-	function setNameSuffix(){
+	function assignNameSuffix(){
 	
-		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
+		
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
+				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':	
-				$this -> args[ 'name_suffix' ][] =  $this -> args[ 'name_order' ] ;
+				$this -> args[ 'name_suffix' ] =  array( $this -> args[ 'name_order' ] ) ;
 			break;
 		}
 	
 	}
 	
-	function setIdSuffix(){
+	function assignIdSuffix(){
 	
-		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
-		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
-				
+				$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
 			break;
 			case 'repeatable':
 				
-				$this -> args[ 'id_suffix' ][] = $this -> args[ 'name_order' ] ;
+				$this -> args[ 'id_suffix' ] = array( $this -> args[ 'id_order' ] ) ;
 			break;
 		}
 	

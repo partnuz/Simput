@@ -1,10 +1,25 @@
-.smof-repeatable  ul > li > div{
-	display: inline-block;
+.smof-repeatable-pattern-item > *{
+	display: none;
+}
+
+.smof-before-item , .smof-after-item , .smof-toggle , .smof-item{
+	display: table-cell;
+}
+
+.smof-before-item , .smof-after-item {
+	vertical-align: middle;
+	text-align: center;
+}
+
+.smof-item , .smof-toggle{
+	width: 100%;
 }
 
 .smof-repeatable ul li{
 	margin-bottom: 10px;
 }
+
+
 
 .smof-repeatable-wide ul li{
 	margin-bottom: 20px;

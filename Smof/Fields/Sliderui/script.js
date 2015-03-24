@@ -1,11 +1,12 @@
+var SmofSliderui = function(){
 	
-	/**
-	  * JQuery UI Slider function
-	  * Dependencies 	 : jquery, jquery-ui-slider
-	  * Feature added by : Smartik - http://smartik.ws/
-	  * Date 			 : 03.17.2013
-	  */
-	jQuery('.smof-sliderui').each(function() {
+}
+
+SmofSliderui.addEvent = function( prefix ){
+	
+	prefix = SmofEvents.getPrefix( prefix );
+	
+	prefix.find( ".smof-sliderui" ).each(function(index, value) {
 		
 		var obj   = jQuery(this);
 		var sId   = "#" + obj.data('id');
@@ -25,5 +26,13 @@
 				jQuery(sId).val( ui.value );
 			}
 		});
-		
+
 	});
+	
+}
+
+jQuery(function() {
+
+	SmofSliderui.addEvent();
+
+});

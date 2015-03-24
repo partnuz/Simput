@@ -2,7 +2,7 @@
 
 class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 
-	static $properties = array(
+	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => false,
 			'group' => true
@@ -11,8 +11,8 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		'category' => 'multiple'
 	);
 	
-	function getDefaultOptions(){
-		return parent :: getDefaultOptions() + array(
+	function obtainDefaultOptions(){
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array(
 				'font-family' => '',
 				'font-weight' => '',
@@ -20,6 +20,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				'font-size-unit' => 'px',
 				'line-height' => '',
 				'line-height-unit' => 'px',
+				'typeface' => '',
 				'color' => '',
 				'preview' => '0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz'
 			),
@@ -28,6 +29,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				'font-weight' => true,
 				'font-size' => true,
 				'line-height' => true,
+				'typeface' => true,
 				'color' => true,
 				'preview' => true
 			),
@@ -43,15 +45,11 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		);
 	}
 	
-	
-	function bodyView(){
-	
-		$preview_style = '';
-		var_dump( $this -> data );
+	function initiateFields(){
 		
 		if( $this -> options[ 'show' ][ 'font-family' ] ){
 		
-			$font_family = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_family' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
 				$this -> data[ 'font-family' ] ,
 				array(
 					'id' => 'font-family',
@@ -64,22 +62,38 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
 					'name' => $this -> args[ 'name' ] ,
-					'show_body_id' => false,
+					'id' => $this -> args[ 'id' ],
 					'form_field_class' => array( 'smof-field-typography-font-family' ) 
 				)
 			);
 			
-			if( isset( $this -> validation_results[ 'font-family' ] ) ){
-				$font_family -> validation_results = $this -> validation_results[ 'font-family' ];
-			}
-			
-			$this -> args[ 'subframework' ] -> fieldLoopView( array( $font_family ) );
+		}
+		
+		if( $this -> options[ 'show' ][ 'font-family' ] ){
+		
+			$this -> fields[ 'font_family' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+				$this -> data[ 'font-family' ] ,
+				array(
+					'id' => 'font-family',
+					'type' => 'combobox',
+					'title' => __( 'Font-family' , 'smof'),
+					'options' => $this -> options[ 'options' ][ 'font-family' ],
+					'data_source_format' => $this -> options[ 'data_source_format' ][ 'font-family'],
+					'cache_data_source' => $this -> options[ 'cache_data_source' ][ 'font-family' ]
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $this -> args[ 'name' ] ,
+					'id' => $this -> args[ 'id' ],
+					'form_field_class' => array( 'smof-field-typography-font-family' ) 
+				)
+			);
 			
 		}
 		
 		if( $this -> options[ 'show' ][ 'font-weight' ] ){
 			
-			$font_weight = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_weight' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
 				$this -> data[ 'font-weight' ] ,
 				array(
 					'id' => 'font-weight',
@@ -90,25 +104,19 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
 					'name' => $this -> args[ 'name' ] ,
-					'show_body_id' => false,
+					'id' => $this -> args[ 'id' ],
 					'form_field_class' => array( 'smof-field-typography-font-weight'),
 					'attributes' => array(
-						'typography-font-weight-default' => $this -> data[ 'font-weight' ]
+						'typography-weight-default' => $this -> data[ 'font-weight' ]
 					)
 				)
 			);
-			
-			if( isset( $this -> validation_results[ 'font-weight' ] ) ){
-				$font_weight -> validation_results = $this -> validation_results[ 'font-weight' ];
-			}
-			
-			$this -> args[ 'subframework' ] -> fieldLoopView( array( $font_weight ) );
 		
 		}
 		
 		if( $this -> options[ 'show' ][ 'font-size' ] ){
 			
-			$font_size = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_size' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
 				$this -> data[ 'font-size' ] ,
 				array(
 					'id' => 'font-size',
@@ -118,7 +126,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
 					'name' => $this -> args[ 'name' ] ,
-					'show_body_id' => false,
+					'id' => $this -> args[ 'id' ],
 					'form_field_class' => array( 'smof-field-typography-font-size' ),
 					'attributes' => array(
 						'typography-font-size-unit' => $this -> data[ 'font-size-unit' ]
@@ -126,17 +134,11 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				)
 			);
 			
-			if( isset( $this -> validation_results[ 'font-size' ] ) ){
-				$font_size -> validation_results = $this -> validation_results[ 'font-size' ];
-			}
-			
-			$this -> args[ 'subframework' ] -> fieldLoopView( array( $font_size ) );
-			
 		}
 		
 		if( $this -> options[ 'show' ][ 'line-height' ] ){
 			
-			$line_height = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'line_height' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
 				$this -> data[ 'line-height' ] ,
 				array(
 					'id' => 'line-height',
@@ -146,7 +148,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
 					'name' => $this -> args[ 'name' ] ,
-					'show_body_id' => false,
+					'id' => $this -> args[ 'id' ],
 					'form_field_class' => array( 'smof-field-typography-line-height' ),
 					'attributes' => array(
 						'typography-line-height-unit' => $this -> data[ 'line-height-unit' ]
@@ -154,12 +156,30 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				)
 			);
 			
-			if( isset( $this -> validation_results[ 'line-height' ] ) ){
-				$line_height -> validation_results = $this -> validation_results[ 'line-height' ];
-			}
+		}
+		
+		if( $this -> options[ 'show' ][ 'typeface' ] ){
 			
-			$this -> args[ 'subframework' ] -> fieldLoopView( array( $line_height ) );
-			
+			$this -> fields[ 'font_weight' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+				$this -> data[ 'typeface' ] ,
+				array(
+					'id' => 'typface',
+					'type' => 'select',
+					'options' => array(
+						'' => __( 'Select' , 'smof' ),
+						'serif' => __( 'Serif' , 'smof' ),
+						'sans-serif' => __( 'Sans-serif' , 'smof' )
+					),
+					'title' => __( 'Typeface' , 'smof')
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $this -> args[ 'name' ] ,
+					'id' => $this -> args[ 'id' ],
+					'form_field_class' => array( 'smof-field-typography-typface')
+				)
+			);
+		
 		}
 		
 		if( $this -> options[ 'show' ][ 'color' ] ){
@@ -174,18 +194,21 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
 					'name' => $this -> args[ 'name' ] ,
-					'show_body_id' => false,
+					'id' => $this -> args[ 'id' ],
 					'form_field_class' => array( 'smof-field-typography-color' )
 				)
 			);
-			
-			if( isset( $this -> validation_results[ 'color' ] ) ){
-				$color -> validation_results = $this -> validation_results[ 'color' ];
-			}
-			
-			$this -> args[ 'subframework' ] -> fieldLoopView( array( $color ) );
 		
 		}
+		
+	}
+	
+	
+	function bodyView(){
+	
+		$preview_style = '';
+
+		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
 			
 		if( $this -> options[ 'show' ][ 'preview' ] ){
 			
@@ -198,13 +221,13 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 	
 	protected function enqueueStyles(){
 	
-		wp_enqueue_style( 'smof-field-typography', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'typography/field.css'  );
+		wp_enqueue_style( 'smof-field-typography', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'typography/field.css'  );
 	
 	}
 	
 	function enqueueScripts(){	
 		
-		wp_register_script( 'smof-field-typography', $this -> args[ 'subframework' ] -> uri[ 'fields' ] . 'typography/script.js', array( 'jquery' ) );
+		wp_register_script( 'smof-field-typography', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'typography/script.js', array( 'jquery' ) );
 		wp_enqueue_script( 'smof-field-typography' );
 	
 	}

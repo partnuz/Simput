@@ -1,29 +1,55 @@
-	/**
-	  * Switch
-	  * Dependencies 	 : jquery
-	  * Feature added by : Smartik - http://smartik.ws/
-	  * Date 			 : 03.17.2013
-	  */
-	jQuery(".smof-field-switch-enable").click(function(){
+var SmofSwitch = function( $parent ){
+	
+	this.$parent = $parent;
+	var obj = this;
+	this.$parent.find(".smof-field-switch-enable").click(function(){
 
-		var parent = jQuery(this).parents('.smof-container-switch');
-		jQuery('.smof-field-switch-disable',parent).removeClass('selected');
+
+		jQuery('.smof-field-switch-disable', obj.$parent).removeClass('selected');
 		jQuery(this).addClass('selected');
-		jQuery('.smof-field-switch-checkbox',parent).attr('checked', true);
+		jQuery('.smof-field-switch-checkbox', obj.$parent).attr('checked', true);
 		
 		//fold/unfold related options
-		var obj = jQuery(this);
-		var $fold='.f_'+obj.data('id');
+		var current = jQuery(this);
+		var $fold='.f_'+current.data('id');
 		jQuery($fold).slideDown('normal', "swing");
+		
 	});
-	jQuery(".smof-field-switch-disable").click(function(){
+	this.$parent.find(".smof-field-switch-disable").click(function(){
+		
 		var parent = jQuery(this).parents('.smof-container-switch');
-		jQuery('.smof-field-switch-enable',parent).removeClass('selected');
+		jQuery('.smof-field-switch-enable',obj.$parent).removeClass('selected');
 		jQuery(this).addClass('selected');
-		jQuery('.smof-field-switch-checkbox',parent).attr('checked', false);
+		jQuery('.smof-field-switch-checkbox',obj.$parent).attr('checked', false);
 		
 		//fold/unfold related options
-		var obj = jQuery(this);
-		var $fold='.f_'+obj.data('id');
+		var current = jQuery(this);
+		var $fold='.f_'+current.data('id');
 		jQuery($fold).slideUp('normal', "swing");
 	});
+} 
+/**
+  * Switch
+  * Dependencies 	 : jquery
+  * Feature added by : Smartik - http://smartik.ws/
+  * Date 			 : 03.17.2013
+  */
+  
+SmofSwitch.addEvent = function( prefix ){
+	
+	prefix = SmofEvents.getPrefix( prefix );
+	
+	prefix.find( ".smof-container-switch" ).each(function(index, value) {
+		
+		new SmofSwitch( jQuery( this ) );
+
+	});
+	
+}
+
+jQuery(function() {
+
+	SmofSwitch.addEvent();
+
+});
+

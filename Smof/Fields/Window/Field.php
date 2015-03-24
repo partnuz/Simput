@@ -1,6 +1,6 @@
 <?php
 
-class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
+class Smof_Fields_Window_Field extends Smof_Fields_Parent_Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -10,8 +10,6 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 		'inheritance' => 'children',
 		'category' => ''
 	);
-
-	public $view;
 	
 	function obtainDefaultOptions(){
 		return parent :: obtainDefaultOptions() + array(
@@ -24,9 +22,6 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 	function __construct( $options , array $args ){
 	
 		parent :: __construct( $options, $args );
-
-		$this -> view = $args[ 'view' ];
-
 	
 	}
 	
@@ -34,52 +29,26 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function initiateFields(){
+	public function initiateFields(){
 	
 		$this -> fields = $this -> args[ 'subframework' ] -> fieldLoopInitiate( $this -> options[ 'fields' ] );
 	
 	}
 	
-	function validateData(){
+	public function validateData(){
 		
 		$this -> data = $this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
 	}
 	
-	function obtainData(){
+	public function obtainData(){
 		return $this -> args[ 'subframework' ] -> fieldLoopSave( $this -> fields );
 	}
 	
-	protected function headingView(){
-		?>
-		<div class="smof-field-header">
-			<?php
-			if( !empty( $this -> options[ 'title' ] ) ){
-				?>
-				<h2><?php echo $this -> options[ 'title' ]; ?></h2>
-				<?php
-			}
-			?>
-		</div>
-		<?php
-	}
-	
 	function view(){
-	
-		$this -> args[ 'subframework' ] -> menuItem( array( 
-			'id' => $this -> options[ 'id' ] ,
-			'title' => $this -> options[ 'title' ],
-			'icon' => $this -> options[ 'icon' ]
-		) );
-		?>
-		<div class="smof-container-<?php echo $this -> options[ 'type' ] ?>" id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>">
-		<?php
-		$this -> headingView();
+
 		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
-		?>
-		</div>
-		<?php
+
 	}
-	
 
 }
 

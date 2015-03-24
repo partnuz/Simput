@@ -60,8 +60,8 @@ class Smof_Subframeworks_Options_Views_Main{
 			<div id="header">
 			
 				<div class="logo">
-					<h2><?php echo $this -> subframework -> args[ 'framework' ] -> getThemeData( 'name' ); ?></h2>
-					<span><?php echo ('v'. $this -> subframework -> args[ 'framework' ] -> getThemeData( 'version' ) ); ?></span>
+					<h2><?php echo $this -> subframework -> getArgs( 'framework' ) -> getThemeData( 'name' ); ?></h2>
+					<span><?php echo ('v'. $this -> subframework -> getArgs( 'framework' ) -> getThemeData( 'version' ) ); ?></span>
 				</div>
 			
 				<div id="js-warning">Warning- This options panel will not work properly without javascript!</div>

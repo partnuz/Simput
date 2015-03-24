@@ -1,4 +1,4 @@
-function SmofFieldImageSelect( parentNode ){
+function SmofImageSelect( parentNode ){
 
 	var obj = this;
 	this._$parentNode = parentNode;
@@ -26,12 +26,20 @@ function SmofFieldImageSelect( parentNode ){
 	this.setEvents();
 }
 
-jQuery(function() {
-
-	jQuery( ".smof-container-image_select" ).each(function(index, value) {
-		console.log( 'fdfdsfds' );
-		new SmofFieldImageSelect( jQuery( this ) );
+SmofImageSelect.addEvent = function( prefix ){
+	
+	prefix = SmofEvents.getPrefix( prefix );
+	
+	prefix.find( ".smof-container-image_select" ).each(function(index, value) {
+		
+		new SmofImageSelect( jQuery( this ) );
 
 	});
+	
+}
+
+jQuery( function(){
+	
+	SmofImageSelect.addEvent();
 
 });
