@@ -49,7 +49,7 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 			$validate = new Smof_Validation();
 			
 			if( $this -> fields ){
-				$this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+				$this -> getCreate() -> fieldsValidate( $this -> fields );
 			}else{
 				
 				foreach( $this -> options[ 'validate' ] as $validation_item => $validate_option ){
@@ -75,7 +75,7 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 		
 		if( $this -> fields ){
 			
-			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> args[ 'subframework' ] -> fieldLoopSave( $this -> fields ) );
+			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> getCreate() -> fieldsSave( $this -> fields ) );
 			
 		}else{
 			

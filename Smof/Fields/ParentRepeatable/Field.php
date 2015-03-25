@@ -41,7 +41,7 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 				
 				if( $this -> fields ){
 					
-					$this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields[ $data_key ] );
+					$this -> getCreate() -> fieldsValidate( $this -> fields[ $data_key ] );
 					
 				}else{
 					
@@ -68,7 +68,7 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 			
 			foreach( $this -> fields as $field_key => $fields ){
 				
-				$this -> data[ $field_key ] = $this -> args[ 'subframework' ] -> fieldLoopSave( $fields );
+				$this -> data[ $field_key ] = $this -> getCreate() -> fieldsSave( $fields );
 			}
 			
 			return array( $this -> args[ 'id_suffix' ][ 0 ] => $data );

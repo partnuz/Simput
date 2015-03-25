@@ -29,19 +29,19 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 	
 	public function initiateFields(){
 	
-		$this -> fields = $this -> args[ 'subframework' ] -> fieldLoopInitiate( $this -> options[ 'fields' ] , $this -> data , $this -> args );
+		$this -> fields = $this -> getCreate() -> createFieldsFromOptions( $this -> options[ 'fields' ] , $this -> data , $this -> args );
 		
 	}
 	
 	public function validateData(){
 		
-		$this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+		$this -> getCreate() -> fieldsValidate( $this -> fields );
 	}
 	
 	
 	function bodyView(){
 		
-		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
+		$this -> getCreate() -> fieldsView( $this -> fields );
 			
 	}
 

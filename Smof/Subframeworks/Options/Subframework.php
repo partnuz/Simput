@@ -12,8 +12,9 @@ class Smof_Subframeworks_Options_Subframework{
 	protected $default_data;
 	public $admin_print;
 	public $menu;
-	protected $fields = array();
+	protected $container_field;
 	protected $container_options;
+	private $create;
 
 	function __construct( $options , $args ){
 	
@@ -42,6 +43,26 @@ class Smof_Subframeworks_Options_Subframework{
 			add_action( 'admin_menu', array( $this , 'addAdminPage' ) );
 		}
 		
+		if( is_admin() ){
+			
+			$this -> assignCreate();
+		}
+		
+		
+	}
+	
+	protected function assignCreate(){
+		
+		$this -> create = new Smof_Create( array(
+			'framework' => $this -> args[ 'framework' ],
+			'subframework' => $this
+		));
+		
+	}
+	
+	public function getCreate(){
+		
+		return $this -> create;
 		
 	}
 	
@@ -90,14 +111,18 @@ class Smof_Subframeworks_Options_Subframework{
 		
 	}
 	
-	public function getFields(){
+	public function getContainerField(){
 		
-		return $this -> fields;
+		return $this -> container_field;
 		
 	}
 	
-	public function setFields( $fields ){
-		$this -> fields = $fields;
+	public function createContainerField(){
+		
+		$this -> container_field = $this -> getCreate() -> createFieldFromOptions( $this -> getData() , $this -> options[ 0 ] , array(
+			'framework' => $this -> args[ 'framework' ],
+			'subframework' => $this
+		) );
 	}
 	
 	public function assignPath(){
@@ -196,7 +221,7 @@ class Smof_Subframeworks_Options_Subframework{
 		$this -> data = $data;
 	}
 	
-	protected function getData(){
+	public function getData(){
 		return $this -> data;
 	}
 	
@@ -276,7 +301,7 @@ class Smof_Subframeworks_Options_Subframework{
 		
 	}
 	
-	public function view(){
+	public function displayPage(){
 		
 		$this -> setAdminData();
 		$this -> prepareView();
@@ -300,95 +325,16 @@ class Smof_Subframeworks_Options_Subframework{
 	protected function getFieldsContent(){
 		ob_start();
 		
-		if( !$this -> getFields() ){
+		if( !$this -> getContainerField() ){
 		
-			$this -> setFields( $this -> fieldLoopInitiate( $this -> getOptions() ) );
+			$this -> createContainerField();
 		
 		}
-		$this -> fieldLoopView( $this -> getFields() );
+		$this -> getCreate() -> fieldsView( array( $this -> getContainerField() ) );
 			
 		$content = ob_get_contents();
 		ob_end_clean();
 		return $content;
-	}
-	
-	public function fieldLoopView( $fields ){
-		if( !is_array( $fields ) ){
-			return;
-		}
-		foreach( $fields as $field ){
-			$field -> view();
-		}
-	}
-	
-	function fieldLoopValidate( $fields ){
-
-		foreach( $fields as $field ){
-			
-			$field -> validateData();
-
-		}
-
-	}
-	
-	function fieldLoopSave( $fields ){
-		$data = array();
-		foreach( $fields as $field ){
-
-			$field_data = $field -> obtainData();
-			
-			if( is_array( $field_data ) ){
-				$data = array_merge_recursive( $data , $field_data );
-			}
-		}
-		return $data;
-	}
-	
-	public function fieldLoopInitiate( $options , $data_all = false , $args = false ){
-	
-		$fields = array();
-	
-		if( $data_all === false ){
-			$data_all = $this -> getData();
-		}
-		
-		if( $args === false ){
-			$args = array( 'view' => $this -> view , 'subframework' => $this );
-		}
-		
-		foreach ( $options as $option ){
-			
-			$data = ( !isset( $data_all[ $option[ 'id' ] ] ) ) ? false  : $data_all[ $option[ 'id' ] ];
-			
-			$field = $this -> singleFieldWithoutView( $data , $option , $args );
-			if( is_object( $field ) ){
-				$fields[] = $field;
-			}
-
-		}
-		
-		return $fields;	
-	}
-	
-	public function singleFieldWithoutView( $data , $options , $args ){
-	
-		$field_class_name = $this -> args[ 'framework' ] -> fieldNameCache( $options[ 'type' ] ); 
-		
-		if( $field_class_name !== false  ){
-		
-			$field = new $field_class_name( $options, $args );
-			
-			if( $field -> getOutput() ){
-
-				$field -> assignData( $data );
-				$field -> initiateFields();
-				
-				return $field;
-			}
-			
-			
-		}
-		
 	}
 	
 	public function menuItem( $item ){
@@ -422,10 +368,10 @@ class Smof_Subframeworks_Options_Subframework{
 				}
 				
 				$this -> assignData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
-				$this -> setFields( $this -> fieldLoopInitiate( $this -> getOptions() , $this -> getData() ) );
+				$this -> setFields( $this -> getCreate() -> createFieldsFromOptions( $this -> getOptions() , $this -> getData() ) );
 				// validated data
-				$this -> fieldLoopValidate( $this -> getFields() );
-				$data = $this -> fieldLoopSave( $this -> getFields() );
+				$this -> getCreate() -> fieldsValidate( $this -> getFields() );
+				$data = $this -> getCreate() -> fieldsSave( $this -> getFields() );
 			break;
 			case 'reset':
 				$data = $this -> getDefaultData() ;
@@ -470,7 +416,7 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	public function addAdminPage(){
 		
-		$page = add_theme_page( $this -> theme_data[ 'name' ] , 'Theme Options', 'edit_theme_options', 'smof_options', array( $this , 'view' ) );
+		$page = add_theme_page( $this -> theme_data[ 'name' ] , 'Theme Options', 'edit_theme_options', 'smof_options', array( $this , 'displayPage' ) );
 		
 		$this -> admin_print['scripts'] = "admin_print_scripts-$page";
 		$this -> admin_print['styles'] = "admin_print_styles-$page";

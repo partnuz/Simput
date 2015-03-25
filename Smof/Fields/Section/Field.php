@@ -36,17 +36,17 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 	
 	function initiateFields(){
 	
-		$this -> fields = $this -> args[ 'subframework' ] -> fieldLoopInitiate( $this -> options[ 'fields' ] );
+		$this -> fields = $this -> getCreate() -> createFieldsFromOptions( $this -> options[ 'fields' ] );
 	
 	}
 	
 	function validateData(){
 		
-		$this -> data = $this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+		$this -> data = $this -> getCreate() -> fieldsValidate( $this -> fields );
 	}
 	
 	function obtainData(){
-		return $this -> args[ 'subframework' ] -> fieldLoopSave( $this -> fields );
+		return $this -> getCreate() -> fieldsSave( $this -> fields );
 	}
 	
 	protected function headingView(){
@@ -74,7 +74,7 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 		<div class="smof-container-<?php echo $this -> options[ 'type' ] ?>" id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>">
 		<?php
 		$this -> headingView();
-		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
+		$this -> getCreate() -> fieldsView( $this -> fields );
 		?>
 		</div>
 		<?php

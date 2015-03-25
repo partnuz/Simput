@@ -39,7 +39,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 	
 	function initiateFields(){
 		
-		$this -> fields[ 'url' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+		$this -> fields[ 'url' ] = $this -> getCreate() -> createFieldFromOptions( 
 			$this -> data[ 'url' ] ,
 			array(
 				'id' => 'url',
@@ -55,7 +55,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 			)
 		);
 		
-		$this -> fields[ 'width' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+		$this -> fields[ 'width' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'width' ] ,
 				array(
 					'id' => 'width',
@@ -71,7 +71,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 				)
 		);
 		
-		$this -> fields[ 'height' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+		$this -> fields[ 'height' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'height' ] ,
 				array(
 					'id' => 'height',
@@ -87,7 +87,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 				)
 			);
 			
-		$this -> fields[ 'id' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+		$this -> fields[ 'id' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'id' ] ,
 				array(
 					'id' => 'id',
@@ -105,7 +105,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 
 			
 			
-			$this -> fields[ 'thumbnail ' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'thumbnail ' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'sizes' ][ 'thumbnail' ] ,
 				array(
 					'id' => 'thumbnail',
@@ -122,7 +122,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 			);
 			
 				
-			$this -> fields[ 'medium' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'medium' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'sizes' ][ 'medium' ] ,
 				array(
 					'id' => 'medium',

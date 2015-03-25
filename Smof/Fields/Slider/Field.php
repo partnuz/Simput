@@ -32,7 +32,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 			$id = $this -> args[ 'id' ];
 			$id[] = $field_key_num;
 			
-			$this -> fields[ $field_key_num ][ 'title' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ $field_key_num ][ 'title' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$field_data[ 'title' ] ,
 				array(
 					'id' => 'title',
@@ -47,7 +47,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 			);
 			
 			
-			$this -> fields[ $field_key_num ][ 'upload' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ $field_key_num ][ 'upload' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$field_data[ 'upload' ] ,
 				array(
 					'id' => 'upload',
@@ -61,7 +61,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 				)
 			);
 			
-			$this -> fields[ $field_key_num ][ 'description' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ $field_key_num ][ 'description' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$field_data[ 'description' ] ,
 				array(
 					'id' => 'description',
@@ -99,7 +99,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 						$id = $this -> args[ 'id' ];
 						$id[] = 9999;
 						
-						$title = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+						$title = $this -> getCreate() -> createFieldFromOptions( 
 							$this -> options[ 'default' ][ 'title' ] ,
 							array(
 								'id' => 'title',
@@ -116,7 +116,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 						
 						$title -> view();
 						
-						$upload = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+						$upload = $this -> getCreate() -> createFieldFromOptions( 
 							$this -> options[ 'default' ][ 'upload' ] ,
 							array(
 								'id' => 'upload',
@@ -133,7 +133,7 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 						
 						$upload -> view();
 						
-						$description = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+						$description = $this -> getCreate() -> createFieldFromOptions( 
 							$this -> options[ 'default' ][ 'description' ] ,
 							array(
 								'id' => 'description',

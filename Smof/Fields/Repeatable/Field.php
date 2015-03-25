@@ -92,7 +92,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		
 		foreach( $this -> data as $field_key => $field_data ){
 
-			$field = $this -> args[ 'subframework' ] -> singleFieldWithoutView(
+			$field = $this -> getCreate() -> createFieldFromOptions(
 				$field_data,
 				$this -> repeatable_field_options,
 				array( 
@@ -118,7 +118,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	
 		if( !empty( $this -> repeatable_field_options[ 'validate' ] ) ){
 	
-			$this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+			$this -> getCreate() -> fieldsValidate( $this -> fields );
 					
 		}
 	
@@ -126,7 +126,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	
 	function obtainData(){
 				
-			$this -> data = $this -> args[ 'subframework' ] -> fieldLoopSave( $this -> fields );
+			$this -> data = $this -> getCreate() -> fieldsSave( $this -> fields );
 
 			
 			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
@@ -146,7 +146,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 					
 					$this -> beforeItemContentView();
 					
-						$repeatable_field = $this -> args[ 'subframework' ] -> singleFieldWithoutView(
+						$repeatable_field = $this -> getCreate() -> createFieldFromOptions(
 							false,
 							$this -> repeatable_field_options,
 							array( 
@@ -180,7 +180,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 				
 				$this -> beforeItemContentView();
 				
-					$this -> args[ 'subframework' ] -> fieldLoopView( array( $field ) );
+					$this -> getCreate() -> fieldsView( array( $field ) );
 					
 				$this -> afterItemContentView();
 				$this -> afterListItemContentView();

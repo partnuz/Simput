@@ -16,6 +16,8 @@ abstract class Smof_Fields_Parent_Field{
 	public $default_args;
 	
 	public $print_scripts_content = '';
+	
+	protected $create;
 
 	function __construct( $options , array $args ){
 	
@@ -37,10 +39,21 @@ abstract class Smof_Fields_Parent_Field{
 		
 		$this -> assignId();
 		
+		$this -> assignCreate();
+		
 		$this -> enqueueAll();
 		
 		$this -> printScriptsWrapper();
 		
+	}
+	
+	protected function assignCreate(){
+		$this -> create = $this -> args[ 'subframework' ] -> getCreate();
+	}
+	
+	public function getCreate(){
+		
+		return $this -> create;	
 	}
 	
 	static function getProperties(){

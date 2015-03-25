@@ -49,7 +49,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'font-family' ] ){
 		
-			$this -> fields[ 'font_family' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_family' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'font-family' ] ,
 				array(
 					'id' => 'font-family',
@@ -71,7 +71,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'font-family' ] ){
 		
-			$this -> fields[ 'font_family' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_family' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'font-family' ] ,
 				array(
 					'id' => 'font-family',
@@ -93,7 +93,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'font-weight' ] ){
 			
-			$this -> fields[ 'font_weight' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_weight' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'font-weight' ] ,
 				array(
 					'id' => 'font-weight',
@@ -116,7 +116,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'font-size' ] ){
 			
-			$this -> fields[ 'font_size' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_size' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'font-size' ] ,
 				array(
 					'id' => 'font-size',
@@ -138,7 +138,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'line-height' ] ){
 			
-			$this -> fields[ 'line_height' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'line_height' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'line-height' ] ,
 				array(
 					'id' => 'line-height',
@@ -160,7 +160,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'typeface' ] ){
 			
-			$this -> fields[ 'font_weight' ] = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$this -> fields[ 'font_weight' ] = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'typeface' ] ,
 				array(
 					'id' => 'typface',
@@ -184,7 +184,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 		
 		if( $this -> options[ 'show' ][ 'color' ] ){
 			
-			$color = $this -> args[ 'subframework' ] -> singleFieldWithoutView( 
+			$color = $this -> getCreate() -> createFieldFromOptions( 
 				$this -> data[ 'color' ] ,
 				array(
 					'id' => 'color',
@@ -208,7 +208,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 	
 		$preview_style = '';
 
-		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
+		$this -> getCreate() -> fieldsView( $this -> fields );
 			
 		if( $this -> options[ 'show' ][ 'preview' ] ){
 			

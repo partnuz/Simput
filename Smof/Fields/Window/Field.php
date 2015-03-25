@@ -31,22 +31,22 @@ class Smof_Fields_Window_Field extends Smof_Fields_Parent_Field{
 	
 	public function initiateFields(){
 	
-		$this -> fields = $this -> args[ 'subframework' ] -> fieldLoopInitiate( $this -> options[ 'fields' ] );
+		$this -> fields = $this -> getCreate() -> createFieldsFromOptions( $this -> options[ 'fields' ] );
 	
 	}
 	
 	public function validateData(){
 		
-		$this -> data = $this -> args[ 'subframework' ] -> fieldLoopValidate( $this -> fields );
+		$this -> data = $this -> getCreate() -> fieldsValidate( $this -> fields );
 	}
 	
 	public function obtainData(){
-		return $this -> args[ 'subframework' ] -> fieldLoopSave( $this -> fields );
+		return $this -> getCreate() -> fieldsSave( $this -> fields );
 	}
 	
 	function view(){
 
-		$this -> args[ 'subframework' ] -> fieldLoopView( $this -> fields );
+		$this -> getCreate() -> fieldsView( $this -> fields );
 
 	}
 
