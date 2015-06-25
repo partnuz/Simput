@@ -12,15 +12,17 @@ class Smof_Fields_Textarea_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+		return array_merge_recursive( parent :: obtainDefaultOptions() , array(
 			'default' => ''
-		);
+		) );
 	}
 	
 	function bodyView(){
+		
+		$this -> viewValidationResult();
 	
 	?>
-		<textarea <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>"><?php echo htmlspecialchars( $this -> data ); ?></textarea>
+		<textarea <?php $this -> viewName(); ?>><?php echo htmlspecialchars( $this -> data ); ?></textarea>
 	
 	<?php
 	}

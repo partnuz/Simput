@@ -38,12 +38,10 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	}
 	
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
-			'field' => array( 
-
-			),
+		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+			'field' => array(),
 			'default' => static :: $properties[ 'default' ]
-		);
+		) );
 	}
 	
 	function assignOptions( $options ){
@@ -116,7 +114,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	
 	function validateData(){
 	
-		if( !empty( $this -> repeatable_field_options[ 'validate' ] ) ){
+		if( !empty( $this -> field[ 0 ] ) ){
 	
 			$this -> getCreate() -> fieldsValidate( $this -> fields );
 					
@@ -127,7 +125,6 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	function obtainData(){
 				
 			$this -> data = $this -> getCreate() -> fieldsSave( $this -> fields );
-
 			
 			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
 

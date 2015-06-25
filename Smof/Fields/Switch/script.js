@@ -39,7 +39,7 @@ SmofSwitch.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-container-switch" ).each(function(index, value) {
+	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-container-switch" ) ).each(function(index, value) {
 		
 		new SmofSwitch( jQuery( this ) );
 

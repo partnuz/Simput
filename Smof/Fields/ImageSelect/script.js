@@ -30,7 +30,7 @@ SmofImageSelect.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-container-image_select" ).each(function(index, value) {
+	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-container-image_select" ) ).each(function(index, value) {
 		
 		new SmofImageSelect( jQuery( this ) );
 

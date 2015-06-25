@@ -12,9 +12,9 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => ''
-		);
+		) );
 	}
 	
 	function assignNameSuffix(){
@@ -46,6 +46,9 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 	
 	
 	function bodyView(){
+		
+		$this -> viewValidationResult();
+		
 		?>
 		<ul class="smof-field-image_select-list">
 		<?php
@@ -68,11 +71,11 @@ class Smof_Fields_ImageSelect_Field extends Smof_Fields_Parent_Field{
 			?>
 			
 			<li>
-				<input type="radio" class="smof-field-image_select-order-<?php echo $i; ?> smof-field-image_select-radio" value="<?php echo $field_key; ?>" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" <?php echo $checked; ?> />
+				<input type="radio" class="smof-field-image_select-order-<?php echo $i; ?> smof-field-image_select-radio" value="<?php echo $field_key; ?>" <?php $this -> viewName(); ?> <?php echo $checked; ?> />
 				
 				<div>
-					<img src="<?php echo $field_data; ?>" alt="" data-smof-order='<?php echo $i; ?>' class="smof-field-image_select-image <?php echo $selected; ?>" />
-					<div class="smof-field-image_select-label"><?php echo $field_key; ?></div>
+					<img src="<?php echo esc_attr( $field_data ); ?>" alt="" data-smof-order='<?php echo $i; ?>' class="smof-field-image_select-image <?php echo $selected; ?>" />
+					<div class="smof-field-image_select-label"><?php echo htmlspecialchars( $field_key ); ?></div>
 				</div>
 			</li>
 			<?php

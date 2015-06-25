@@ -12,12 +12,12 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'type' => 'select',
 			'multiple' => false,
 			'options' => array(),
-		);
+		) ) ;
 	}
 
 	function __construct( $options , array $args ){
@@ -122,16 +122,35 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 		
 	}
 	
+	public function viewValidationResult( ){
+		if( $this -> options[ 'multiple' ] ){
+					
+			if( !empty( $this -> validation_results ) ) {
+
+				foreach( $this -> validation_results as $key => $result ){
+					
+					var_dump( $result );
+					
+				}
+				
+			}
+			
+		}else{
+			
+			parent :: viewValidationResult();
+		}
+	}
+	
 	
 	function bodyView(){
 
 		?>
-		<select <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" <?php if( $this -> options[ 'multiple' ] ){ echo 'multiple="multiple"'; } ?> class="<?php echo $this -> formFieldClass(); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> >
+		<select <?php $this -> viewName(); ?> <?php if( $this -> options[ 'multiple' ] ){ echo 'multiple="multiple"'; } ?> class="<?php echo $this -> formFieldClass(); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> >
 			<?php
 			foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
 				?>
-				<option class="" type="text" <?php if( $this -> options[ 'multiple' ] ){ selected( in_array( $field_key, $this -> data )  , true ); }else{ selected( $this -> data  , $field_key ); } ?> value="<?php echo $field_key; ?>">
-				<?php echo $field_data; ?>
+				<option class="" type="text" <?php if( $this -> options[ 'multiple' ] ){ selected( in_array( $field_key, $this -> data )  , true ); }else{ selected( $this -> data  , $field_key ); } ?> value="<?php echo esc_attr( $field_key ); ?>">
+				<?php echo htmlspecialchars( $field_data ); ?>
 				</option>
 			<?php } ?>
 		</select>

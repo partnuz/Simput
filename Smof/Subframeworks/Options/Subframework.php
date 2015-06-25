@@ -15,8 +15,15 @@ class Smof_Subframeworks_Options_Subframework{
 	protected $container_field;
 	protected $container_options;
 	private $create;
+	protected $nonce;
+	protected static $instance_num = 0;
+	protected $user_role;
 
 	function __construct( $options , $args ){
+		
+		$this -> increaseInstanceNumber();
+		
+		$this -> setUserRole();
 	
 		$this -> defaultArgs( $args );
 	
@@ -188,7 +195,8 @@ class Smof_Subframeworks_Options_Subframework{
 		$defaults = array(
 			'mode' => 'options',
 			'debug_mode' => true,
-			'container_field' => true
+			'container_field' => true,
+			'access_lvl' => array( 'administrator')
 		);
 		 
 		$this -> args = wp_parse_args( $args , $defaults );
@@ -243,11 +251,7 @@ class Smof_Subframeworks_Options_Subframework{
 				continue;
 			}
 			
-			$this -> args[ 'framework' ] -> setFieldProperties( $option[ 'type' ]);
-			
-			if( isset( $this -> args[ 'framework' ] -> fields_properties[ $option[ 'type' ] ] ) ){
-				$field_properties = $this -> args[ 'framework' ] -> fields_properties[ $option[ 'type' ] ];
-			}
+			$field_properties = $this -> args[ 'framework' ] -> setFieldProperties( $option[ 'type' ]);
 			
 			if( $field_properties === false){
 				continue;
@@ -303,22 +307,31 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	public function displayPage(){
 		
+		$this -> createNonce();
+		
 		$this -> setAdminData();
 		$this -> prepareView();
 		$this -> postActions();
 		
-		$this -> getContent();
-		$this -> getMenu();
+		$this -> setContentViewValue();
+		$this -> setMenuViewValue();
+		$this -> setViewNonceValue();
 		
 		$this -> view -> view();
 		
 	}
 	
-	protected function getContent(){
+	protected function setViewNonceValue(){
+		
+		$this -> view -> options[ 'nonce' ] = $this -> getNonce() ;
+		
+	}
+	
+	protected function setContentViewValue(){
 		$this -> view -> content =  $this -> getFieldsContent() ;
 	}
 	
-	protected function getMenu(){
+	protected function setMenuViewValue(){
 		$this -> view -> menu = $this -> menu;
 	}
 	
@@ -352,51 +365,59 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	protected function postActions(){
 		
-		if( !isset( $_POST[ 'smof' ]) ){
+		if( !isset( $_POST[ 'smof' ]) || !$_POST[ 'smof' ][ 'nonce' ] ||  !$this -> allowAccess( $_POST[ 'smof' ][ 'nonce' ] ) ){
+			$this -> view -> options[ 'error' ] = true;
 			return;
 		}
 		
 		$this -> action = $_POST[ 'smof' ][ 'action' ];
 		unset( $_POST[ 'smof' ][ 'action' ] );
-		$post_data = $_POST[ 'smof' ];
+
+		$this -> post_data = $_POST[ 'smof' ];
+		
+		
 		
 		switch( $this -> action ){
 			case 'save':
-				// must add twice because of validation
-				if( !empty( $post_data[ 'backup' ] ) ){
-					unset( $post_data[ 'backup' ] );
-				}
 				
-				$this -> assignData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
-				$this -> setFields( $this -> getCreate() -> createFieldsFromOptions( $this -> getOptions() , $this -> getData() ) );
-				// validated data
-				$this -> getCreate() -> fieldsValidate( $this -> getFields() );
-				$data = $this -> getCreate() -> fieldsSave( $this -> getFields() );
+				$this -> assignData( $this -> decodeHtmlSpecialCharsLoop( $this -> post_data ) );
+				$this -> createContainerField();
+				
+				$this -> getCreate() -> fieldsValidate( array( $this -> getContainerField() ) );
+				$data = $this -> getCreate() -> fieldsSave( array( $this -> getContainerField() ) );
+				
+				$this -> view -> options[ 'save' ] = true;
+				
 			break;
 			case 'reset':
 				$data = $this -> getDefaultData() ;
 			break;
+			case 'no_save':
+			
+				$this -> assignData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
+				$this -> createContainerField();
+			
+			break;
 			case 'import':
-				if( !empty( $post_data[ 'backup' ] ) ){
-					$data = unserialize( $post_data[ 'backup' ] );
+				if( !empty( $this -> post_data[ 'backup' ] ) ){
+					$data = unserialize( $this -> post_data[ 'backup' ] );
 				}else{
-					$data = $post_data;
+					$data = $this -> post_data;
 				}
 			break;
 			case 'export':
-				if( !empty( $post_data[ 'backup' ] ) ){
-					unset( $post_data[ 'backup' ] );
+				if( !empty( $this -> post_data[ 'backup' ] ) ){
+					unset( $this -> post_data[ 'backup' ] );
 				}
-				$data = $post_data;
-				$data[ 'backup' ] = serialize( $post_data );
+				$data = $this -> post_data;
+				$data[ 'backup' ] = serialize( $this -> post_data );
 			break;
 			
 		}
 		
 		// add filter to $data
-
-		var_dump( $data );
-
+		
+		$data = add_filter( 'smof_'.$this -> args[ 'framework' ] -> args[ 'mode' ] .'_'. $this -> getInstanceNumber() , $data );
 		
 		$this -> setDbData( $data );
 		$this -> assignData( $data );
@@ -431,7 +452,7 @@ class Smof_Subframeworks_Options_Subframework{
 	
 	
 	
-	public function setFieldName( $name , $args = array() ){
+	public function getFieldName( $name , $args = array() ){
 	
 		$defaults = array(
 		);
@@ -457,37 +478,20 @@ class Smof_Subframeworks_Options_Subframework{
 		
 	}
 	
-	public function setFieldId( $id , $args = array() ){
+	public function getFieldId( array $id , $args = array() ){
 	
 		$defaults = array(
 		);
 		
 		$args = wp_parse_args( $args , $defaults );
-		
-		$real_id = '';
 
-		foreach( $id as $key => $format ){
-		
-			if( $format !== false ){
-			
-				if( is_string( $format ) ){
-					$real_id .= '-'. $id[ $key ] ;
-				}elseif( is_int( $format ) ){
-					$real_id .= '-'. $id[ $key ] ;
-				}
-
-			
-			}
-		}
-		
-		// DON'T ADD PREFIX HERE
-		return $real_id;
+		return implode( '-' , $id );
 		
 	}
 	
-	public function setFieldClass( $class , $args = array() ){
+	public function getFieldClass( $class , $args = array() ){
 		// format same as id ??????????
-		$this -> setFieldId( $class );
+		return $this -> getFieldId( $class );
 		
 	}
 	
@@ -504,6 +508,54 @@ class Smof_Subframeworks_Options_Subframework{
 		wp_enqueue_script( 'smof-options', $this -> uri[ 'assets' ][ 'scripts' ] . 'smof.js', array( 'jquery' , 'cookie' ) );
 		wp_enqueue_script( 'cookie', $this -> uri[ 'assets' ][ 'scripts' ] . 'cookie.js', array( 'jquery' ) );
 	}
+	
+	protected function increaseInstanceNumber(){
+		
+		static :: $instance_num++;
+		
+	}
+	
+	public function getInstanceNumber(){
+		return static :: $instance_num;
+	}
+	
+	protected  function createNonceName(){
+		
+		return wp_create_nonce( 'smof_' . $this -> args[ 'framework' ] -> args[ 'mode' ] .'_'. $this -> getInstanceNumber() );
+	}
+	
+	protected function createNonce(){
+		
+		$this -> nonce = wp_create_nonce( $this -> createNonceName() );
+		
+	}
+	
+	public function getNonce(){
+		return $this -> nonce;
+	}
+	
+	public function setUserRole(){
+		$this -> user_role = wp_get_current_user() -> roles[ 0 ];
+		
+	}
+	
+	public function allowAccess( $new_nonce ){
+		
+		if( array_search( $this -> user_role, $this -> args[ 'access_lvl' ] ) !== false && $this -> getNonce() === $new_nonce ){
+			
+			return true;
+			
+		}else{
+			
+			return false;
+		}
+		
+		
+	}
+
+
+	
+
 
 }
 

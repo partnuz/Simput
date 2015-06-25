@@ -181,7 +181,7 @@ SmofFieldTypography.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-font-preview" ).each(function(index, value) {
+	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-font-preview" ) ).each(function(index, value) {
 		
 		new SmofFieldTypography( jQuery( this ) );
 

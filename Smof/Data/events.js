@@ -1,3 +1,4 @@
+/*
 var SmofData = function( parent , args ){
 	console.log( parent );
 	this.$parent = jQuery( parent );
@@ -40,7 +41,7 @@ SmofData.prototype.run = function(){
 	}
 }
 
-/* field specific */
+
 
 var SmofDataCombobox = function( $parent , args ){
 	
@@ -84,4 +85,4 @@ var SmofDataCombobox = function( $parent , args ){
 	}
 	
 }
-
+*/

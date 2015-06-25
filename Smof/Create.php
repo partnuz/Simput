@@ -82,13 +82,9 @@ class Smof_Create{
 		return $data;
 	}
 	
-	public function createFieldsFromOptions( array $options , $data_all = false , $args = false ){
+	public function createFieldsFromOptions( array $options , $data , $args = false ){
 	
 		$fields = array();
-	
-		if( $data_all === false ){
-			$data_all = $this -> subframework -> getData();
-		}
 		
 		if( $args === false ){
 			$args = array( 'view' => $this -> subframework -> view , 'subframework' => $this -> subframework );
@@ -96,9 +92,23 @@ class Smof_Create{
 		
 		foreach ( $options as $option ){
 			
-			$data = ( !isset( $data_all[ $option[ 'id' ] ] ) ) ? false  : $data_all[ $option[ 'id' ] ];
+			$field_properties = $this -> framework -> setFieldProperties( $option[ 'type' ]);
 			
-			$field = $this -> createFieldFromOptions( $data , $option , $args );
+			if( $field_properties === false){
+				continue;
+			}
+			
+			if( $field_properties[ 'inheritance' ] === 'children' ){
+				$field_data = $data;
+			}else{
+
+				
+				$field_data = ( !isset( $data[ $option[ 'id' ] ] ) ) ? false  : $data[ $option[ 'id' ] ];
+				
+			}
+			
+			
+			$field = $this -> createFieldFromOptions( $field_data , $option , $args );
 			if( is_object( $field ) ){
 				$fields[] = $field;
 			}

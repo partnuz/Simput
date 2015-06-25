@@ -12,6 +12,8 @@ class Smof_Framework{
 	public $fields_properties;
 	public $theme_data;
 	
+	protected $scripts;
+	
 	function __construct( $options, $args ){
 	
 		$this -> defaultArgs( $args );
@@ -31,7 +33,7 @@ class Smof_Framework{
 		
 		$this -> enqueueAll();
 		
-		add_action( 'in_admin_footer' , array( $this , 'printDataSources' ) );
+		add_action( 'in_admin_footer' , array( $this , 'printScripts' ) );
 		
 	}
 	
@@ -94,9 +96,14 @@ class Smof_Framework{
 			if( $field_name ){
 				// for PHP 5.2 compatibility
 				$this -> fields_properties[ $field_type ] = call_user_func( array( $field_name , 'getProperties' ) );
+				return $this -> fields_properties[ $field_type ];
 			}
 
+		}else{
+			return $this -> fields_properties[ $field_type ];
 		}
+		
+		return false;
 		
 	}
 	
@@ -246,21 +253,31 @@ class Smof_Framework{
 	
 	}
 	
-	function addToPrintDataSources( $name, $data , $container = array( 'before' => '', 'after' => '' ) ){
+	function dataSourceExists( $name ){
 		static $names = array();
 		if( !array_search( $name , $names ) ){
-			$this -> data_sources .= $container[ 'before' ] . $data . $container[ 'after' ] ;
+			$names[] = $name;
+			return false;
+		}else{
+			
+			return true;
+			
 		}
 	}
 	
 	function dataSourceAction( $caller , $id , array $args ){
 		
-		$caller -> addPrintScriptsContent( 'new SmofData(\'#smof-container' . $caller -> args[ 'subframework' ] -> setFieldId( $caller -> args[ 'id' ] ) . '\' , '.json_encode( $args ) .');' );
+		$caller -> addPrintScriptsContent( 'new SmofData(\'#smof-container' . $caller -> args[ 'subframework' ] -> getFieldId( $caller -> args[ 'id' ] ) . '\' , '.json_encode( $args ) .');' );
 	}
 	
-	function printDataSources(){
-		
-		echo $this -> data_sources;
+	function printScripts(){
+		?>
+		<script>
+			<?php
+			echo $this -> scripts;
+			?>
+		</script>
+		<?php
 	}
 	
 	function underscore2Camelcase( $str ) {

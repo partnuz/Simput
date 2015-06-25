@@ -17,18 +17,20 @@ class Smof_Fields_Color_Field extends Smof_Fields_Parent_Field{
 	);
 
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'type' => 'color'
-		);
+		) );
 	}
 	
 	
 	function bodyView(){
+		
+		$this -> viewValidationResult();
 	
 		?>
 
-			<input name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" class="smof-field-color cs-wp-color-picker <?php echo $this -> formFieldClass(); ?>"  type="text" value="<?php echo $this -> data; ?>" <?php if( !empty( $this -> options[ 'default' ] ) && empty( $this -> data ) ){?>data-default-color=<?php echo $this -> options[ 'default' ]; }; ?> />
+			<input "<?php $this -> viewName(); ?> class="smof-field-color cs-wp-color-picker <?php echo $this -> formFieldClass(); ?>"  type="text" value="<?php echo esc_attr( $this -> data ); ?>" <?php if( !empty( $this -> options[ 'default' ] ) && empty( $this -> data ) ){?>data-default-color=<?php echo $this -> options[ 'default' ]; }; ?> />
 				
 		<?php
 	}

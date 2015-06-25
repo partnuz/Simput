@@ -11,108 +11,73 @@ class Smof_Fields_Combobox_Field extends Smof_Fields_Parent_Field{
 		'category' => 'single'
 	);
 	
+	protected $options_converted;
+	
 	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'options' => array(),
 			'data_source_format' => false,
 			'cache_data_source' => false,
 			
-		);
+		) );
 	}
 	
+	public function encodeOptionsToJson(){
+		
+		var_dump( current( $this -> options[ 'options' ] ) );
+		
+		if( is_array( $this -> options[ 'options' ] ) ){
+			
+			if( is_array( current( $this -> options[ 'options' ] ) ) ) {
+				foreach( $this -> options[ 'options' ] as $name => $options ){ 
+					
+					if( !$this -> framework -> dataSourceExists( $name ) ){
+						
+						$this -> options_converted[ $name ] = json_encode( $options , JSON_FORCE_OBJECT );
+					}
+				
+				}
+			}else{
+				
+				$this -> options_converted = json_encode( $this -> options[ 'options' ] , JSON_FORCE_OBJECT );
+				
+			}
+
+		}
+	}
+	
+	public function addOptionsToExternalSource(){
+		
+		var_dump( reset( $this -> options[ 'options' ] ) );
+		
+		if( is_array( reset( $this -> options[ 'options' ] ) ) ) {
+			foreach( $this -> options_converted as $name => $options ){
+				
+				if( !$this -> framework -> dataSourceExists( $name ) ){
+					$this -> addPrintScriptsContent( $name . '=' .$options . ';' );
+				}
+			
+			}
+		}else{
+			
+			$name = $this -> subframework -> getFieldId( $this -> args[ 'id' ] );
+			$this -> addPrintScriptsContent( 'var ' . $name . '=' . $this -> options_converted . ';' );
+			
+		}
+
+	}
 	
 	function bodyView(){
+		
+		$this -> viewValidationResult();
+		
+		$this -> encodeOptionsToJson();
+		
+		$this -> addOptionsToExternalSource();
 
 		?>
-
-			<select <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>" <?php if( $this -> options[ 'data_source_format' ] !== false ){?>data-smof-data-source-format="<?php echo $this -> options[ 'data_source_format' ] ;?>"<?php } ?> class="smof-field-combobox <?php echo $this -> formFieldClass(); ?>" >
-			
-				<?php
-				
-				switch( $this -> options[ 'data_source_format' ]){
-					case false:
-						foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
-						
-							if( !is_array( $field_data ) ){
-								?>
-								<option type="text" <?php selected( $this -> data  , $field_key ); ?> value="<?php echo $field_key; ?>" ><?php echo $field_data; ?></option>
-								<?php
-								
-							}else{
-								$attributes = $field_data;
-								unset( $attributes[ 'key' ] );
-								unset( $attributes[ 'val' ] );
-								?>
-								<option type="text" <?php selected( $this -> data  , $field_data[ 'key' ] ); ?> value="<?php echo $field_data[ 'key' ]; ?>" <?php $this -> addAttributes( $attributes , array( 'typography' ) ); ?> ><?php echo $field_data[ 'val' ]; ?></option>
-								<?php
-							}
-
-						}
-					break;
-					case 'html':
-
-							
-						
-						// output
-						if( $this -> options[ 'cache_data_source' ] ){
-							// print only once than build using js
-							// printScripts with id
-							foreach( $this -> options[ 'options' ] as $data_source_name => $data_source_data ){
-
-								$this -> args[ 'subframework' ] -> args[ 'framework' ] -> addToPrintDataSources( 
-									$data_source_name , 
-									$data_source_data , 
-									array( 
-										'before' => '<select id="smof-data-source-'.$data_source_name.'">' , 
-										 'after' => '</select>' 
-									) 
-								);
-								
-								$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction( 
-									$this , 
-									$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
-									array( 
-										'actions' => array( 'append' ) ,
-										'data_source_name' => $data_source_name 
-									) 
-								);					
-								
-							}
-							
-							// select it
-							
-							$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction(
-								$this , 
-								$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
-								array( 
-									'actions' => array( 'select' ) ,
-									'data' => $this -> data 
-								) 
-							);
-	
-						}else{
-							foreach( $this -> options[ 'options' ] as $data_source_key => $data_source_data ){
-								echo $data_source_data;
-							}
-							
-							$this -> args[ 'subframework' ] -> args[ 'framework' ] -> dataSourceAction(
-								$this , 
-								$this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ) , 
-								array( 
-									'actions' => array( 'select' ) ,
-									'data' => $this -> data 
-								) 
-							);
-						}
-
-					break;
-					case 'json':
-						// output once in a footer, then append using js
-					break;
-				}
-				?>
-			</select>
+			<input <?php $this -> viewName(); ?> data-smof-source-name="" class="smof-field-combobox <?php echo $this -> formFieldClass(); ?>" value="<?php echo $this -> data; ?>" >
 		
 		<?php
 

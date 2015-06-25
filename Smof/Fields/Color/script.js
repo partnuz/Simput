@@ -196,37 +196,11 @@ SmofColor.addEvent = function( prefix ){
 	prefix = SmofEvents.getPrefix( prefix );
 	console.log( prefix );
 	
-	prefix.find( '.cs-wp-color-picker').cs_wpColorPicker({
+	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "cs-wp-color-picker" ) ).cs_wpColorPicker({
 
 	});
 
 
 }
-
-//Color picker
-
-/*
-( function( $ ){
-	
-	$('.smof-field-color').wpColorPicker({
-		
-		change: _.throttle( function( event , ui) { 
-            $(this).trigger( 'change' );
-        }, 2000 )
-	});
-})(jQuery);
-*/
-
-/*
-( function( $ ){
-	
-		console.log( typeof _ );
-		
-		_.throttle( function( event , ui) { 
-            console.log( 'throtte outside' );
-        }, 1 )
-
-})(jQuery);
-*/
 
   	
