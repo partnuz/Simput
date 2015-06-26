@@ -85,6 +85,7 @@ abstract class Main{
 		}
 		
 		protected function beforeHeaderView(){
+
 			if( !empty( $this -> data[ 'title' ] ) || !empty( $this -> data[ 'description' ] ) ){
 				?>
 				<div class="smof-field-header">

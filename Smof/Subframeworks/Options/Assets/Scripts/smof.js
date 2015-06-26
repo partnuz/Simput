@@ -11,7 +11,18 @@ jQuery.noConflict();
  */
 jQuery(document).ready(function($){
 	
-	$( "#of_container #main" ).tabs();
+	$( "#of_container #main" ).tabs(
+		{
+			active : window.sessionStorage.getItem( 'of_container') || 0,
+			// Triggered after a tab has been activated
+			activate : function( event, ui ){
+				//  Get future value
+				var newIndex = ui.newTab.parent().children().index( ui.newTab );
+				//  Set future value
+				window.sessionStorage.setItem( 'of_container', newIndex ) 
+			}
+		}
+	);
 	
 	//(un)fold options in a checkbox-group
   	jQuery('.fld').click(function() {

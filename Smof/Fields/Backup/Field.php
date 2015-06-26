@@ -22,18 +22,18 @@ class Field extends \Smof\Fields\ParentField\Field{
 	}
 	
 	public function controller(){
-	
-	?>
-		<textarea <?php $this -> viewName(); ?>><?php echo  $this -> data ; ?></textarea>
-		<br>
-		<button class="button-primary" value="import" name="smof[action]" type="submit">Import</button>
-		<button class="button-primary" value="export" name="smof[action]" type="submit">Export</button>
-	
-	<?php
+		
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$view -> setData( 'button_name' , $this -> subframework -> getFieldName( array( 'action' ) ) );
+		
+		$view -> view();
+
 	}
 	
 	public function enqueueStyles(){
 	
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
 		wp_enqueue_style( 'smof-field-backup', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'Backup/field.css' ) ;
 	
 	}

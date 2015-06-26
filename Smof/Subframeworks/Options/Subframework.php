@@ -147,6 +147,10 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 		
 		switch( $this -> action ){
 			case 'save':
+			
+				if( !empty( $this -> post_data[ 'backup' ] ) ){
+					unset( $this -> post_data[ 'backup' ] );
+				}
 				
 				$this -> setData( $this -> decodeHtmlSpecialCharsLoop( $this -> post_data ) );
 				$this -> createContainerField();
@@ -169,6 +173,7 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 			case 'import':
 				if( !empty( $this -> post_data[ 'backup' ] ) ){
 					$data = unserialize( $this -> post_data[ 'backup' ] );
+					if( !empty( $data[ 'backup' ] ) ){ unset( $data[ 'backup' ] ); };
 				}else{
 					$data = $this -> post_data;
 				}
