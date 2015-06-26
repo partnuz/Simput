@@ -1,0 +1,9 @@
+{
+  "name": "Smof",
+  "version": "1.0.0",
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-concat": "~0.1.3",
+	"grunt-newer" : "~1.1.1"
+  }
+}
