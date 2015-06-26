@@ -1,3 +1,12 @@
+// @koala-append '../../Fields/Color/script.js';
+// @koala-append '../../Fields/Combobox/script.js';
+// @koala-append '../../Fields/ImageSelect/script.js';
+// @koala-append '../../Fields/ParentRepeatable/script.js';
+// @koala-append '../../Fields/Sliderui/script.js';
+// @koala-append '../../Fields/Switcher/script.js';
+// @koala-append '../../Fields/Typography/script.js';
+// @koala-append '../../Fields/Upload/script.js';
+
 var SmofToggle = function( $container ){
 	
 	var obj = this;
@@ -29,61 +38,79 @@ SmofToggle.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".toggle" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "toggle" ) ).each(function(index, value) {
 		
-		new SmofToggle( jQuery( this ) );
+		new SmofToggle(  this  );
 
 	});
 	
 }
 
-jQuery(function() {
+// register all fields names
+var SmofFieldRegister = [];
 
-	SmofToggle.addEvent();
-
-});
-
+// adds events
 var SmofEvents = function(){
-	
 }
+
+SmofEvents.registered_events = [];
 
 SmofEvents.getPrefix = function( prefix ){
 	
-	var query = jQuery('html');
+	var node = document.getElementsByTagName('html')[ 0 ];
 	
 	if( prefix ){
 	
 		var type = typeof prefix;
 		
 		if( type == 'string' ){
-			query = jQuery( prefix );
+			node = document.querySelector( prefix );
 
 		}else if( prefix.nodeType ){
-			query = jQuery( prefix );
+			node = prefix;
 
 		}else if( type == 'object' ){
-			query = prefix;
+			node = prefix[ 0 ];
 
 		}
 		
 	}
 		
-	return query;
+	return node;
 
 }
 
 
-SmofEvents.add = function( prefix ){
+SmofEvents.addEvent = function( prefix ){
 	
-	prefix = SmofEvents.getPrefix( prefix );
+	var prefix = SmofEvents.getPrefix( prefix );
 	
+	// execute them here, remove code below
+	
+	var registered_events_length = this.registered_events.length;
+	
+	for( var i = 0; i < registered_events_length; i++ ){
+
+		window[ this.registered_events[ i ] ].addEvent( prefix );
+		
+	}
+	
+	
+	
+	/*
 	SmofColor.addEvent( prefix );
 	SmofCombobox.addEvent( prefix );
 	SmofImageSelect.addEvent( prefix );
 	SmofSliderui.addEvent( prefix );
-	SmofSwitch.addEvent( prefix );
+	SmofSwitcher.addEvent( prefix );
 	SmofFieldTypography.addEvent( prefix );
 	SmofUpload.addEvent( prefix );
 	SmofRepeatable.addEvent( prefix );
 	SmofToggle.addEvent( prefix );
+	*/
 }
+
+SmofEvents.register = function( event_name ){
+	
+	this.registered_events.push( event_name );
+};

@@ -1,29 +1,68 @@
  (function( $ ) {
 $.widget( "ui.combobox", {
 	_create: function() {
+		
 		this.wrapper = $( "<span>" )
-		.addClass( "smof-combobox" )
-		.insertAfter( this.element );
-		this.element.hide();
+		.addClass( "smof-combobox" ).insertBefore( this.element );
+		
+		this.wrapper.append( this.element );
+
+		
+		console.log( this.element );
+		
+	
 		this._createAutocomplete();
 		this._createShowAllButton();
 	},
 	_createAutocomplete: function() {
-		var selected = this.element.children( ":selected" ),
-		value = selected.val() ? selected.text() : "";
-		this.input = $( "<input>" )
-		.appendTo( this.wrapper )
-		.val( value )
-		.attr( "title", "" )
-		.addClass( "smof-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
-		.autocomplete({
+		
+		var ref = this;
+		
+		var source_names = this.element.data( 'smof-source-name' );
+		var source = [];
+		for( name_key in source_names ){
+
+			source = source.concat( window[ source_names[ name_key ] ] );
+			
+		}
+		
+		var realSource = source;
+
+		this.element.autocomplete({
 			delay: 0,
 			minLength: 0,
-			source: $.proxy( this, "_source" )
+			source: realSource,
+			select: function( event, ui ) {
+
+				$( this ).data( 'smof-combobox' , ui.item );
+				ref._selectTriggerChange();
+				return true;
+			},
+			create: function( event, ui ) {
+				
+				var currentVal = $( this ).val();
+
+				var data = $( this ).autocomplete( "option" , "source" ) || [];
+				var currentItemData = [];
+
+				data.map(function ( item ) {
+					  if ( item.value && item.value.toLowerCase() == currentVal.toLowerCase() ) {
+						return currentItemData = item;
+					  }
+				});
+				
+				console.log( currentItemData );
+				$( this ).data( 'smof-combobox' , currentItemData );
+
+				ref._selectTriggerChange();
+
+				return true;
+			}
 		})
 		.tooltip({
 			tooltipClass: "ui-state-highlight"
 		});
+		/*
 		this._on( this.input, {
 			autocompleteselect: function( event, ui ) {
 				ui.item.option.selected = true;
@@ -34,9 +73,10 @@ $.widget( "ui.combobox", {
 			},
 			autocompletechange: "_removeIfInvalid"
 		});
+		*/
 	},
 	_createShowAllButton: function() {
-		var input = this.input,
+		var input = this.element,
 		wasOpen = false;
 		$( "<a>" )
 		.attr( "tabIndex", -1 )
@@ -65,63 +105,8 @@ $.widget( "ui.combobox", {
 		input.autocomplete( "search", "" );
 		});
 	},
-	_source: function( request, response ) {
-		var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
-		response( this.element.children( "option" ).map(
-				function() {
-					var text = $( this ).text();
-					
-					if ( this.value && ( !request.term || matcher.test(text) )  )
-						return {
-							label: text,
-							value: text,
-							option: this
-						};
-				}
-			) 
-		);
-	},
-	_removeIfInvalid: function( event, ui ) {
 
-		// Selected an item, nothing to do
-		if ( ui.item ) {
-			return;
-		}
-		
-		// Search for a match (case-insensitive)
-		var value = this.input.val(),
-		valueLowerCase = value.toLowerCase(),
-		valid = false;
-		this.element.children( "option" ).each(function() {
-			if ( $( this ).text().toLowerCase() === valueLowerCase ) {
-				this.selected = valid = true;
-				return false;
-			}
-		});
-		
-		// Found a match, nothing to do
-		if ( valid ) {
-			this._selectTriggerChange();
-			return;
-		}
-		
-		// Remove invalid value
-		this.input
-		.val( "" )
-		.attr( "title", value + " didn't match any item" )
-		.tooltip( "open" );
-		this.element.val( "" );
-		this._delay(function() {
-			this.input.tooltip( "close" ).attr( "title", "" );
-		}, 2500 );
-		this._selectTriggerChange();
-		this.input.autocomplete( "instance" ).term = "";
-		
-	},
-	_destroy: function() {
-		this.wrapper.remove();
-		this.element.show();
-	},
+
 	_selectTriggerChange: function(){
 		this.element.trigger( "change" );
 	}
@@ -136,12 +121,16 @@ SmofCombobox.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-field-combobox" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "smof-field-combobox" ) ).each(function(index, value) {
 		
 		if( jQuery( this ).parents( '.smof-repeatable-pattern-item' ).first().get( 0 ) ) {
 			
 		}else{
 			jQuery( this ).combobox();
+			/*
+			console.log( jQuery( this ).autocomplete( "search", jQuery( this ).val() ) );
+			*/
+
 		}
 
 	});
@@ -149,9 +138,7 @@ SmofCombobox.addEvent = function( prefix ){
 }
 
 jQuery(function() {
-
+	SmofEvents.register( 'SmofCombobox' );
 	SmofCombobox.addEvent();
 
 });
-
-

@@ -1,16 +1,17 @@
 <?php
 
-abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\ParentRepeatable;
+abstract class Field extends \Smof\Fields\ParentField\Field{
 
-	function assignData( $data ){
+	public function setData( $data ){
 	
-		if( $data !== false && $data !== null && ( is_array( $data ) && !empty( $data ) && isset( $data[ 0 ] ) ) ){
+		if( $data !== null && ( is_array( $data ) && !empty( $data ) && isset( $data[ 0 ] ) ) ){
 			
-			$default_pattern = ( isset( $this -> options[ 'default' ] ) ) ? $this -> options[ 'default' ] : false ;
+			$default_pattern = ( isset( $this -> options[ 'default' ] ) ) ? $this -> options[ 'default' ] : null ;
 			
 			foreach( $data as $data_key => $data_val ){
 
-				if( is_array( $data_val ) && is_array( $default_pattern ) && $default_pattern !== false ){
+				if( is_array( $data_val ) && is_array( $default_pattern ) && $default_pattern !== null ){
 					$this -> data[ $data_key ] = array_replace_recursive(  $default_pattern , $data_val );
 
 				}else{
@@ -26,18 +27,18 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 
 	}
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'toggle' => false
-		);
+		) );
 	}
 	
 	public function validateData(){
 		foreach( $this -> data as $data_key => $data_val ){
 		
-			if( is_array( $this -> options[ 'validate' ] ) && $this -> options[ 'validate' ] ){
+			if( is_array( $this -> options[ 'validate' ] ) && array_filter( $this -> options[ 'validate' ] ) ){
 		
-				$validate = new Smof_Validation();
+				$validate = new \Smof\Validation();
 				
 				if( $this -> fields ){
 					
@@ -62,13 +63,13 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 		}
 	}
 	
-	function obtainData(){
+	public function obtainData(){
 		
 		if( $this -> fields ){
 			
 			foreach( $this -> fields as $field_key => $fields ){
 				
-				$this -> data[ $field_key ] = $this -> getCreate() -> fieldsSave( $fields );
+				$this -> data[ $field_key ] = $this -> getCreate() -> obtainFieldsData( $fields );
 			}
 			
 			return array( $this -> args[ 'id_suffix' ][ 0 ] => $data );
@@ -83,89 +84,36 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 	
 	
 	// suffix is NOT FULL for this type of fields
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 	
 		$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
 	
 	}
 	
 	// suffix is NOT FULL for this type of fields
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 	
 		$this -> args[ 'id_suffix' ] = array( $this -> options[ 'id' ] );
 	
 	}
 
 	
-	function beforeListItemContentView(){
-		?>
-		<div class="smof-before-item">
-			<span class="smof-icons smof-i-move"></span>
-		</div>
-		<?php
-	}
-	
-	function afterListItemContentView(){
-		?>
-		<div class="smof-after-item">
-			<span class="smof-repeatable-delete smof-icons smof-i-delete"></span>
-		</div>
-		<?php
-	}
-	
-	function beforeItemContentView(){
-		?>
-		<div class="<?php if( $this -> options[ 'toggle' ] ){ ?>smof-toggle<?php }else{ ?>smof-item<?php } ?>">
-			
-			<?php
-			if( $this -> options[ 'toggle' ]){
-				
-				?>
-				<div class="header">
-					<div class="toggle smof-icons"></div>
-				</div>
-				<div class="body">
-				<?php
-			}
-		
-	}
-	
-	function afterItemContentView(){
-			if( $this -> options[ 'toggle' ]){
-				?>
-				</div>
-				<?php
-			}
-			?>
-		</div>
-		<?php
-	}
-	
-	
-	function addNewButtonView(){
-		?>
-		<span class="smof-repeatable-add-new button">Add New</span>
-		<?php
-	}
-	
-	function beforeContainerView(){
-	
-		?>
-		
-		<div class="smof-container smof-repeatable smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>" >
-		<?php
 
+	
+	public function enqueueStyles(){
+		
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
+	
+		wp_enqueue_style( 'smof-field-parent_repeatable', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'ParentRepeatable/field.css' )  ;
+	
 	}
 	
-	function enqueueStyles(){
-	
-		wp_enqueue_style( 'smof-field-parent_repeatable', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'ParentRepeatable/style.css' )  ;
-	
-	}
-	
-	function enqueueScripts(){	
+	public function enqueueScripts(){	
 		wp_enqueue_script( 'jquery-ui-core' );
 		wp_enqueue_script( 'jquery-ui-sortable' );
+		
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
+		
 		wp_register_script( 'smof-field-parent_repeatable', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'ParentRepeatable/script.js', array( 'jquery' ) );
 		wp_enqueue_script( 'smof-field-parent_repeatable' );
 	

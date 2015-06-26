@@ -1,6 +1,8 @@
 <?php
 
-class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Radio; 
+
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,20 +10,19 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => 0,
 			'type' => 'radio'
-		);
+		) );
 	}
 	
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 	
-		
-		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
 				$this -> args[ 'name_suffix' ] = array( $this -> options[ 'id' ] );
@@ -33,7 +34,7 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 	
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
@@ -47,15 +48,11 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 	
 	}
 
-	function bodyView(){
-
-			foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
-			?>
-				<input class="smof-field-radio" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="radio" value="<?php echo $field_key; ?>" <?php checked( $this -> data, $field_key ); ?> />
-				<?php echo $field_data; ?>
-				<br>
-			<?php
-			}
+	public function controller(){
+		
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$view -> view();
 
 	}
 	

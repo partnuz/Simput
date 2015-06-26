@@ -1,0 +1,274 @@
+.smof_clearfix:before,
+.smof_clearfix:after {
+	content: ".";
+	display: block;
+	overflow: hidden;
+	visibility: hidden;
+	font-size: 0;
+	line-height: 0;
+	width: 0;
+	height: 0;
+}
+
+.smof_clearfix:after{
+	clear: both;
+}
+
+.smof-table{
+	display: table;
+}
+
+#wpwrap .smof-hidden{
+	display: none;
+}
+
+html body .smof-small{
+	width: 60px;
+}
+
+/* field */
+.smof-container{
+	display: block;
+	margin-bottom: 20px;
+	padding-bottom: 20px;
+	border-bottom: 1px solid #e7e7e7;
+}
+
+.smof-container .smof-container ~ .smof-container{
+	margin-top: 5px;
+}
+
+.smof-container .smof-container > .smof-field-header,
+.smof-container .smof-container > .smof-field-description,
+.smof-container .smof-container > .smof-field-body{
+	width: 100%;
+	padding-right: 0px;
+}
+
+
+
+ .smof-container .smof-container > .smof-field-header > h3{
+	color: gray;
+	font-size: 9.5pt;
+}
+
+.smof-container  .smof-container{
+	margin-bottom: 0px;
+	border-bottom: 0px;
+	padding-bottom: 0px;
+}
+
+.smof-container ~ .smof-container{
+
+}
+.smof-field-header , .smof-field-body{
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.smof-field-header{
+	width: 40%;
+	float: left;
+	padding-right: 20px;
+}
+
+.smof-field-body{
+	width: 60%;
+	float:right;
+}
+
+.smof-field-description{
+	color: #999;
+	font-size: 9pt;
+}
+
+.smof-container h3 {
+	margin-top: 3px;
+	line-height: 22px;
+	margin-bottom: 3px;
+}
+.smof-container-section h2 {
+	margin: 20px 0 20px 0;
+	padding: 0px 0px 14px 0px;
+	border-bottom: 1px solid #e7e7e7;
+	font-weight: bold;
+}
+
+
+input[type="color"], input[type="date"], input[type="datetime-local"], input[type="datetime"], input[type="email"], input[type="month"], input[type="number"], input[type="password"], input[type="search"], input[type="tel"], input[type="text"], input[type="time"], input[type="url"], input[type="week"], select, textarea{
+	width: 100%;
+}
+
+/* .field */
+/* section */
+.smof-container-section > .smof-field-header, .smof-container-section > .smof-field-body{
+	width: 100%;
+	float: none;
+}
+
+/* .section */
+/* group field */
+.smof-container-group > .smof-field-body > .smof-container > .smof-field-header,
+.smof-container-group > .smof-field-body > .smof-container > .smof-field-description,
+.smof-container-group > .smof-field-body > .smof-container > .smof-field-body{
+	width: 100%;
+}
+
+
+.smof-container-group .smof-container h3{
+	border-bottom: 0px;
+	font-size: 11pt;
+}
+/* .group field */
+/* smof-toggle */
+.smof-toggle{
+	min-width: 200px;
+}
+
+.smof-toggle > .header{
+	background-color: #fafafa;
+	border: 1px solid #dfdfdf;
+	padding:15px;
+	position: relative;
+	min-height: 16px;
+}
+
+.smof-toggle > .body{
+
+	border: 1px solid #dfdfdf;
+	border-top-width: 0px;
+	display: none;
+	padding: 15px;
+	
+}
+
+.smof-toggle .toggle{
+
+	float: right;
+	margin-right: 0px;
+	background-position: 0px -144px;
+}
+
+
+/* .smof-toggle */
+
+/* field  */
+
+/* icons */
+.smof-icons{
+	background-image: url("../../Assets/Images/smof_icons.png");
+	background-repeat: no-repeat;
+	vertical-align: middle;
+	width: 16px;
+	height: 16px;
+	margin: 0px 5px;
+	display: inline-block;
+}
+
+.smof-i-delete{
+	background-position: 0px 0px;
+}
+.smof-i-move{
+	background-position: 0px -16px;
+}
+
+.smof-i-drive{
+	background-position: 0px -48px;
+}
+
+.smof-i-file{
+	background-position: 0px -64px;
+}
+
+.smof-i-write{
+	background-position: 0px -80px;
+}
+
+.smof-i-home{
+	background-position: 0px -96px;
+}
+
+.smof-i-bucket{
+	background-position: 0px -112px;
+}
+
+.smof-i-tools{
+	background-position: 0px -128px;
+}
+
+.smof-i-arrow {
+	background-position: 0px -144px;
+}
+
+
+
+/*-------------------------------------------------------------------------------------------*/
+/* Tipsy
+/*-------------------------------------------------------------------------------------------*/
+.tipsy { font-size: 10px; position: absolute; padding: 5px; z-index: 100000; }
+  .tipsy-inner { background-color: #000; color: #FFF; max-width: 200px; padding: 5px 8px 4px 8px; text-align: center; }
+
+  /* Rounded corners */
+  .tipsy-inner { border-radius: 3px; -moz-border-radius: 3px; -webkit-border-radius: 3px; }
+  
+  /* Uncomment for shadow */
+  /*.tipsy-inner { box-shadow: 0 0 5px #000000; -webkit-box-shadow: 0 0 5px #000000; -moz-box-shadow: 0 0 5px #000000; }*/
+  
+  .tipsy-arrow { position: absolute; width: 0; height: 0; line-height: 0; border: 5px dashed #000; }
+  
+  /* Rules to colour arrows */
+  .tipsy-arrow-n { border-bottom-color: #000; }
+  .tipsy-arrow-s { border-top-color: #000; }
+  .tipsy-arrow-e { border-left-color: #000; }
+  .tipsy-arrow-w { border-right-color: #000; }
+  
+	.tipsy-n .tipsy-arrow { top: 0px; left: 50%; margin-left: -5px; border-bottom-style: solid; border-top: none; border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-nw .tipsy-arrow { top: 0; left: 10px; border-bottom-style: solid; border-top: none; border-left-color: transparent; border-right-color: transparent;}
+    .tipsy-ne .tipsy-arrow { top: 0; right: 10px; border-bottom-style: solid; border-top: none;  border-left-color: transparent; border-right-color: transparent;}
+  .tipsy-s .tipsy-arrow { bottom: 0; left: 50%; margin-left: -5px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-sw .tipsy-arrow { bottom: 0; left: 10px; border-top-style: solid; border-bottom: none;  border-left-color: transparent; border-right-color: transparent; }
+    .tipsy-se .tipsy-arrow { bottom: 0; right: 10px; border-top-style: solid; border-bottom: none; border-left-color: transparent; border-right-color: transparent; }
+  .tipsy-e .tipsy-arrow { right: 0; top: 50%; margin-top: -5px; border-left-style: solid; border-right: none; border-top-color: transparent; border-bottom-color: transparent; }
+  .tipsy-w .tipsy-arrow { left: 0; top: 50%; margin-top: -5px; border-right-style: solid; border-left: none; border-top-color: transparent; border-bottom-color: transparent; }
+  
+/* icons */
+#of_container .ui-icon {
+    background-repeat: no-repeat;
+    display: block;
+    overflow: hidden;
+    text-indent: -99999px;
+	height: 16px;
+    width: 16px;
+	display: inline-block;
+    vertical-align: middle;
+}
+
+#of_container .ui-icon-triangle-1-s{
+    background-position: 0px -32px;
+}
+#of_container .ui-icon, #of_container .ui-widget-content .ui-icon {
+    background-image: url("../Images/smof_icons.png");
+}
+
+#of_container .ui-button-icon-only .ui-icon,
+#of_container .ui-button-text-icon-primary .ui-icon,
+#of_container .ui-button-text-icon-secondary .ui-icon,
+#of_container .ui-button-text-icons .ui-icon,
+#of_container .ui-button-icons-only .ui-icon {
+	position: absolute;
+	top: 50%;
+	margin-top: -8px;
+}
+
+#of_container .ui-button-icon-only .ui-icon {
+	left: 50%;
+	margin-left: -8px;
+}
+
+#of_container .ui-button{
+	width: 16px;
+}
+
+/* */
+
+/* field */

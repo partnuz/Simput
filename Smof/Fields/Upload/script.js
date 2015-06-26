@@ -48,8 +48,8 @@ var SmofUpload = function( $parent ){
 			obj.$parent.find('.smof-field-upload-width').val('');
 			obj.$parent.find('.smof-field-upload-height').val('');
 			
-			obj.$parent.find('.smof-field-upload-sizes-thumbnail').val('');
-			obj.$parent.find('.smof-field-upload-sizes-medium').val('');
+			obj.$parent.find('.smof-field-upload-size-thumbnail').val('');
+			obj.$parent.find('.smof-field-upload-size-medium').val('');
 			
 			if (typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined') {
 				screenshotUrl = attachment.attributes.sizes.thumbnail.url;
@@ -70,11 +70,11 @@ var SmofUpload = function( $parent ){
 			
 
 			if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.thumbnail !== 'undefined' ){
-				obj.$parent.find('.smof-field-upload-sizes-thumbnail').val( attachment.attributes.sizes.thumbnail.url );
+				obj.$parent.find('.smof-field-upload-size-thumbnail').val( attachment.attributes.sizes.thumbnail.url );
 			}
 			
 			if( typeof attachment.attributes.sizes !== 'undefined' && typeof attachment.attributes.sizes.medium !== 'undefined' ){
-				obj.$parent.find('.smof-field-upload-sizes-medium').val( attachment.attributes.sizes.medium.url );
+				obj.$parent.find('.smof-field-upload-size-medium').val( attachment.attributes.sizes.medium.url );
 			}
 
 			if( screenshotUrl !== '' ){
@@ -125,7 +125,7 @@ SmofUpload.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-container-upload" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "smof-container-upload" ) ).each(function(index, value) {
 		
 		new SmofUpload( jQuery( this ) );
 
@@ -135,6 +135,7 @@ SmofUpload.addEvent = function( prefix ){
 
 jQuery(function() {
 
+	SmofEvents.register( 'SmofUpload' );
 	SmofUpload.addEvent();
 
 });

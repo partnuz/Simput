@@ -1,9 +1,16 @@
 <?php
 
-abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\ParentMulti;
+abstract class Field extends \Smof\Fields\ParentField\Field{
+	
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() , array(
+			'validate' => array()
+		) );
+	}
 
 	// suffix is NOT FULL for this type of fields
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
@@ -17,7 +24,7 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 	}
 	
 	// suffix is NOT FULL for this type of fields
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
@@ -31,9 +38,9 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function assignData( $data ){
+	public function setData( $data ){
 	
-		if( !empty( $data ) ){ 
+		if( is_array( $data ) ){ 
 
 			$this -> data = array_replace_recursive( $this -> options[ 'default' ] , $data );
 			
@@ -44,13 +51,13 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 	
 	public function validateData(){
 
-		if( $this -> options[ 'validate' ] ){
-			
-			$validate = new Smof_Validation();
+		if( array_filter( $this -> options[ 'validate' ] ) ){
 			
 			if( $this -> fields ){
 				$this -> getCreate() -> fieldsValidate( $this -> fields );
 			}else{
+				
+				$validate = new \Smof\Validation();
 				
 				foreach( $this -> options[ 'validate' ] as $validation_item => $validate_option ){
 					
@@ -64,18 +71,16 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 					}
 					
 				}
-				
 			}
-			
 		}
 
 	}
 	
-	function obtainData(){
+	public function obtainData(){
 		
 		if( $this -> fields ){
 			
-			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> getCreate() -> fieldsSave( $this -> fields ) );
+			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> getCreate() -> obtainFieldsData( $this -> fields ) );
 			
 		}else{
 			
@@ -83,8 +88,20 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 			
 		}
 		
-
+	}
+	
+	public function viewValidationResults( $field_id ){
 		
+		if( !$this -> fields ){
+					
+			if( !empty( $this -> validation_results[ $field_id ] ) ) {
+
+				var_dump( $this -> validation_results[ $field_id ] );
+				
+			}
+			
+		}
+
 	}
 
 }

@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Checkboxes_Field extends Smof_Fields_ParentMulti_Field{
+namespace Smof\Fields\Checkboxes;
+class Field extends \Smof\Fields\ParentMulti\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,22 +9,22 @@ class Smof_Fields_Checkboxes_Field extends Smof_Fields_ParentMulti_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'multiple'
+		'category' => 'multiple',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => array(),
-			'type' => 'checkboxes',
-			'options_as_names' => true
-		);
+			'type' => 'checkboxes'
+		) );
 	}
 	
-	function validateData(){
+	public function validateData(){
 		
-		if( $this -> options[ 'validate' ] ){
+		if( $this -> options[ 'validate' ] && $this -> data ){
 			
-			$validate = new Smof_Validation();
+			$validate = new \Smof\Validation();
 		
 			foreach( $this -> data as $field_key => $field ){
 					
@@ -37,37 +38,50 @@ class Smof_Fields_Checkboxes_Field extends Smof_Fields_ParentMulti_Field{
 			}
 	
 		}
+		
+		
 	}
 	
-	function obtainData(){
+	public function setData( $data ){
 		
-		if( !$this -> data ){
+
+		if( is_array( $data ) ){ 
+			
+			$this -> data = $data;
+
+		}elseif( $data === '' ){
+			
 			$this -> data = array();
+			
+		}else{
+		
+			$this -> data = $this -> options[ 'default' ];
 		}
+	}
+	
+	public function obtainData(){
 		
 		return array( $this -> options[ 'id' ] => $this -> data );
 	}
 
-	function bodyView(){
+	public function controller(){
 		
-		?>
+		var_dump( $this -> options );
 		
-		<input class="smof-field smof-field-hidden" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="" />
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
 		
-		<?php
 		
-		foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
+		$name_suffixes = array();
 		
-			$name = $this -> args[ 'name' ];
-			$name[] = $field_key;
+		foreach( $this -> options[ 'options' ] as $field_name => $field_value ){
 			
-			?>
-		
-			<input class="smof-field smof-field-checkboxes" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $name ); ?>" type="checkbox" value="1" <?php if( isset( $this -> data[ $field_key ] ) ){ checked( '1', $this -> data[ $field_key ] ); } ?> /><?php echo $field_data; ?>
-			</br>
-			<?php
-
+			$name_suffixes[ $field_name ] = $this -> subframework -> getFieldName( array_merge( $this -> args[ 'name' ] , array( $field_name ) ) ) ;
+			
 		}
+		
+		$view -> setData( 'name_suffixes' , $name_suffixes );
+		
+		$view -> view();
 
 	}
 

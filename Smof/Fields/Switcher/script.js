@@ -1,4 +1,4 @@
-var SmofSwitch = function( $parent ){
+var SmofSwitcher = function( $parent ){
 	
 	this.$parent = $parent;
 	var obj = this;
@@ -35,21 +35,21 @@ var SmofSwitch = function( $parent ){
   * Date 			 : 03.17.2013
   */
   
-SmofSwitch.addEvent = function( prefix ){
+SmofSwitcher.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-container-switch" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "smof-container-switcher" ) ).each(function(index, value) {
 		
-		new SmofSwitch( jQuery( this ) );
+		new SmofSwitcher( jQuery( this ) );
 
 	});
 	
 }
 
 jQuery(function() {
-
-	SmofSwitch.addEvent();
+	SmofEvents.register( 'SmofSwitcher' );
+	SmofSwitcher.addEvent();
 
 });
 

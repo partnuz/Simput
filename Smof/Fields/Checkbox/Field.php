@@ -1,23 +1,25 @@
 <?php
 
-class Smof_Fields_Checkbox_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Checkbox; 
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => 0,
 			'type' => 'checkbox'
-		);
+		) );
 	}
 	
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
@@ -30,7 +32,7 @@ class Smof_Fields_Checkbox_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 		
 		switch( $this -> args[ 'mode' ] ){
 			case 'nonrepeatable':
@@ -44,17 +46,12 @@ class Smof_Fields_Checkbox_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function bodyView(){
-	
-		?>
+	public function controller(){
 		
-		<input class="smof-field smof-field-hidden" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="0" />
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
 		
-		<?php
+		$view -> view();
 
-			?>
-			<input class="smof-field smof-field-checkbox" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="checkbox" value="1" <?php checked( '1', $this -> data ); ?> /><?php echo $this -> options[ 'options' ]; ?>
-		<?php
 	}
 
 }

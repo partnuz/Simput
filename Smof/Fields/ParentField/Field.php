@@ -1,6 +1,7 @@
 <?php
 
-abstract class Smof_Fields_Parent_Field{
+namespace Smof\Fields\ParentField; 
+abstract class Field{
 
 	protected $output = true;
 	protected $validation_results;
@@ -17,7 +18,13 @@ abstract class Smof_Fields_Parent_Field{
 	
 	public $print_scripts_content = '';
 	
+	protected $framework;
+	protected $subframework;
+	
 	protected $create;
+	
+	protected $options_converted = array();
+	protected $data_source_names = array();
 
 	function __construct( $options , array $args ){
 	
@@ -30,6 +37,8 @@ abstract class Smof_Fields_Parent_Field{
 		$this -> assignOptions( $options  );
 
 		$this -> assignArgs( $args  );
+		
+		$this -> assignFrameworks();
 		
 		$this -> assignNameSuffix();
 		
@@ -56,11 +65,11 @@ abstract class Smof_Fields_Parent_Field{
 		return $this -> create;	
 	}
 	
-	static function getProperties(){
-		return static :: $properties;
+	static function getProperties( $key = false ){
+		return ( ( $key ) ? static :: $properties[ $key ] : static :: $properties );
 	}
 	
-	function appendArgs( array $args ){
+	protected function appendArgs( array $args ){
 		$this -> args = array_replace_recursive( $this -> args, $args );
 	}
 	
@@ -72,7 +81,7 @@ abstract class Smof_Fields_Parent_Field{
 		return array(
 			'id' => '',
 			'title' => '',
-			'form_field_class' => array(),
+			'field_class' => array(),
 			'class' => array(),
 			'desc' => '',
 			'validate' => false
@@ -87,7 +96,7 @@ abstract class Smof_Fields_Parent_Field{
 			'id_order' => false,
 			'id_suffix' => array(),
 			'attributes' => array(),
-			'form_field_class' => array(),
+			'field_class' => array(),
 			'name' => array(),
 			'name_suffix' => array(),
 			'mode' => 'nonrepeatable'
@@ -110,9 +119,16 @@ abstract class Smof_Fields_Parent_Field{
 		$this -> args = array_replace_recursive( $this -> default_args , $args );
 	}
 	
-	function assignData( $data ){
+	protected function assignFrameworks(){
+		
+		$this -> framework = $this -> args[ 'subframework' ] -> args[ 'framework' ];
+		$this -> subframework = $this -> args[ 'subframework' ];
+		
+	}
+	
+	public function setData( $data ){
 
-		if( $data !== false && $data !== null ){ 
+		if( $data !== null ){ 
 			
 			$this -> data = $data;
 
@@ -166,115 +182,31 @@ abstract class Smof_Fields_Parent_Field{
 
 	}
 	
-	protected function beforeBodyView(){
-	
-		?>
-		<div class="smof-field-body">
-		<?php
-	}
-	
-	protected function afterBodyView(){
-
-		?>
-		</div>
-		<?php
-		
-	}
-	
-	protected function beforeContainerView(){
-		
-		?>
-		
-		<div class="smof-container smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>" >
-		<?php
-
-	}
-	
-	protected function afterContainerView(){
-	
-		?>
-		</div>
-		<?php
-
-	}
-	
-	protected function headingView(){
-		?>
-			<?php
-			if( !empty( $this -> options[ 'title' ] ) ){
-				?>
-				<h3><?php echo $this -> options[ 'title' ] ?></h3>
-				<?php
-			}
-			?>
-		<?php
-	}
-	
-	protected function descriptionView(){
-		if( $this -> args[ 'show_description' ] ){
-			?>
-			<div class="smof-field-description">
-				<?php echo $this -> options[ 'desc' ]; ?>
-			</div>
-			<?php
-		}
-	}
-	
-	function view(){
-	
-		$this -> beforeContainerView();
-		
-			$this -> beforeHeaderView();
-			
-				$this -> headingView();
-				
-				$this -> descriptionView();	
-				
-			$this -> afterHeaderView();
-		
-			$this -> beforeBodyView();
-			
-				$this -> bodyView();
-			
-			$this -> afterBodyView();
-		
-		
-		$this -> afterContainerView();
-	}
-	
-
-	
-	protected function beforeHeaderView(){
-		if( !empty( $this -> options[ 'title' ] ) || !empty( $this -> options[ 'description' ] ) ){
-			?>
-			<div class="smof-field-header">
-			<?php
-		}
-	}
-	
-	protected function afterHeaderView(){
-		if( !empty( $this -> options[ 'title' ] ) || !empty( $this -> options[ 'description' ] ) ){
-			?>
-			</div>
-			<?php
-		}
-
-	}
-	
-	protected function enqueueStyles(){
+	public function enqueueStyles(){
 	
 	}
 	
-	protected function enqueueScripts(){
+	public function enqueueScripts(){
 	
 	}
 	
-	function addPrintScriptsContent( $content ){
+	protected function addPrintScriptsContent( $content ){
 	
 		$this -> print_scripts_content .= $content;
 	
 	}
-	function printScripts(){
+	
+	protected function printScriptsBody(){
+		
+	}
+	
+	public function printScripts(){
+		
+		ob_start();
+			$this -> printScriptsBody();
+			$body = ob_get_contents();
+		ob_end_clean();
+		$this -> addPrintScriptsContent( $body );
 		
 		if( !empty( $this -> print_scripts_content ) ){
 		?>
@@ -314,9 +246,9 @@ abstract class Smof_Fields_Parent_Field{
 		return false;
 	}
 	
-	function enqueueAll(){
+	public function enqueueAll(){
 		
-		if( !$this -> isInstantiated() && ( $this -> args[ 'subframework' ] -> getArgs( 'debug_mode' ) || $this -> options[ 'custom' ] ) ){
+		if( !$this -> isInstantiated() ){
 
 			$this -> enqueueStyles();
 			$this -> enqueueScripts();
@@ -325,80 +257,111 @@ abstract class Smof_Fields_Parent_Field{
 		
 	}
 	
-	protected function loadFromDataSource( $file_path ){
-	
-		foreach( $file_paths as $file_path ){
-			if( file_exists( $this -> args[ 'framework' ] -> path[ 'data_source' ] . $file_path ) ){
-				include_once( $this -> args[ 'framework' ] -> path[ 'data_source' ] . $file_path );
-			}
-		
-		}
-	}
-	
-	protected function addAttributes( $attributes, $prefix = array() ){
+	protected function convertAttributesToJson( array $attributes ){
 	
 		if( empty( $attributes ) ){
-			return;
-		}
-	
-		$output = '';
-		foreach( $attributes as $attribute_name => $attribute ){
-			$prefix_joined = ( $prefix ) ? implode( '-', $prefix ) . '-' : '';
-
-			$output .= 'data-smof-'. $prefix_joined .$attribute_name . '=\'';
-			
-			if( !is_array( $attribute ) ){
-				$output .=  $attribute ;
-			}else{
-				$output .= json_encode( $attribute );
-			}
-			
-			$output .= '\' ';
-			
+			return array();
 		}
 		
-		echo $output;
+		foreach( $attributes as $attribute => $attribute_value ){
+			
+			if( !is_array( $attribute_value ) ){
+				$output[ $attribute ] =  esc_attr( $attribute_value ) ;
+			}else{
+				$output[ $attribute ] = json_encode( $attribute_value );
+			}
+						
+		}
+		
+		return $output;
 		
 		
 	}
 	
-	function getOutput(){
+	public function getOutput(){
 		
 		return $this -> output;
 	}
 	
-	function setOutput( $output ){
+	public function setOutput( $output ){
 		$this -> output = $output;
 	}
 	
-	function validateData(){
+	public function validateData(){
 		if( $this -> options[ 'validate' ] ){
 		
-			$validate = new Smof_Validation();
-			$results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
+			$validate = new \Smof\Validation();
+			$this -> validation_results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
 			
-			if( !empty( $results ) ){
-				$this -> validation_results = $results;
+			if( !empty( $this -> validation_results ) ){
+				
 				$this -> data = $this -> options[ 'default' ];
 			}
 			
 		}
 	}
 	
-	function initiateFields(){
+	public function initiateFields(){
 	
 	}
 	
-	protected function formFieldClass(){
-		if( is_array( $this -> options[ 'class' ] ) && is_array( $this -> args[ 'form_field_class' ] ) ){
-			return implode( ' ' , array_merge( $this -> options[ 'class' ] , $this -> args[ 'form_field_class' ] ) );
+	protected function obtainFieldClass(){
+		if( is_array( $this -> options[ 'class' ] ) && is_array( $this -> args[ 'field_class' ] ) ){
+			return implode( ' ' , array_merge( $this -> options[ 'class' ] , $this -> args[ 'field_class' ] ) );
 		}
 		
 	}
 	
-	function obtainData(){
+	public function obtainData(){
 		
 		return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
+	}
+	
+	public function obtainOutput( $caller ){
+		
+		ob_start();
+		
+			if( is_callable( $caller ) ){
+				
+				call_user_func( $caller );
+				
+			}
+			
+		$output = ob_get_contents();
+		
+		ob_end_clean();
+		
+		return $output;
+		
+	}
+	
+	protected function obtainDefaultViewData(){
+		
+		$data = $this -> options;
+		
+		if( isset( $data[ 'fields' ] ) ){
+			
+			unset( $data[ 'fields' ]);
+			
+		}
+		
+		if( isset( $data[ 'validate' ] ) ){
+			
+			unset( $data[ 'validate' ]);
+			
+		}
+		
+		$data[ 'data' ] = $this -> data;
+		$data[ 'validation_results' ] = $this -> validation_results;
+		// parsed into string
+		$data[ 'id' ] = $this -> subframework -> getFieldId( $this -> args[ 'id' ] );
+		$data[ 'name' ] = $this -> subframework -> getFieldName( $this -> args[ 'name' ] );
+		
+		$data[ 'show_description' ] = $this -> args[ 'show_description' ];
+		$data[ 'show_data_name' ] = $this -> args[ 'show_data_name' ];
+		
+		return $data;	
+		
 	}
 	
 

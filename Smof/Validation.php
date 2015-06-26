@@ -1,11 +1,11 @@
 <?php
+namespace Smof;
 
-
-class Smof_Validation{
+class Validation{
 
 	protected $data;
 	
-	function validate( array $args ){
+	public function validate( array $args ){
 		
 		if( isset( $args[ 'data' ] ) ){
 			$this -> data = $args[ 'data' ];

@@ -1,26 +1,29 @@
 <?php
 
-class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Hidden; 
+
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true,
 			'group' => false
 		),
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => ''
-		);
+		) );
 	}
-	function obtainDefaultArgs(){
-		return parent :: obtainDefaultArgs() + array(
+	protected function obtainDefaultArgs(){
+		return array_merge_recursive( parent :: obtainDefaultArgs() ,array(
 			'args_name_only' => false
-		);
+		) );
 	}
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 		
 		if( $this -> args[ 'args_name_only' ] == true ){
 			$this -> args[ 'name_suffix' ] = array();
@@ -30,7 +33,7 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 		if( $this -> args[ 'args_name_only' ] == true ){
 			$this -> args[ 'id_suffix' ] = array();
 		}else{
@@ -39,11 +42,15 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	}
 
 	
-	function view(){
+	public function controller(){
+		
+		$view = new Views\Main( 
+			$this -> obtainDefaultViewData()
+		);
+		
+		$view -> view();
 	
-		?>
-			<input class="smof-field smof-field-hidden <?php echo $this -> formFieldClass(); ?>" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="<?php echo $this -> data; ?>" />
-		<?php
+
 	}
 	
 }

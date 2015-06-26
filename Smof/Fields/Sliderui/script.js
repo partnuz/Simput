@@ -6,7 +6,7 @@ SmofSliderui.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-sliderui" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "smof-sliderui" ) ).each(function(index, value) {
 		
 		var obj   = jQuery(this);
 		var sId   = "#" + obj.data('id');
@@ -32,7 +32,7 @@ SmofSliderui.addEvent = function( prefix ){
 }
 
 jQuery(function() {
-
+	SmofEvents.register( 'SmofSliderui' );
 	SmofSliderui.addEvent();
 
 });

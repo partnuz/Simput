@@ -29,30 +29,30 @@ function SmofFieldTypography( previewNode ){
 	this.setEvents = function(){
 	
 		if( this.$fontFamilyNode ){
-			this.fontFamily();
+			this.previewFontFamily();
 			this.rebuildFontWeight();
 			this.addStyle();
 			this.setFontFamilyEvent();
 		}
 		
 		if( this.$fontWeightNode ){
-			this.fontWeight();
+			this.previewFontWeight();
 			this.setFontWeightEvent();
 		}
 		
 		if( this.$fontSizeNode ){
-			this.fontSize();
+			this.previewFontSize();
 			this.setFontSizeEvent();
 		}
 		
 		if( this.$lineHeightNode ){
-			this.lineHeight();
+			this.previewLineHeight();
 			this.setLineHeightEvent();
 		}
 		
 
 		if( this.$colorNode ){
-			this.color();
+			this.previewColor();
 			this.setColorEvent();
 		}
 
@@ -61,7 +61,7 @@ function SmofFieldTypography( previewNode ){
 	
 	this.setFontFamilyEvent = function(){
 		this.$fontFamilyNode.change( function(){
-				obj.fontFamily();	
+				obj.previewFontFamily();	
 				obj.rebuildFontWeight();
 				obj.addStyle();
 			}
@@ -70,7 +70,7 @@ function SmofFieldTypography( previewNode ){
 	
 	this.setFontWeightEvent = function(){
 		this.$fontWeightNode.change( function(){
-				obj.fontWeight();
+				obj.previewFontWeight();
 				obj.addStyle();
 			}
 		)
@@ -78,14 +78,14 @@ function SmofFieldTypography( previewNode ){
 	
 	this.setFontSizeEvent = function(){
 		this.$fontSizeNode.change( function(){
-				obj.fontSize();
+				obj.previewFontSize();
 			}
 		)
 	}
 	
 	this.setLineHeightEvent = function(){
 		this.$lineHeightNode.change( function(){
-				obj.lineHeight();
+				obj.previewLineHeight();
 			}
 		)
 	}
@@ -95,14 +95,14 @@ function SmofFieldTypography( previewNode ){
 			
 				console.log( 'setColorEvent' );
 				console.log( color );
-				obj.color( color );
+				obj.previewColor( color );
 			}
 		)
 	}
 	
 	this.addStyle = function(){
 		
-		if( !this.$fontFamilyNode.children( ":selected" ).data( 'smof-typography-weight' ) ){
+		if( !this.$fontFamilyNode.data( 'smof-combobox' ).weight ){
 			return;
 		}
 		
@@ -112,7 +112,7 @@ function SmofFieldTypography( previewNode ){
 		
 		if( this.$fontFamilyNode ){
 			
-			font = this.$fontFamilyNode.children( ":selected" ).val().replace(/\s+/g, '+');
+			font = this.$fontFamilyNode.data( 'smof-combobox' ).value.replace(/\s+/g, '+');
 			addStyle = true;
 
 		}
@@ -131,45 +131,48 @@ function SmofFieldTypography( previewNode ){
 	
 	}
 	
-	this.fontFamily = function(){
-		this.$previewNode.css( 'font-family' , this.$fontFamilyNode.children( ":selected" ).val() );
+	this.previewFontFamily = function(){
+		this.$previewNode.css( 'font-family' , this.$fontFamilyNode.data( 'smof-combobox' ).value );
 	}
 	
-	this.fontWeight = function(){
-		console.log( this.$fontWeightNode.children( ":selected" ).val() );
+	this.previewFontWeight = function(){
+
 		this.$previewNode.css( 'font-weight' , this.$fontWeightNode.children( ":selected" ).val() );
-		console.log( this.$previewNode.css( 'font-weight' ) );
+
 	}
 	
 	this.rebuildFontWeight = function(){
-
+		console.log( obj.$fontWeightNode );
 		if( obj.$fontWeightNode ){
+			console.log( 'rebuildFontWeight' );
 			var fontWeightDefaultValue = obj.$fontWeightNode.data( 'smof-typography-weight-default' );
 			obj.$fontWeightNode.find('option').remove();
-			var font_weight = obj.$fontFamilyNode.children( ":selected" ).data( 'smof-typography-weight' );
+			var font_weight = obj.$fontFamilyNode.data( 'smof-combobox' ).weight;
+			console.log( obj.$fontFamilyNode.data( 'smof-combobox' ).weight );
 
 			for( font_weight_id in font_weight ){
 
 				var selected = ( font_weight_id == fontWeightDefaultValue ) ? 'selected="selected"' : '';
 
-
 				obj.$fontWeightNode.append('<option value="' + font_weight[ font_weight_id ] + '" ' + selected +'>' + font_weight[ font_weight_id ] +'</option>')
 			}
 			obj.$fontWeightNode.data( 'smof-typography-weight-default' , '' )
 			obj.$fontWeightNode.trigger( 'change' );
+			
+
 		}
 	}
 	
-	this.fontSize = function(){
+	this.previewFontSize = function(){
 		this.$previewNode.css( 'font-size' , this.$fontSizeNode.val() + this.$fontSizeNode.data( 'smof-typography-font-size-unit' )  );
 	}
 	
-	this.lineHeight = function(){
+	this.previewLineHeight = function(){
 
 		this.$previewNode.css( 'line-height' , this.$lineHeightNode.val() + this.$lineHeightNode.data( 'smof-typography-line-height-unit' ) );
 	}
 	
-	this.color = function( color ){
+	this.previewColor = function( color ){
 		var color = color ||  this.$colorNode.val();
 		this.$previewNode.css( 'color' , color );
 	}
@@ -181,7 +184,7 @@ SmofFieldTypography.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	prefix.find( ".smof-font-preview" ).each(function(index, value) {
+	jQuery( prefix.getElementsByClassName( "smof-font-preview" ) ).each(function(index, value) {
 		
 		new SmofFieldTypography( jQuery( this ) );
 
@@ -190,7 +193,8 @@ SmofFieldTypography.addEvent = function( prefix ){
 }
 
 jQuery(function() {
-
+	
+	SmofEvents.register( 'SmofFieldTypography' );
 	SmofFieldTypography.addEvent();
 
 });

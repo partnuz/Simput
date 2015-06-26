@@ -1,6 +1,6 @@
 <?php
-
-class Smof_Create{
+namespace Smof;
+class Create{
 	
 	protected $framework;
 	protected $subframework;
@@ -26,7 +26,7 @@ class Smof_Create{
 			
 			if( $field -> getOutput() ){
 
-				$field -> assignData( $data );
+				$field -> setData( $data );
 				$field -> initiateFields();
 				
 				return $field;
@@ -45,7 +45,7 @@ class Smof_Create{
 	
 	public function fieldClassName( $field_slug ){
 		
-		$field_name = 'Smof_Fields_' . $this -> framework -> underscore2Camelcase( $field_slug ). '_Field' ;
+		$field_name = __NAMESPACE__ .'\\Fields\\' . $this -> framework -> underscore2Camelcase( $field_slug ). '\\Field' ;
 		
 		return ( class_exists( $field_name ) ? $field_name : false );
 	}
@@ -55,11 +55,11 @@ class Smof_Create{
 			return;
 		}
 		foreach( $fields as $field ){
-			$field -> view();
+			$field -> controller();
 		}
 	}
 	
-	function fieldsValidate( array $fields ){
+	public function fieldsValidate( array $fields ){
 
 		foreach( $fields as $field ){
 			
@@ -69,7 +69,7 @@ class Smof_Create{
 
 	}
 	
-	function fieldsSave( array $fields ){
+	public function obtainFieldsData( array $fields ){
 		$data = array();
 		foreach( $fields as $field ){
 
@@ -82,13 +82,9 @@ class Smof_Create{
 		return $data;
 	}
 	
-	public function createFieldsFromOptions( array $options , $data_all = false , $args = false ){
+	public function createFieldsFromOptions( array $options , $data , $args = false ){
 	
 		$fields = array();
-	
-		if( $data_all === false ){
-			$data_all = $this -> subframework -> getData();
-		}
 		
 		if( $args === false ){
 			$args = array( 'view' => $this -> subframework -> view , 'subframework' => $this -> subframework );
@@ -96,9 +92,22 @@ class Smof_Create{
 		
 		foreach ( $options as $option ){
 			
-			$data = ( !isset( $data_all[ $option[ 'id' ] ] ) ) ? false  : $data_all[ $option[ 'id' ] ];
+			$field_properties = $this -> framework -> setFieldProperties( $option[ 'type' ]);
 			
-			$field = $this -> createFieldFromOptions( $data , $option , $args );
+			if( $field_properties === false){
+				continue;
+			}
+			
+			if( $field_properties[ 'inheritance' ] === 'children' ){
+				$field_data = $data;
+			}else{
+
+				
+				$field_data = ( !isset( $data[ $option[ 'id' ] ] ) ) ? null  : $data[ $option[ 'id' ] ];
+				
+			}
+			
+			$field = $this -> createFieldFromOptions( $field_data , $option , $args );
 			if( is_object( $field ) ){
 				$fields[] = $field;
 			}

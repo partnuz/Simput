@@ -17,9 +17,9 @@ function SmofRepeatable( $parentNode ){
 	}
 	
 
-	this.addNewEvents = function(){
+	this.addEventsToNewItem = function(){
 		
-		SmofEvents.add( this.$patternItem );
+		SmofEvents.addEvent( this.$newItem );
 		/*
 		this.$patternItemClone.find( '.smof-repeatable' ).each( 
 			function(){
@@ -52,13 +52,13 @@ function SmofRepeatable( $parentNode ){
 	
 		this.newItemAppend();
 		
-		this.addNewEvents();
+		this.addEventsToNewItem();
 
 	}
 	
 	this.newItemAppend = function(){
-		this.$patternItem = this.$patternItemClone.appendTo( this.$patternItemNode.parent( 'ul' ) ).get(0);
-		console.log( this.$patternItem );
+		this.$newItem = this.$patternItemClone.appendTo( this.$patternItemNode.parent( 'ul' ) ).get(0);
+		console.log( this.$newItem );
 		console.log( this.$patternItemNode.parent( 'ul' ) );
 	}
 	
@@ -292,9 +292,10 @@ function SmofRepeatable( $parentNode ){
 SmofRepeatable.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
-	console.log( typeof prefix );
 	
-	prefix.find( ".smof-repeatable" ).each(function(index, value) {
+	console.log( prefix );
+	
+	jQuery( prefix.getElementsByClassName( "smof-repeatable" ) ).each(function(index, value) {
 		
 		new SmofRepeatable( jQuery( this ) );
 
@@ -302,8 +303,8 @@ SmofRepeatable.addEvent = function( prefix ){
 	
 }
 
-jQuery(document).ready(function($){
-
+jQuery(function(){
+	SmofEvents.register( 'SmofRepeatable' );
 	SmofRepeatable.addEvent();
 
 });

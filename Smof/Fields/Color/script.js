@@ -1,11 +1,4 @@
-// the semi-colon before the function invocation is a safety
-// net against concatenated scripts and/or other plugins
-// that are not closed properly.
-// set root Object
-
-
-
-;(function ( $, window, document, undefined ) {
+(function ( $, window, document, undefined ) {
   'use strict';
 
   // adding alpha support for Automattic Color.js toString function.
@@ -194,39 +187,18 @@ var SmofColor = function(){
 SmofColor.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
-	console.log( prefix );
 	
-	prefix.find( '.cs-wp-color-picker').cs_wpColorPicker({
+	jQuery( prefix.getElementsByClassName( "cs-wp-color-picker" ) ).cs_wpColorPicker({
 
 	});
 
 
 }
 
-//Color picker
-
-/*
-( function( $ ){
+jQuery( function(){
 	
-	$('.smof-field-color').wpColorPicker({
-		
-		change: _.throttle( function( event , ui) { 
-            $(this).trigger( 'change' );
-        }, 2000 )
-	});
-})(jQuery);
-*/
+	SmofEvents.register( 'SmofColor' );
 
-/*
-( function( $ ){
-	
-		console.log( typeof _ );
-		
-		_.throttle( function( event , ui) { 
-            console.log( 'throtte outside' );
-        }, 1 )
-
-})(jQuery);
-*/
+});
 
   	

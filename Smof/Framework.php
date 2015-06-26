@@ -1,6 +1,8 @@
 <?php
 
-class Smof_Framework{
+namespace Smof;
+
+class Framework{
 	
 	public $path;
 	public $uri;
@@ -11,6 +13,9 @@ class Smof_Framework{
 	public $field_class_names = array();
 	public $fields_properties;
 	public $theme_data;
+	protected $options;
+	
+	protected $scripts;
 	
 	function __construct( $options, $args ){
 	
@@ -19,20 +24,20 @@ class Smof_Framework{
 	
 		$this -> assignPath();
 		$this -> assignUris();
-
-		
-		if( is_admin() ){
-			$this -> loadFields();
-		}
 		
 		$this -> assignSubframeworkName();
 				
-		$this -> mode( $options );
+		$this -> setOptions( $options );
+		$this -> modeWrapper();
 		
-		$this -> enqueueAll();
-		
-		add_action( 'in_admin_footer' , array( $this , 'printDataSources' ) );
-		
+	}
+	
+	protected function setOptions( $options ){
+		$this -> options = ( is_callable( $options ) ) ? call_user_func( $options ) : $options ;
+	}
+	
+	protected function modeWrapper(){
+		$this -> mode() ;
 	}
 	
 	public function setThemeData( $theme_data ){
@@ -79,9 +84,10 @@ class Smof_Framework{
 		return $this -> subframework;
 	}
 	
-	function fieldNameCache( $field_slug ){
+	public function obtainFieldClassName( $field_slug ){
 		
-		$field_name = 'Smof_Fields_' . $this -> underscore2Camelcase( $field_slug ). '_Field' ;
+		
+		$field_name = __NAMESPACE__ . '\\Fields\\' . $this -> underscore2Camelcase( $field_slug ) . '\Field' ;
 		
 		return ( class_exists( $field_name ) ? $field_name : false );
 	}
@@ -89,14 +95,19 @@ class Smof_Framework{
 	public function setFieldProperties( $field_type ){
 	
 		if( !isset( $this -> fields_properties[ $field_type ] ) ){
-			$field_name = $this -> fieldNameCache( $field_type ) ;
+			$field_name = $this -> obtainFieldClassName( $field_type ) ;
 			
 			if( $field_name ){
 				// for PHP 5.2 compatibility
-				$this -> fields_properties[ $field_type ] = call_user_func( array( $field_name , 'getProperties' ) );
+				$this -> fields_properties[ $field_type ] = $field_name :: getProperties() ;
+				return $this -> fields_properties[ $field_type ];
 			}
 
+		}else{
+			return $this -> fields_properties[ $field_type ];
 		}
+		
+		return false;
 		
 	}
 	
@@ -113,7 +124,7 @@ class Smof_Framework{
 		return $array;
 	}
 	
-	function assignPath(){
+	public function assignPath(){
 		
 		$this -> path[ 'main' ] = plugin_dir_path( __FILE__ );
 		$this -> path[ 'fields' ] = $this -> path[ 'main' ] . 'Fields/';
@@ -181,21 +192,7 @@ class Smof_Framework{
 		
 	}
 	
-	function loadFields(){
-
-		// php compatibility
-		
-		include_once( $this -> path[ 'includes' ] . 'php_compatibility.php' );
-		
-		
-		/* advanced
-		
-		include_once( $this -> path[ 'fields' ] . 'typography/field.php' );
-		
-		*/
-	}
-	
-	function defaultArgs( $args ){
+	public function defaultArgs( $args ){
 		
 		$defaults = array(
 			'mode' => 'Options',
@@ -207,63 +204,73 @@ class Smof_Framework{
 		$this -> args[ 'prefix' ] = 'Smof';
 	}
 	
-	function assignSubframeworkName(){
-		$this -> subframework_name =  $this -> args[ 'prefix' ] .'_'. 'Subframeworks_' . ucfirst( $this -> args[ 'mode' ] ) . '_Subframework';
+	public function assignSubframeworkName(){
+		$this -> subframework_name = __NAMESPACE__ . '\\Subframeworks\\' . ucfirst( $this -> args[ 'mode' ] ) . '\\Subframework';
 	}
 	
-	function mode( $options ){
+	public function mode( ){
 
 		if( class_exists( $this -> subframework_name ) ){
 		
-			$this -> subframework = new $this -> subframework_name( $options , $this -> args[ 'subframework_args' ]  );
+			$this -> subframework = new $this -> subframework_name( $this -> options , $this -> args[ 'subframework_args' ]  );
 		}
 	}
 	
-	function enqueueAll(){
-	
-		add_action( 'admin_enqueue_scripts', array( $this , 'enqueueStyles') );
-		add_action( 'admin_enqueue_scripts', array( $this , 'enqueueScripts') );
+	public function enqueueStyles(){
 		
+		if( !$this -> subframework -> isSubframeworkPage() ){ return; }
+		
+		if( $this -> subframework -> args[ 'debug_mode' ] ){
+			wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style.css' );
+		}else{
+			wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style_all.css' );
+		}
+		
+	
 	}
 	
-	function enqueueStyles(){
-	
-		wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style.css' );
-		wp_enqueue_style('jquery-ui-custom-admin', $this -> getUri( 'assets' , 'css' ) .'jquery-ui-custom.css' );
-	
-	}
-	
-	function enqueueScripts(){
-	
+	public function enqueueScripts(){
+
 		wp_enqueue_script('jquery-ui-core');
 		wp_enqueue_script('jquery-ui-sortable');
 		wp_enqueue_script('jquery-ui-slider');
 	
 		wp_enqueue_media();
 		
-		wp_enqueue_script( 'smof', $this -> getUri( 'assets' , 'scripts' ) . 'smof.js', array( 'jquery' ) );
-		wp_enqueue_script( 'smof-data-events', $this -> getUri( 'data' ) . 'events.js', array( 'jquery' ) );
+		if( $this -> subframework -> args[ 'debug_mode' ] ){
+			wp_enqueue_script( 'smof', $this -> getUri( 'assets' , 'scripts' ) . 'smof.js', array( 'jquery' ) );
+		}else{
+			wp_enqueue_script( 'smof', $this -> getUri( 'assets' , 'scripts' ) . 'smof_all.js', array( 'jquery' , 'wp-color-picker' ) );
+		}
+		
 	
 	}
 	
-	function addToPrintDataSources( $name, $data , $container = array( 'before' => '', 'after' => '' ) ){
+	public function dataSourceExists( $name ){
+			
 		static $names = array();
-		if( !array_search( $name , $names ) ){
-			$this -> data_sources .= $container[ 'before' ] . $data . $container[ 'after' ] ;
+		
+		if( array_search( $name , $names ) === false ){
+			$names[] = $name;
+			return false;
+		}else{
+			return true;
+			
 		}
 	}
 	
-	function dataSourceAction( $caller , $id , array $args ){
-		
-		$caller -> addPrintScriptsContent( 'new SmofData(\'#smof-container' . $caller -> args[ 'subframework' ] -> setFieldId( $caller -> args[ 'id' ] ) . '\' , '.json_encode( $args ) .');' );
+	public function printScripts(){
+	
+		?>
+		<script>
+			<?php
+			echo $this -> scripts;
+			?>
+		</script>
+		<?php
 	}
 	
-	function printDataSources(){
-		
-		echo $this -> data_sources;
-	}
-	
-	function underscore2Camelcase( $str ) {
+	public function underscore2Camelcase( $str ) {
 	  // Split string in words.
 	  $words = explode('_', strtolower($str));
 

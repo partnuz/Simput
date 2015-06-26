@@ -105,7 +105,7 @@ border: 1px solid #bbb;
 #of_container #of-nav li:last-child {
 }
 
-#of_container #of-nav li.current {
+#of_container #of-nav li.ui-state-active {
 	margin-right: 0;
 }
 
@@ -120,13 +120,13 @@ border: 1px solid #bbb;
 	color: #555;
 	opacity: 0.5;
 }
-#of_container #of-nav ul li.current a {
+#of_container #of-nav ul li.ui-state-active a {
 	background-color: #fff;
 	color: #797979;
 	opacity: 1;
 }
 
-#of_container #of-nav ul li a:hover {
+#of_container #of-nav ul li a.ui-state-active:hover {
 	color: #d54e21;
 	opacity: 1;
 }

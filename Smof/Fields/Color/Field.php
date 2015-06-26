@@ -1,13 +1,15 @@
 <?php
 
-class Smof_Fields_Color_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Color;
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 
 	public $editor_options;
@@ -16,34 +18,42 @@ class Smof_Fields_Color_Field extends Smof_Fields_Parent_Field{
 			
 	);
 
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'type' => 'color'
-		);
+		) );
 	}
 	
 	
-	function bodyView(){
-	
-		?>
-
-			<input name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" class="smof-field-color cs-wp-color-picker <?php echo $this -> formFieldClass(); ?>"  type="text" value="<?php echo $this -> data; ?>" <?php if( !empty( $this -> options[ 'default' ] ) && empty( $this -> data ) ){?>data-default-color=<?php echo $this -> options[ 'default' ]; }; ?> />
-				
-		<?php
+	public function controller(){
+		
+		$view = new Views\Main( 
+			array_replace( $this -> obtainDefaultViewData() , 
+				array(
+					'field_class' => $this -> obtainFieldClass()
+				) 
+			) 
+		);
+		
+		$view -> view();
 	}
 	
 	function enqueueStyles(){
 	
 		wp_enqueue_style( 'wp-color-picker' );
+		
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
+		
 		wp_enqueue_style( 'smof-field-color', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'color/field.css' )  ;
 	}
 	
 	function enqueueScripts(){
 	
 		wp_enqueue_script( 'wp-color-picker' );
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
 		
-		wp_register_script( 'smof-field-color', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'color/script.js', array( 'jquery' ) );
+		wp_register_script( 'smof-field-color', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'color/script.js', array( 'jquery' , 'wp-color-picker' ) );
 		wp_enqueue_script( 'smof-field-color' );
 	}
 

@@ -1,23 +1,25 @@
 <?php
 
-class Smof_Fields_Editor_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Editor;
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
 			'repeatable' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 
 	public $editor_options;
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => 0,
 			'rows' => 10,
 			'teeny' => true
-		);
+		) );
 	}
 
 	function __construct( $options , array $args ){
@@ -28,31 +30,42 @@ class Smof_Fields_Editor_Field extends Smof_Fields_Parent_Field{
 		
 	}
 	
-	function assignEditorOptions(){
+	protected function assignEditorOptions(){
 		$this -> editor_options = array(
 			'textarea_name' => $this -> options[ 'id' ],
-			'editor_class' => $this -> formFieldClass(),
+			'editor_class' => $this -> obtainFieldClass(),
 			'textarea_rows' => $this -> options[ 'rows' ],
-			'textarea_name' => $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ),
+			'textarea_name' => $this -> args[ 'subframework' ] -> getFieldName( $this -> args[ 'name' ] ),
 			'teeny' => $this -> options[ 'teeny' ]
 		);	
 	}
 	
 	
-	function bodyView(){
-	
+	public function controller(){
+		
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
 		?>
 					
 			<?php
-			
-			wp_editor( $this -> data, 'smof' . $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ), $this -> editor_options );
+			ob_start();
+				wp_editor( $this -> data, 'smof-' . $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ), $this -> editor_options );
+			$editor_field = ob_get_contents();
+			ob_end_clean();
 			
 			?>
 				
 		<?php
+		
+		$view -> setData( 'editor_field' , $editor_field );
+		
+		$view -> view();
 	}
 	
-	function enqueueStyles(){
+	public function enqueueStyles(){
+		
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
+		
 		wp_enqueue_style( 'smof-field-editor', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'editor/field.css'  );
 	}
 	

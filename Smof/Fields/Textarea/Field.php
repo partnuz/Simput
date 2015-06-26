@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Textarea_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Textarea; 
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,21 +9,21 @@ class Smof_Fields_Textarea_Field extends Smof_Fields_Parent_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() , array(
 			'default' => ''
-		);
+		) );
 	}
 	
-	function bodyView(){
-	
-	?>
-		<textarea <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>"><?php echo htmlspecialchars( $this -> data ); ?></textarea>
-	
-	<?php
+	public function controller(){
+		
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$view -> view();
 	}
 
 }

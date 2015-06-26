@@ -1,0 +1,18 @@
+.smof-field-image_select-list > li{
+	display: inline-block;
+	margin: 0px 5px 5px 0px;
+	text-align: center;
+}
+
+body .smof-field-image_select-radio{
+	display: none;
+}
+
+.smof-field-image_select-image{
+	padding: 2px;
+}
+
+.smof-field-image_select-selected{
+	border: 2px solid gray;
+	padding: 0px;
+}

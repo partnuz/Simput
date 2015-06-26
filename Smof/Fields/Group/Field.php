@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
+namespace Smof\Fields\Group;
+class Field extends \Smof\Fields\ParentMulti\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,7 +9,8 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 			'group' => false
 		),
 		'inheritance' => 'parent_children',
-		'category' => 'multiple'
+		'category' => 'multiple',
+		'custom' => false
 	);
 	
 	function __construct( $options , array $args ){
@@ -21,10 +23,10 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 		$this -> args[ 'mode' ] = 'nonrepeatable';
 	}
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => array()
-		);
+		) );
 	}
 	
 	public function initiateFields(){
@@ -38,10 +40,28 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 		$this -> getCreate() -> fieldsValidate( $this -> fields );
 	}
 	
-	
-	function bodyView(){
+	public function controller(){
 		
-		$this -> getCreate() -> fieldsView( $this -> fields );
+		$view = new Views\Main( 
+			array_replace( $this -> obtainDefaultViewData() , 
+				array(
+					'data_source_names' => $this -> data_source_names
+				) 
+			) 
+		);
+		
+		$fields_views = array();
+		
+		foreach( $this -> fields as $field ){
+			
+			$fields_views[] = $this -> obtainOutput( array( $field , 'controller' ) ) ;
+				
+			
+		}
+		
+		$view -> setData( 'fields' , $fields_views );
+		
+		$view -> view();
 			
 	}
 

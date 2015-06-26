@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Select;
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,16 +9,17 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'single_multiple'
+		'category' => 'single_multiple',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'type' => 'select',
 			'multiple' => false,
 			'options' => array(),
-		);
+		) ) ;
 	}
 
 	function __construct( $options , array $args ){
@@ -36,6 +38,8 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 
 		$this -> assignArgs( $args  );
 		
+		$this -> assignFrameworks();
+		
 		$this -> assignNameSuffix();
 		
 		$this -> assignName();
@@ -48,7 +52,7 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 
 	}
 	
-	function assignNameSuffix(){
+	protected function assignNameSuffix(){
 	
 		
 		
@@ -76,7 +80,7 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function assignIdSuffix(){
+	protected function assignIdSuffix(){
 	
 		
 		
@@ -95,13 +99,13 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 	
 	}
 	
-	function validateData(){
+	public function validateData(){
 		
 		if( $this -> options[ 'validate' ] ){
 		
 			if( $this -> options[ 'multiple' ] !== false ){
 				
-				$validate = new Smof_Validation();
+				$validate = new \Smof\Validation();
 				
 				foreach( $this -> data as $field_key => $field ){
 						
@@ -122,20 +126,18 @@ class Smof_Fields_Select_Field extends Smof_Fields_Parent_Field{
 		
 	}
 	
-	
-	function bodyView(){
-
-		?>
-		<select <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" <?php if( $this -> options[ 'multiple' ] ){ echo 'multiple="multiple"'; } ?> class="<?php echo $this -> formFieldClass(); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> >
-			<?php
-			foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
-				?>
-				<option class="" type="text" <?php if( $this -> options[ 'multiple' ] ){ selected( in_array( $field_key, $this -> data )  , true ); }else{ selected( $this -> data  , $field_key ); } ?> value="<?php echo $field_key; ?>">
-				<?php echo $field_data; ?>
-				</option>
-			<?php } ?>
-		</select>
-		<?php
+	public function controller(){
+		
+		$view = new Views\Main( 
+			array_replace( $this -> obtainDefaultViewData() , 
+				array(
+					'attributes' => $this -> convertAttributesToJson( $this -> args[ 'attributes' ] ),
+					'field_class' => $this -> obtainFieldClass()
+				) 
+			) 
+		);
+		
+		$view -> view();
 
 	}
 

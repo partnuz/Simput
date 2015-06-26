@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Text; 
+class Field extends \Smof\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,26 +9,30 @@ class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'single'
+		'category' => 'single',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'custom' => false
-		);
+		) );
 	}
 	
-	function bodyView(){
-	
+	public function controller(){
 		
-		if( !empty( $this -> validation_results ) ){
-			var_dump( $this -> validation_results );
-		}
-
-		?>
-		<input class="<?php echo $this -> formFieldClass(); ?>" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> type="text" value="<?php echo htmlspecialchars($this -> data ); ?>" />
-		<?php
+		$view = new Views\Main( 
+			array_replace( $this -> obtainDefaultViewData() , 
+				array(
+					'field_class' => $this -> obtainFieldClass(),
+					'attributes' => $this -> convertAttributesToJson( $this -> args[ 'attributes' ] )
+				) 
+			) 
+		);
+		
+		$view -> view();
+	
 	}
 	
 

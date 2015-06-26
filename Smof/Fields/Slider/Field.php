@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
+namespace Smof\Fields\Slider;
+class Field extends \Smof\Fields\ParentRepeatable\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,21 +9,22 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 			'group' => true
 		),
 		'inheritance' => false,
-		'category' => 'repeatable'
+		'category' => 'repeatable',
+		'custom' => false
 	);
 	
-	function obtainDefaultOptions(){
-		return  array(
+	protected function obtainDefaultOptions(){
+		return  array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => array(
 				'title' => '',
 				'upload' => array(), // if we base on multifield we don't need to specify details all over
 				'description' => 'saSAsa'
 			),
 			'toggle' => true
-		) + parent :: obtainDefaultOptions();
+		) );
 	}
 	
-	function initiateFields(){
+	public function initiateFields(){
 		
 		foreach( $this -> data as $field_key_num => $field_data ){
 			
@@ -78,121 +80,96 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 		}
 		
 	}
-	
-	
-	function bodyView(){
-	
-		?>
-			<ul>
-				<li class="smof-hidden smof-repeatable-pattern-item">
-				<?php
-				$this -> beforeListItemContentView();
-				$this -> beforeItemContentView();
-				?>
+		
+	public function controller(){
+		
 
-
-						<?php
-						
-						$name = $this -> args[ 'name' ];
-						$name[] = 9999;
-						
-						$id = $this -> args[ 'id' ];
-						$id[] = 9999;
-						
-						$title = $this -> getCreate() -> createFieldFromOptions( 
-							$this -> options[ 'default' ][ 'title' ] ,
-							array(
-								'id' => 'title',
-								'type' => 'text',
-								'title' => __( 'Title' , 'smof' )
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id,
-								'show_data_name' => true
-							)
-						);
-						
-						$title -> view();
-						
-						$upload = $this -> getCreate() -> createFieldFromOptions( 
-							$this -> options[ 'default' ][ 'upload' ] ,
-							array(
-								'id' => 'upload',
-								'type' => 'upload',
-								'title' => __( 'Upload' , 'smof' )
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id,
-								'show_data_name' => true
-							)
-						);
-						
-						$upload -> view();
-						
-						$description = $this -> getCreate() -> createFieldFromOptions( 
-							$this -> options[ 'default' ][ 'description' ] ,
-							array(
-								'id' => 'description',
-								'type' => 'textarea',
-								'title' => __( 'Description' , 'smof' )
-							),
-							array(
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $name,
-								'id' => $id,
-								'show_data_name' => true
-							)
-						);
-						
-						$description -> view();
-					
-						?>
-
-					<?php
-					$this -> afterItemContentView();
-					$this -> afterListItemContentView();
-					?>
-				</li>
-			<?php
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$name = $this -> args[ 'name' ];
+		$name[] = 9999;
+		
+		$id = $this -> args[ 'id' ];
+		$id[] = 9999;
+		
+		$title = $this -> getCreate() -> createFieldFromOptions( 
+			$this -> options[ 'default' ][ 'title' ] ,
+			array(
+				'id' => 'title',
+				'type' => 'text',
+				'title' => __( 'Title' , 'smof' )
+			),
+			array(
+				'subframework' => $this -> args[ 'subframework' ],
+				'name' => $name,
+				'id' => $id,
+				'show_data_name' => true
+			)
+		);
+		
+		$view -> setData( 'pattern_item_title' , $this -> obtainOutput( array( $title , 'controller' ) ) );
+		
+		$upload = $this -> getCreate() -> createFieldFromOptions( 
+			$this -> options[ 'default' ][ 'upload' ] ,
+			array(
+				'id' => 'upload',
+				'type' => 'upload',
+				'title' => __( 'Upload' , 'smof' )
+			),
+			array(
+				'subframework' => $this -> args[ 'subframework' ],
+				'name' => $name,
+				'id' => $id,
+				'show_data_name' => true
+			)
+		);
+		
+		$view -> setData( 'pattern_item_upload' , $this -> obtainOutput( array( $upload , 'controller' ) ) );
+		
+		$description = $this -> getCreate() -> createFieldFromOptions( 
+			$this -> options[ 'default' ][ 'description' ] ,
+			array(
+				'id' => 'description',
+				'type' => 'textarea',
+				'title' => __( 'Description' , 'smof' )
+			),
+			array(
+				'subframework' => $this -> args[ 'subframework' ],
+				'name' => $name,
+				'id' => $id,
+				'show_data_name' => true
+			)
+		);
+		
+		$view -> setData( 'pattern_item_description' , $this -> obtainOutput( array( $description , 'controller' ) ) );
+		
+		
+		
+		
+		
+		
+		
+		// view pattern item
+		$fields_views = array();
+		
+		foreach( $this -> data as $field_id => $fields ){
 			
-			foreach( $this -> data as $field_key_num => $field_data ){
+			$fields_views[ $field_id ][ 'title' ] = $this -> obtainOutput( array( $fields[ 'title' ] , 'controller' ) ) ;
+			$fields_views[ $field_id ][ 'upload' ] = $this -> obtainOutput( array( $fields[ 'upload' ] , 'controller' ) ) ;
+			$fields_views[ $field_id ][ 'description' ] = $this -> obtainOutput( array( $fields[ 'description' ] , 'controller' ) ) ;
+				
 			
-				?>
-				<li>
-					<?php
-					$this -> beforeListItemContentView();
-					$this -> beforeItemContentView();
-					?>
-						<?php
-						
-						$this -> fields[ $field_key_num ][ 'title' ] -> view();
-						
-						$this -> fields[ $field_key_num ][ 'upload' ] -> view();
-						
-						$this -> fields[ $field_key_num ][ 'description' ] -> view();
+		}
+		
+		$view -> setData( 'items' , $fields_views );
+		
+		// view data
 
-						?>
-
-					<?php
-					$this -> afterItemContentView();
-					$this -> afterListItemContentView();
-					?>
-				</li>
-				<?php
-			}
-			?>
-			</ul>
-			<input type="button" value="<?php _e( 'Add new' , 'smof' ); ?>" class="button smof-field-repeatable-add-new">
-		<?php
 	}
 	
+	public function enqueueScripts(){
 	
-	function enqueueScripts(){
-	
+		if( !$this -> subframework -> args[ 'debug_mode' ] ){ return; }
 		wp_enqueue_script( 'smof-field-upload', $this -> args[ 'subframework' ] -> getUri( 'fields' ) . 'upload/script.js', array( 'jquery' ) );
 	
 	}

@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
+namespace Smof\Fields\Section;
+class Field extends \Smof\Fields\ParentContainer\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -8,17 +9,18 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 			'group' => false
 		),
 		'inheritance' => 'children',
-		'category' => ''
+		'category' => '',
+		'custom' => false
 	);
 
 	public $view;
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
 			'default' => '',
 			'depth' => false,
 			'icon' => ''
-		);
+		) );
 	}
 
 	function __construct( $options , array $args ){
@@ -28,25 +30,6 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 		$this -> view = $args[ 'view' ];
 
 	
-	}
-	
-	function assignData( $data ){
-	
-	}
-	
-	function initiateFields(){
-	
-		$this -> fields = $this -> getCreate() -> createFieldsFromOptions( $this -> options[ 'fields' ] );
-	
-	}
-	
-	function validateData(){
-		
-		$this -> data = $this -> getCreate() -> fieldsValidate( $this -> fields );
-	}
-	
-	function obtainData(){
-		return $this -> getCreate() -> fieldsSave( $this -> fields );
 	}
 	
 	protected function headingView(){
@@ -63,21 +46,29 @@ class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 		<?php
 	}
 	
-	function view(){
+	public function controller(){
+		
+	$view = new Views\Main( $this -> obtainDefaultViewData() );
 	
 		$this -> args[ 'subframework' ] -> menuItem( array( 
 			'id' => $this -> options[ 'id' ] ,
 			'title' => $this -> options[ 'title' ],
 			'icon' => $this -> options[ 'icon' ]
 		) );
-		?>
-		<div class="smof-container-<?php echo $this -> options[ 'type' ] ?>" id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>">
-		<?php
-		$this -> headingView();
-		$this -> getCreate() -> fieldsView( $this -> fields );
-		?>
-		</div>
-		<?php
+		
+		$fields_views = array();
+		
+		foreach( $this -> fields as $field ){
+			
+			$fields_views[] = $this -> obtainOutput( array( $field , 'controller' ) ) ;
+				
+		}
+		
+		$view -> setData( 'fields' , $fields_views );
+		
+		$view -> view();
+		
+
 	}
 	
 

@@ -1,6 +1,7 @@
 <?php
 
-class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
+namespace Smof\Fields\Repeatable; 
+class Field extends \Smof\Fields\ParentRepeatable\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -9,7 +10,8 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		),
 		'inheritance' => 'parent',
 		'default' => array(),
-		'category' => 'repeatable'
+		'category' => 'repeatable',
+		'custom' => false
 	);
 	
 	protected $repeatable_field_options;
@@ -25,9 +27,9 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 
 	}
 	
-	function assignData( $data ){
+	public function setData( $data ){
 
-		if( $data !== false && $data !== null && is_array( $data ) && isset( $data[ 0 ]) ){ 
+		if( $data !== null && is_array( $data ) && isset( $data[ 0 ]) ){ 
 			
 			$this -> data = $data;
 
@@ -37,22 +39,20 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		}
 	}
 	
-	function obtainDefaultOptions(){
-		return parent :: obtainDefaultOptions() + array(
-			'field' => array( 
-
-			),
+	protected function obtainDefaultOptions(){
+		return array_replace_recursive( parent :: obtainDefaultOptions() ,array(
+			'field' => array(),
 			'default' => static :: $properties[ 'default' ]
-		);
+		) );
 	}
 	
-	function assignOptions( $options ){
+	public function assignOptions( $options ){
 	
 		$this -> options = array_replace_recursive( $this -> default_options, $options );
 
 	}
 	
-	function assignRepeatableField(){
+	public function assignRepeatableField(){
 	
 		$this -> repeatable_field_options = $this -> options[ 'options' ];
 		
@@ -68,10 +68,10 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		$this -> repeatable_field_options[ 'id' ] = '';
 		
 		
-		$this -> repeatable_field_name = $this -> args[ 'subframework' ] -> getArgs( 'framework' ) -> fieldNameCache( $this -> options[ 'options' ][ 'type' ] );
+		$this -> repeatable_field_name = $this -> args[ 'subframework' ] -> getArgs( 'framework' ) -> obtainFieldClassName( $this -> options[ 'options' ][ 'type' ] );
 	}
 	
-	function isFieldRepeatable(){
+	public function isFieldRepeatable(){
 		
 		if( $this -> repeatable_field_name !== false ){
 			
@@ -88,7 +88,7 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		
 	}
 	
-	function initiateFields(){
+	public function initiateFields(){
 		
 		foreach( $this -> data as $field_key => $field_data ){
 
@@ -97,8 +97,8 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 				$this -> repeatable_field_options,
 				array( 
 					'subframework' => $this -> args[ 'subframework' ],
-					'name' => $this -> args[ 'name' ] ,
-					'id' => $this -> args[ 'id' ],
+					'name' => $this -> args[ 'name' ],
+					'id' =>  $this -> args[ 'id' ],
 					'show_description' => false,
 					'name_order' => $field_key,
 					'id_order' => $field_key,
@@ -114,9 +114,9 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 		
 	}
 	
-	function validateData(){
+	public function validateData(){
 	
-		if( !empty( $this -> repeatable_field_options[ 'validate' ] ) ){
+		if( !empty( $this -> field[ 0 ] ) ){
 	
 			$this -> getCreate() -> fieldsValidate( $this -> fields );
 					
@@ -124,10 +124,9 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	
 	}
 	
-	function obtainData(){
+	public function obtainData(){
 				
-			$this -> data = $this -> getCreate() -> fieldsSave( $this -> fields );
-
+			$this -> data = $this -> getCreate() -> obtainFieldsData( $this -> fields );
 			
 			return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
 
@@ -135,67 +134,44 @@ class Smof_Fields_Repeatable_Field extends Smof_Fields_ParentRepeatable_Field{
 	}
 	
 	
-	function bodyView(){
+	public function controller(){
+		
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$repeatable_field = $this -> getCreate() -> createFieldFromOptions(
+			false,
+			$this -> repeatable_field_options,
+			array( 
+				'subframework' => $this -> args[ 'subframework' ],
+				'name' => $this -> args[ 'name' ] ,
+				'id' => $this -> args[ 'id' ] ,
+				'show_description' => false,
+				'show_data_name' => true,
+				'name_order' => 9999,
+				'id_order' => 9999,
+				'mode' => 'repeatable'
+			) 
+		);
+		
+		
+		
+		$view -> setData( 'pattern_item' , $this -> obtainOutput( array( $repeatable_field , 'controller' ) ) );
+		
+		
+		$fields_views = array();
+		
+		foreach( $this -> fields as $field ){
+			
+			$fields_views[] = $this -> obtainOutput( array( $field , 'controller' ) ) ;
+				
+		}
+		
+		$view -> setData( 'fields' , $fields_views );
+		
+		$view -> view();
+		
+		// view data
 
-		?>
-			<ul>
-				<li class="smof-hidden smof-repeatable-pattern-item">
-					<?php
-					
-					$this -> beforeListItemContentView();
-					
-					$this -> beforeItemContentView();
-					
-						$repeatable_field = $this -> getCreate() -> createFieldFromOptions(
-							false,
-							$this -> repeatable_field_options,
-							array( 
-								'subframework' => $this -> args[ 'subframework' ],
-								'name' => $this -> args[ 'name' ] ,
-								'id' => $this -> args[ 'id' ],
-								'show_description' => false,
-								'show_data_name' => true,
-								'name_order' => 9999,
-								'id_order' => 9999,
-								'mode' => 'repeatable'
-							) 
-						);
-						
-						$repeatable_field -> view();
-					
-					$this -> afterItemContentView();
-					
-					$this -> afterListItemContentView();
-					
-					?>
-				</li>
-			<?php
-			
-			foreach( $this -> fields as $field ){
-				?>
-				<li>
-				<?php
-				
-				$this -> beforeListItemContentView();
-				
-				$this -> beforeItemContentView();
-				
-					$this -> getCreate() -> fieldsView( array( $field ) );
-					
-				$this -> afterItemContentView();
-				$this -> afterListItemContentView();
-				
-				
-				?>
-				</li>
-				<?php
-			}
-			
-			
-			?>
-			</ul>
-			<input type="button" value="<?php _e( 'Add new' , 'smof' ); ?>" class="button smof-field-repeatable-add-new">
-		<?php
 	}
 
 }

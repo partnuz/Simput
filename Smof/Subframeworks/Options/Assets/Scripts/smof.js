@@ -11,6 +11,8 @@ jQuery.noConflict();
  */
 jQuery(document).ready(function($){
 	
+	$( "#of_container #main" ).tabs();
+	
 	//(un)fold options in a checkbox-group
   	jQuery('.fld').click(function() {
     	var $fold='.f_'+this.id;
@@ -20,50 +22,6 @@ jQuery(document).ready(function($){
 	
 	//hides warning if js is enabled			
 	$('#js-warning').hide();
-	
-	$( '.smof-container-section').hide();
-	
-	// Display last current tab	
-	if ($.cookie("smof_current_opt") === null) {
-		$('.smof-container-section:first').fadeIn('fast');	
-		$('#of-nav li:first').addClass('current');
-
-	} else {
-		jQuery( "#of-nav > ul > li > a" ).each(function(index, value) {
-
-			var attr = $(this).attr( 'href' );
-			var id = attr;
-			id = id.replace("#smof-container-", "");
-			console.log( id );
-			if ($.cookie("smof_current_opt") == attr ) {
-				$( attr ).fadeIn();
-				$( '#of-nav li#' + id ).addClass('current');
-				console.log( '.smof-container-' + attr );
-			}
-		});
-	
-	}
-				
-	//Current Menu Class
-	$('#of-nav li a').click(function(evt){
-	
-		evt.preventDefault();
-				
-		$('#of-nav li').removeClass('current');
-		$(this).parent().addClass('current');
-							
-		var clicked_group = $(this).attr('href');
-		
-		$.cookie('smof_current_opt', clicked_group, { expires: 7, path: '/' });
-			
-		$('.smof-container-section').hide();
-		
-		console.log( clicked_group );
-							
-		$(clicked_group).fadeIn('fast');
-		return false;
-						
-	});
 
 	//Expand Options 
 	var flip = 0;
@@ -136,7 +94,7 @@ jQuery(document).ready(function($){
 
 	
 	/** Aquagraphite Slider MOD */
-	
+
 	//Hide (Collapse) the toggle containers on load
 	$(".slide_body").hide(); 
 
@@ -151,6 +109,7 @@ jQuery(document).ready(function($){
 		$(this).parent().toggleClass("active").next().slideToggle("fast");
 		return false; //Prevent the browser jump to the link anchor
 	});	
+
 	
 
 	/**	Tipsy @since v1.3 */
