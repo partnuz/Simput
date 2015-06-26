@@ -66,8 +66,6 @@ class Field extends \Smof\Fields\ParentMulti\Field{
 
 	public function controller(){
 		
-		var_dump( $this -> options );
-		
 		$view = new Views\Main( $this -> obtainDefaultViewData() );
 		
 		
