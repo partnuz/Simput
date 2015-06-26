@@ -4,10 +4,8 @@ class Smof_Subframeworks_Options_Views_Main{
 
 	public $subframework;
 	public $framework;
-	
 	public $content;
 	public $menu;
-	public $options;
 
 	function __construct( $framework , $subframework ){
 	
@@ -40,31 +38,22 @@ class Smof_Subframeworks_Options_Views_Main{
 	?>
 	
 	<div class="wrap" id="of_container">
-		<?php
-		if( !empty( $this -> options[ 'save' ] ) ){
-		?>
-			<div id="of-popup-save" class="of-save-popup">
-				<div class="of-save-save">Options Updated</div>
-			</div>
-		<?php
-		}
-		?>
+
+		<div id="of-popup-save" class="of-save-popup">
+			<div class="of-save-save">Options Updated</div>
+		</div>
 		
 		<div id="of-popup-reset" class="of-save-popup">
 			<div class="of-save-reset">Options Reset</div>
 		</div>
 		
-		<?php
-		if( !empty( $this -> options[ 'error' ] ) ){
-		?>
-			<div id="of-popup-fail" class="of-save-popup">
-				<div class="of-save-fail">Error!</div>
-			</div>
-		<?php
-		}
-		?>
+		<div id="of-popup-fail" class="of-save-popup">
+			<div class="of-save-fail">Error!</div>
+		</div>
 		
-		
+		<span style="display: none;" id="hooks"><?php /* echo json_encode(of_get_header_classes_array()); */ ?></span>
+		<input type="hidden" id="reset" value="<?php if(isset($_REQUEST['reset'])) echo $_REQUEST['reset']; ?>" />
+		<input type="hidden" id="security" name="security" value="<?php echo wp_create_nonce('of_ajax_nonce'); ?>" />
 
 		<form id="of_form" method="post" action="<?php echo esc_attr( $_SERVER['REQUEST_URI'] ) ?>" enctype="multipart/form-data" >
 		
@@ -121,8 +110,6 @@ class Smof_Subframeworks_Options_Views_Main{
 				<button id ="of_reset" type="submit" name="smof[action]" value="reset" class="button submit-button reset-button" ><?php _e('Options Reset');?></button>
 				
 			</div><!--.save_bar--> 
-			
-			<input type="hidden" id="nonce" name="smof[nonce]" value="<?php echo $this -> options[ 'nonce' ]; ?>" />
 	 
 		</form>
 		

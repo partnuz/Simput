@@ -13,11 +13,11 @@ class Smof_Fields_Editor_Field extends Smof_Fields_Parent_Field{
 	public $editor_options;
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'rows' => 10,
 			'teeny' => true
-		) );
+		);
 	}
 
 	function __construct( $options , array $args ){
@@ -33,21 +33,19 @@ class Smof_Fields_Editor_Field extends Smof_Fields_Parent_Field{
 			'textarea_name' => $this -> options[ 'id' ],
 			'editor_class' => $this -> formFieldClass(),
 			'textarea_rows' => $this -> options[ 'rows' ],
-			'textarea_name' => $this -> args[ 'subframework' ] -> getFieldName( $this -> args[ 'name' ] ),
+			'textarea_name' => $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ),
 			'teeny' => $this -> options[ 'teeny' ]
 		);	
 	}
 	
 	
 	function bodyView(){
-		
-		$this -> viewValidationResult();
 	
 		?>
 					
 			<?php
 			
-			wp_editor( $this -> data, 'smof-' . $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ), $this -> editor_options );
+			wp_editor( $this -> data, 'smof' . $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ), $this -> editor_options );
 			
 			?>
 				

@@ -17,9 +17,6 @@ abstract class Smof_Fields_Parent_Field{
 	
 	public $print_scripts_content = '';
 	
-	protected $framework;
-	protected $subframework;
-	
 	protected $create;
 
 	function __construct( $options , array $args ){
@@ -33,8 +30,6 @@ abstract class Smof_Fields_Parent_Field{
 		$this -> assignOptions( $options  );
 
 		$this -> assignArgs( $args  );
-		
-		$this -> assignFrameworks();
 		
 		$this -> assignNameSuffix();
 		
@@ -61,8 +56,8 @@ abstract class Smof_Fields_Parent_Field{
 		return $this -> create;	
 	}
 	
-	static function getProperties( $key = false ){
-		return ( ( $key ) ? static :: $properties[ $key ] : static :: $properties );
+	static function getProperties(){
+		return static :: $properties;
 	}
 	
 	function appendArgs( array $args ){
@@ -113,13 +108,6 @@ abstract class Smof_Fields_Parent_Field{
 	protected function assignArgs( array $args ){
 	
 		$this -> args = array_replace_recursive( $this -> default_args , $args );
-	}
-	
-	protected function assignFrameworks(){
-		
-		$this -> framework = $this -> args[ 'subframework' ] -> args[ 'framework' ];
-		$this -> subframework = $this -> args[ 'subframework' ];
-		
 	}
 	
 	function assignData( $data ){
@@ -197,7 +185,7 @@ abstract class Smof_Fields_Parent_Field{
 		
 		?>
 		
-		<div class="smof-container smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container-<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>" >
+		<div class="smof-container smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>" >
 		<?php
 
 	}
@@ -357,10 +345,10 @@ abstract class Smof_Fields_Parent_Field{
 		foreach( $attributes as $attribute_name => $attribute ){
 			$prefix_joined = ( $prefix ) ? implode( '-', $prefix ) . '-' : '';
 
-			$output .= 'data-smof-'. $prefix_joined . esc_attr( $attribute_name ) . '=\'';
+			$output .= 'data-smof-'. $prefix_joined .$attribute_name . '=\'';
 			
 			if( !is_array( $attribute ) ){
-				$output .=  esc_attr( $attribute ) ;
+				$output .=  $attribute ;
 			}else{
 				$output .= json_encode( $attribute );
 			}
@@ -387,10 +375,10 @@ abstract class Smof_Fields_Parent_Field{
 		if( $this -> options[ 'validate' ] ){
 		
 			$validate = new Smof_Validation();
-			$this -> validation_results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
+			$results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
 			
-			if( !empty( $this -> validation_results ) ){
-				
+			if( !empty( $results ) ){
+				$this -> validation_results = $results;
 				$this -> data = $this -> options[ 'default' ];
 			}
 			
@@ -411,32 +399,6 @@ abstract class Smof_Fields_Parent_Field{
 	function obtainData(){
 		
 		return array( $this -> args[ 'id_suffix' ][ 0 ] => $this -> data );
-	}
-	
-	public function viewValidationResult(){
-		
-		if( !empty( $this -> validation_results ) ){
-
-			var_dump( $this -> validation_results );
-
-			
-		}
-	}
-	
-	protected function viewName( $name_suffix = array() ){
-		
-		if( $name_suffix ){
-			
-			$name = array_merge( $this -> args[ 'name' ] , array( $name_suffix ) );
-			
-		}else{
-			
-			$name = $this -> args[ 'name' ];
-		}
-		
-		if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> getFieldName( $name ) ;?>"
-		<?php
-		
 	}
 	
 

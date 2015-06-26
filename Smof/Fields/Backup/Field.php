@@ -8,22 +8,23 @@ class Smof_Fields_Backup_Field extends Smof_Fields_Parent_Field{
 		'inheritance' => false,
 		'category' => 'single'
 	);
+
+	public $default_options = array(
+
+			
+	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'id' => 'backup',
 			'default' => ''
-		) );
-	}
-	
-	public function obtainData(){
-		return array();
+		);
 	}
 	
 	function bodyView(){
 	
 	?>
-		<textarea <?php $this -> viewName(); ?>><?php echo  $this -> data ; ?></textarea>
+		<textarea <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>"><?php echo $this -> data; ?></textarea>
 		<br>
 		<button class="button-primary" value="import" name="smof[action]" type="submit">Import</button>
 		<button class="button-primary" value="export" name="smof[action]" type="submit">Export</button>

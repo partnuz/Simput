@@ -1,12 +1,6 @@
 <?php
 
 abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
-	
-	protected function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() , array(
-			'validate' => array()
-		) );
-	}
 
 	// suffix is NOT FULL for this type of fields
 	function assignNameSuffix(){
@@ -50,13 +44,13 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 	
 	public function validateData(){
 
-		if( array_filter( $this -> options[ 'validate' ] ) ){
+		if( $this -> options[ 'validate' ] ){
+			
+			$validate = new Smof_Validation();
 			
 			if( $this -> fields ){
 				$this -> getCreate() -> fieldsValidate( $this -> fields );
 			}else{
-				
-				$validate = new Smof_Validation();
 				
 				foreach( $this -> options[ 'validate' ] as $validation_item => $validate_option ){
 					
@@ -70,7 +64,9 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 					}
 					
 				}
+				
 			}
+			
 		}
 
 	}
@@ -87,20 +83,8 @@ abstract class Smof_Fields_ParentMulti_Field extends Smof_Fields_Parent_Field{
 			
 		}
 		
-	}
-	
-	public function viewValidationResult( $field_id ){
+
 		
-		if( !$this -> fields ){
-					
-			if( !empty( $this -> validation_results[ $field_id ] ) ) {
-
-				var_dump( $this -> validation_results[ $field_id ] );
-				
-			}
-			
-		}
-
 	}
 
 }

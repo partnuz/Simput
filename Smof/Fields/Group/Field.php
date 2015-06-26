@@ -22,9 +22,9 @@ class Smof_Fields_Group_Field extends Smof_Fields_ParentMulti_Field{
 	}
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array()
-		) );
+		);
 	}
 	
 	public function initiateFields(){

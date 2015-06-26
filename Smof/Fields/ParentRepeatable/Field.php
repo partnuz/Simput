@@ -27,15 +27,15 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 	}
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'toggle' => false
-		) );
+		);
 	}
 	
 	public function validateData(){
 		foreach( $this -> data as $data_key => $data_val ){
 		
-			if( is_array( $this -> options[ 'validate' ] ) && array_filter( $this -> options[ 'validate' ] ) ){
+			if( is_array( $this -> options[ 'validate' ] ) && $this -> options[ 'validate' ] ){
 		
 				$validate = new Smof_Validation();
 				
@@ -152,7 +152,7 @@ abstract class Smof_Fields_ParentRepeatable_Field extends Smof_Fields_Parent_Fie
 	
 		?>
 		
-		<div class="smof-container smof-repeatable smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container-<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>" >
+		<div class="smof-container smof-repeatable smof-container-<?php echo $this -> options[ 'type' ] ?> smof_clearfix"  id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>" >
 		<?php
 
 	}

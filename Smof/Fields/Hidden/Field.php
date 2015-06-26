@@ -11,14 +11,14 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => ''
-		) );
+		);
 	}
 	function obtainDefaultArgs(){
-		return array_merge_recursive( parent :: obtainDefaultArgs() ,array(
+		return parent :: obtainDefaultArgs() + array(
 			'args_name_only' => false
-		) );
+		);
 	}
 	function assignNameSuffix(){
 		
@@ -42,7 +42,7 @@ class Smof_Fields_Hidden_Field extends Smof_Fields_Parent_Field{
 	function view(){
 	
 		?>
-		<input class="smof-field smof-field-hidden <?php echo $this -> formFieldClass(); ?>" id="" <?php $this -> viewName(); ?> type="hidden" value="<?php echo htmlspecialchars( $this -> data ); ?>" />
+			<input class="smof-field smof-field-hidden <?php echo $this -> formFieldClass(); ?>" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="<?php echo $this -> data; ?>" />
 		<?php
 	}
 	

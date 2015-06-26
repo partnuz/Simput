@@ -1,31 +1,29 @@
  (function( $ ) {
 $.widget( "ui.combobox", {
 	_create: function() {
-		
 		this.wrapper = $( "<span>" )
-		.addClass( "smof-combobox" ).insertBefore( this.element );
-		
-		this.wrapper.append( this.element );
-
-		
-		console.log( this.element );
-	
+		.addClass( "smof-combobox" )
+		.insertAfter( this.element );
+		this.element.hide();
 		this._createAutocomplete();
 		this._createShowAllButton();
 	},
 	_createAutocomplete: function() {
-		
-		console.log( window[ this.element.data( 'smof-source-name' ) ] );
-
-		this.element.autocomplete({
+		var selected = this.element.children( ":selected" ),
+		value = selected.val() ? selected.text() : "";
+		this.input = $( "<input>" )
+		.appendTo( this.wrapper )
+		.val( value )
+		.attr( "title", "" )
+		.addClass( "smof-combobox-input ui-widget ui-widget-content ui-state-default ui-corner-left" )
+		.autocomplete({
 			delay: 0,
 			minLength: 0,
-			source: window[ this.element.data( 'smof-source-name' ) ]
+			source: $.proxy( this, "_source" )
 		})
 		.tooltip({
 			tooltipClass: "ui-state-highlight"
 		});
-		/*
 		this._on( this.input, {
 			autocompleteselect: function( event, ui ) {
 				ui.item.option.selected = true;
@@ -36,10 +34,9 @@ $.widget( "ui.combobox", {
 			},
 			autocompletechange: "_removeIfInvalid"
 		});
-		*/
 	},
 	_createShowAllButton: function() {
-		var input = this.element,
+		var input = this.input,
 		wasOpen = false;
 		$( "<a>" )
 		.attr( "tabIndex", -1 )
@@ -68,7 +65,6 @@ $.widget( "ui.combobox", {
 		input.autocomplete( "search", "" );
 		});
 	},
-	/*
 	_source: function( request, response ) {
 		var matcher = new RegExp( $.ui.autocomplete.escapeRegex(request.term), "i" );
 		response( this.element.children( "option" ).map(
@@ -85,8 +81,6 @@ $.widget( "ui.combobox", {
 			) 
 		);
 	},
-	*/
-	/*
 	_removeIfInvalid: function( event, ui ) {
 
 		// Selected an item, nothing to do
@@ -124,12 +118,10 @@ $.widget( "ui.combobox", {
 		this.input.autocomplete( "instance" ).term = "";
 		
 	},
-
 	_destroy: function() {
 		this.wrapper.remove();
 		this.element.show();
 	},
-	*/
 	_selectTriggerChange: function(){
 		this.element.trigger( "change" );
 	}
@@ -144,7 +136,7 @@ SmofCombobox.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-field-combobox" ) ).each(function(index, value) {
+	prefix.find( ".smof-field-combobox" ).each(function(index, value) {
 		
 		if( jQuery( this ).parents( '.smof-repeatable-pattern-item' ).first().get( 0 ) ) {
 			
@@ -162,50 +154,4 @@ jQuery(function() {
 
 });
 
-/*
- $(function() {
-    var projects = [
-      {
-        value: "jquery",
-        label: "jQuery",
-        desc: "the write less, do more, JavaScript library",
-        icon: "jquery_32x32.png"
-      },
-      {
-        value: "jquery-ui",
-        label: "jQuery UI",
-        desc: "the official user interface library for jQuery",
-        icon: "jqueryui_32x32.png"
-      },
-      {
-        value: "sizzlejs",
-        label: "Sizzle JS",
-        desc: "a pure-JavaScript CSS selector engine",
-        icon: "sizzlejs_32x32.png"
-      }
-    ];
- 
-    $( "#project" ).autocomplete({
-      minLength: 0,
-      source: projects,
-      focus: function( event, ui ) {
-        $( "#project" ).val( ui.item.label );
-        return false;
-      },
-      select: function( event, ui ) {
-        $( "#project" ).val( ui.item.label );
-        $( "#project-id" ).val( ui.item.value );
-        $( "#project-description" ).html( ui.item.desc );
-        $( "#project-icon" ).attr( "src", "images/" + ui.item.icon );
- 
-        return false;
-      }
-    })
-    .autocomplete( "instance" )._renderItem = function( ul, item ) {
-      return $( "<li>" )
-        .append( "<a>" + item.label + "<br>" + item.desc + "</a>" )
-        .appendTo( ul );
-    };
-  });
 
-*/

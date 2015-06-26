@@ -12,11 +12,11 @@ class Smof_Fields_Checkboxes_Field extends Smof_Fields_ParentMulti_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array(),
 			'type' => 'checkboxes',
 			'options_as_names' => true
-		) );
+		);
 	}
 	
 	function validateData(){
@@ -52,17 +52,18 @@ class Smof_Fields_Checkboxes_Field extends Smof_Fields_ParentMulti_Field{
 		
 		?>
 		
-		<input class="smof-field smof-field-hidden" id="" <?php $this -> viewName(); ?> type="hidden" value="" />
+		<input class="smof-field smof-field-hidden" id="" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="hidden" value="" />
 		
 		<?php
 		
 		foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
-			
-			$this -> viewValidationResult( $field_key );
+		
+			$name = $this -> args[ 'name' ];
+			$name[] = $field_key;
 			
 			?>
 		
-			<input class="smof-field smof-field-checkboxes" <?php $this -> viewName( array( $field_key ) ); ?>" type="checkbox" value="1" <?php if( isset( $this -> data[ $field_key ] ) ){ checked( '1', $this -> data[ $field_key ] ); } ?> /><?php echo htmlspecialchars( $field_data ); ?>
+			<input class="smof-field smof-field-checkboxes" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $name ); ?>" type="checkbox" value="1" <?php if( isset( $this -> data[ $field_key ] ) ){ checked( '1', $this -> data[ $field_key ] ); } ?> /><?php echo $field_data; ?>
 			</br>
 			<?php
 

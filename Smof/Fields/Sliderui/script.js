@@ -6,7 +6,7 @@ SmofSliderui.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-sliderui" ) ).each(function(index, value) {
+	prefix.find( ".smof-sliderui" ).each(function(index, value) {
 		
 		var obj   = jQuery(this);
 		var sId   = "#" + obj.data('id');

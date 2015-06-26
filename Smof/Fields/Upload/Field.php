@@ -12,25 +12,29 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array( 
 				'url' => '', 
 				'id' => '',
 				'height' => '',
 				'width' => '' , 
-				'size_thumbnail' => '',
-				'size_medium' => ''
+				'sizes' => array(
+					'thumbnail' =>'',
+					'medium' => ''
+				) 
 			),
 			'validate' => array(
 				'url' => false,
-				'id' => false,
 				'width' => false,
 				'height' => false,
-				'size_thumbnail' => false,
-				'size_medium' => false
+				'id' => false,
+				'sizes' => array(
+					'thumbnail' => false,
+					'medium' => false
 				)
-			) );
+			)
 			
+		);
 	}
 	
 	function initiateFields(){
@@ -102,35 +106,35 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 			
 			
 			$this -> fields[ 'thumbnail ' ] = $this -> getCreate() -> createFieldFromOptions( 
-				$this -> data[ 'size_thumbnail' ] ,
+				$this -> data[ 'sizes' ][ 'thumbnail' ] ,
 				array(
 					'id' => 'thumbnail',
 					'type' => 'hidden',
-					'validate' => $this -> options[ 'validate' ][ 'size_thumbnail' ]
+					'validate' => $this -> options[ 'validate' ][ 'sizes' ][ 'thumbnail' ]
 				),
 				array(
 						'subframework' => $this -> args[ 'subframework' ],
-						'name' => $this -> args[ 'name' ]  ,
-						'id' => $this -> args[ 'id' ],
+						'name' => array_merge( $this -> args[ 'name' ] , array( 'sizes' ) ) ,
+						'id' => array_merge( $this -> args[ 'id' ] , array( 'sizes' ) ),
 						'show_data_name' => $this -> args[ 'show_data_name' ],
-						'form_field_class' => array( 'smof-field-upload-size-thumbnail' )
+						'form_field_class' => array( 'smof-field-upload-sizes-thumbnail' )
 				)
 			);
 			
 				
 			$this -> fields[ 'medium' ] = $this -> getCreate() -> createFieldFromOptions( 
-				$this -> data[ 'size_medium' ] ,
+				$this -> data[ 'sizes' ][ 'medium' ] ,
 				array(
 					'id' => 'medium',
 					'type' => 'hidden',
-					'class' => array( 'smof-field-upload-size-medium' ),
-					'validate' => $this -> options[ 'validate' ][ 'size_medium' ]
+					'class' => array( 'smof-field-upload-sizes-medium' ),
+					'validate' => $this -> options[ 'validate' ][ 'sizes' ][ 'medium' ]
 				),
 				array(
 						
 						'subframework' => $this -> args[ 'subframework' ],
-						'name' => $this -> args[ 'name' ]  ,
-						'id' => $this -> args[ 'id' ] ,
+						'name' => array_merge( $this -> args[ 'name' ] , array( 'sizes' ) ) ,
+						'id' => array_merge( $this -> args[ 'id' ] , array( 'sizes' ) ),
 						'show_data_name' => $this -> args[ 'show_data_name' ]
 				)
 			);
@@ -146,7 +150,7 @@ class Smof_Fields_Upload_Field extends Smof_Fields_ParentMulti_Field{
 			?>
 			<input type="button" class="button smof-field-upload-upload-button" value="<?php _e( "Upload" , 'smof'); ?>">
 			<input type="button" class="button smof-field-upload-remove-url" value="<?php _e( "Remove" , 'smof'); ?>">
-			<div class="smof-field-upload-screenshot"><?php if( !empty( $this -> data[ 'id' ] ) ){ ?><img src="<?php $screenshot_file = wp_get_attachment_image_src( $this -> data[ 'id' ], 'thumbnail', true ); echo sanitize_file_name( $screenshot_file[ 0 ] ); ?>"><?php } ?></div>
+			<div class="smof-field-upload-screenshot"><?php if( !empty( $this -> data[ 'id' ] ) ){ ?><img src="<?php $screenshot_file = wp_get_attachment_image_src( $this -> data[ 'id' ], 'thumbnail', true ); echo $screenshot_file[ 0 ]; ?>"><?php } ?></div>
 		<?php
 	}
 	

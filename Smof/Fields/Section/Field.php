@@ -1,6 +1,6 @@
 <?php
 
-class Smof_Fields_Section_Field extends Smof_Fields_ParentContainer_Field{
+class Smof_Fields_Section_Field extends Smof_Fields_Parent_Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
@@ -14,11 +14,11 @@ class Smof_Fields_Section_Field extends Smof_Fields_ParentContainer_Field{
 	public $view;
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => '',
 			'depth' => false,
 			'icon' => ''
-		) );
+		);
 	}
 
 	function __construct( $options , array $args ){
@@ -28,6 +28,25 @@ class Smof_Fields_Section_Field extends Smof_Fields_ParentContainer_Field{
 		$this -> view = $args[ 'view' ];
 
 	
+	}
+	
+	function assignData( $data ){
+	
+	}
+	
+	function initiateFields(){
+	
+		$this -> fields = $this -> getCreate() -> createFieldsFromOptions( $this -> options[ 'fields' ] );
+	
+	}
+	
+	function validateData(){
+		
+		$this -> data = $this -> getCreate() -> fieldsValidate( $this -> fields );
+	}
+	
+	function obtainData(){
+		return $this -> getCreate() -> fieldsSave( $this -> fields );
 	}
 	
 	protected function headingView(){
@@ -52,7 +71,7 @@ class Smof_Fields_Section_Field extends Smof_Fields_ParentContainer_Field{
 			'icon' => $this -> options[ 'icon' ]
 		) );
 		?>
-		<div class="smof-container-<?php echo $this -> options[ 'type' ] ?>" id="smof-container-<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>">
+		<div class="smof-container-<?php echo $this -> options[ 'type' ] ?>" id="smof-container<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>">
 		<?php
 		$this -> headingView();
 		$this -> getCreate() -> fieldsView( $this -> fields );

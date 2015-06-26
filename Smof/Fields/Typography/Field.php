@@ -12,7 +12,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() , array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => array(
 				'font-family' => '',
 				'font-weight' => '',
@@ -23,14 +23,6 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				'typeface' => '',
 				'color' => '',
 				'preview' => '0123456789 ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz'
-			),
-			'validate' => array(
-				'font-family' => false,
-				'font-weight' => false,
-				'font-size' => false,
-				'typeface' => false,
-				'line-height' => false,
-				'color' => false
 			),
 			'show' => array(
 				'font-family' => true,
@@ -50,7 +42,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 			'cache_data_source' => array(
 				'font-family' => false
 			)
-		) );
+		);
 	}
 	
 	function initiateFields(){
@@ -65,8 +57,29 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 					'title' => __( 'Font-family' , 'smof'),
 					'options' => $this -> options[ 'options' ][ 'font-family' ],
 					'data_source_format' => $this -> options[ 'data_source_format' ][ 'font-family'],
-					'cache_data_source' => $this -> options[ 'cache_data_source' ][ 'font-family' ],
-					'validate' => $this -> options[ 'validate' ][ 'font-family' ]
+					'cache_data_source' => $this -> options[ 'cache_data_source' ][ 'font-family' ]
+				),
+				array(
+					'subframework' => $this -> args[ 'subframework' ],
+					'name' => $this -> args[ 'name' ] ,
+					'id' => $this -> args[ 'id' ],
+					'form_field_class' => array( 'smof-field-typography-font-family' ) 
+				)
+			);
+			
+		}
+		
+		if( $this -> options[ 'show' ][ 'font-family' ] ){
+		
+			$this -> fields[ 'font_family' ] = $this -> getCreate() -> createFieldFromOptions( 
+				$this -> data[ 'font-family' ] ,
+				array(
+					'id' => 'font-family',
+					'type' => 'combobox',
+					'title' => __( 'Font-family' , 'smof'),
+					'options' => $this -> options[ 'options' ][ 'font-family' ],
+					'data_source_format' => $this -> options[ 'data_source_format' ][ 'font-family'],
+					'cache_data_source' => $this -> options[ 'cache_data_source' ][ 'font-family' ]
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
@@ -86,8 +99,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 					'id' => 'font-weight',
 					'type' => 'select',
 					'options' => $this -> options[ 'options' ][ 'font-weight' ],
-					'title' => __( 'Font-weight' , 'smof'),
-					'validate' => $this -> options[ 'validate' ][ 'font-weight' ]
+					'title' => __( 'Font-weight' , 'smof')
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
@@ -109,8 +121,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'id' => 'font-size',
 					'type' => 'text',
-					'title' => __( 'Font-size' , 'smof'),
-					'validate' => $this -> options[ 'validate' ][ 'font-size' ]
+					'title' => __( 'Font-size' , 'smof')
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
@@ -132,8 +143,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'id' => 'line-height',
 					'type' => 'text',
-					'title' => __( 'Line-height' , 'smof'),
-					'validate' => $this -> options[ 'validate' ][ 'line-height' ]
+					'title' => __( 'Line-height' , 'smof')
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
@@ -160,8 +170,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 						'serif' => __( 'Serif' , 'smof' ),
 						'sans-serif' => __( 'Sans-serif' , 'smof' )
 					),
-					'title' => __( 'Typeface' , 'smof'),
-					'validate' => $this -> options[ 'validate' ][ 'typeface' ]
+					'title' => __( 'Typeface' , 'smof')
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],
@@ -180,8 +189,7 @@ class Smof_Fields_Typography_Field extends Smof_Fields_ParentMulti_Field{
 				array(
 					'id' => 'color',
 					'type' => 'color',
-					'title' => __( 'Color' , 'smof'),
-					'validate' => $this -> options[ 'validate' ][ 'color' ]
+					'title' => __( 'Color' , 'smof')
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],

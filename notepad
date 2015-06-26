@@ -15,7 +15,6 @@
             <Folder name="Data">
                 <File name="Smof\Data\empty.array.php" />
                 <File name="Smof\Data\empty.html" />
-                <File name="Smof\Data\events.js" />
                 <File name="Smof\Data\google_fonts.html" />
                 <File name="Smof\Data\google_fonts.json" />
                 <File name="Smof\Data\google_fonts.php" />
@@ -61,9 +60,6 @@
                 </Folder>
                 <Folder name="Parent">
                     <File name="Smof\Fields\Parent\Field.php" />
-                </Folder>
-                <Folder name="ParentContainer">
-                    <File name="Smof\Fields\ParentContainer\Field.php" />
                 </Folder>
                 <Folder name="ParentMulti">
                     <File name="Smof\Fields\ParentMulti\Field.php" />
@@ -120,9 +116,6 @@
                     <File name="Smof\Fields\Upload\Field.php" />
                     <File name="Smof\Fields\Upload\script.js" />
                 </Folder>
-                <Folder name="Window">
-                    <File name="Smof\Fields\Window\Field.php" />
-                </Folder>
             </Folder>
             <Folder name="Includes">
                 <File name="Smof\Includes\php_compatibility.php" />
@@ -148,18 +141,13 @@
                 </Folder>
                 <Folder name="plugins" />
                 <Folder name="widgets" />
-                <File name="Smof\Subframeworks\SubframeworkInterface.php" />
             </Folder>
-            <File name="Smof\Create.php" />
             <File name="Smof\Framework.php" />
             <File name="Smof\load.php" />
             <File name="Smof\Validation.php" />
         </Folder>
         <File name=".gitattributes" />
         <File name=".gitignore" />
-        <File name="notepad" />
         <File name="README.md" />
-        <File name="Smof._new.7z" />
-        <File name="Smof._old.7z" />
     </Project>
 </NotepadPlus>

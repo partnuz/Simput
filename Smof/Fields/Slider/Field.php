@@ -12,14 +12,14 @@ class Smof_Fields_Slider_Field extends Smof_Fields_ParentRepeatable_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return  array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return  array(
 			'default' => array(
 				'title' => '',
 				'upload' => array(), // if we base on multifield we don't need to specify details all over
 				'description' => 'saSAsa'
 			),
 			'toggle' => true
-		) );
+		) + parent :: obtainDefaultOptions();
 	}
 	
 	function initiateFields(){

@@ -12,18 +12,21 @@ class Smof_Fields_Text_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => '',
 			'custom' => false
-		) );
+		);
 	}
 	
 	function bodyView(){
 	
-		$this -> viewValidationResult();
 		
+		if( !empty( $this -> validation_results ) ){
+			var_dump( $this -> validation_results );
+		}
+
 		?>
-		<input class="<?php echo $this -> formFieldClass(); ?>" <?php $this -> viewName(); ?> <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> type="text" value="<?php echo htmlspecialchars($this -> data ); ?>" />
+		<input class="<?php echo $this -> formFieldClass(); ?>" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] , array() ); ?>" <?php $this -> addAttributes( $this -> args[ 'attributes' ] ); ?> type="text" value="<?php echo htmlspecialchars($this -> data ); ?>" />
 		<?php
 	}
 	

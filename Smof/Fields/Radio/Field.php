@@ -12,10 +12,10 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() ,array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'type' => 'radio'
-		) );
+		);
 	}
 	
 	function assignNameSuffix(){
@@ -48,13 +48,11 @@ class Smof_Fields_Radio_Field extends Smof_Fields_Parent_Field{
 	}
 
 	function bodyView(){
-		
-			$this -> viewValidationResult();
 
 			foreach( $this -> options[ 'options' ] as $field_key => $field_data ){
 			?>
-				<input class="smof-field-radio" <?php $this -> viewName(); ?> type="radio" value="<?php echo esc_attr( $field_key ); ?>" <?php checked( $this -> data, $field_key ); ?> />
-				<?php echo htmlspecialchars( $field_data ); ?>
+				<input class="smof-field-radio" <?php if( $this -> args[ 'show_data_name' ] ){ ?>data-smof-<?php } ?>name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" type="radio" value="<?php echo $field_key; ?>" <?php checked( $this -> data, $field_key ); ?> />
+				<?php echo $field_data; ?>
 				<br>
 			<?php
 			}

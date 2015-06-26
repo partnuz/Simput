@@ -294,7 +294,7 @@ SmofRepeatable.addEvent = function( prefix ){
 	prefix = SmofEvents.getPrefix( prefix );
 	console.log( typeof prefix );
 	
-	jQuery( document.getElementsByTagName('html')[0].getElementsByClassName( "smof-repeatable" ) ).each(function(index, value) {
+	prefix.find( ".smof-repeatable" ).each(function(index, value) {
 		
 		new SmofRepeatable( jQuery( this ) );
 

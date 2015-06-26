@@ -12,18 +12,16 @@ class Smof_Fields_Switch_Field extends Smof_Fields_Parent_Field{
 	);
 	
 	function obtainDefaultOptions(){
-		return array_merge_recursive( parent :: obtainDefaultOptions() , array(
+		return parent :: obtainDefaultOptions() + array(
 			'default' => 0,
 			'text' => array( 
 				'on' => __( 'On' , 'smof'),
 				'off' => __( 'Off' , 'smof' )
 			)
-		) );
+		);
 	}
 	
 	function bodyView(){
-		
-		$this -> viewValidationResult();
 	
 		/*
 		$fold = '';
@@ -32,11 +30,11 @@ class Smof_Fields_Switch_Field extends Smof_Fields_Parent_Field{
 		?>
 		<p class="switch-options">
 
-		<label class="smof-field-switch-enable <?php if(  $this -> data == 1 ){?>selected<?php }; ?>" data-id="<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>"><span><?php echo $this -> options[ 'text' ][ 'on' ]; ?></span></label>
-		<label class="smof-field-switch-disable <?php if(  $this -> data == 0 ){?>selected<?php }; ?>" data-id="<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>"><span><?php echo $this -> options[ 'text' ][ 'off' ]; ?></span></label>
+		<label class="smof-field-switch-enable <?php if(  $this -> data == 1 ){?>selected<?php }; ?>" data-id="<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>"><span><?php echo $this -> options[ 'text' ][ 'on' ]; ?></span></label>
+		<label class="smof-field-switch-disable <?php if(  $this -> data == 0 ){?>selected<?php }; ?>" data-id="<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>"><span><?php echo $this -> options[ 'text' ][ 'off' ]; ?></span></label>
 		
-		<input type="hidden" class="smof-field-checkbox" <?php $this -> viewName() ; ?>" value="0"/>
-		<input type="checkbox" id="smof-field-<?php echo $this -> args[ 'subframework' ] -> getFieldId( $this -> args[ 'id' ] ); ?>"  class="smof-field-checkbox smof-field-switch-checkbox" name="<?php echo $this -> args[ 'subframework' ] -> getFieldName( $this -> args[ 'name' ] ); ?>"  value="1" <?php checked( $this -> data, 1 ); ?> />
+		<input type="hidden" class="smof-field-checkbox" name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>" value="0"/>
+		<input type="checkbox" id="smof-field<?php echo $this -> args[ 'subframework' ] -> setFieldId( $this -> args[ 'id' ] ); ?>"  class="smof-field-checkbox smof-field-switch-checkbox" name="<?php echo $this -> args[ 'subframework' ] -> setFieldName( $this -> args[ 'name' ] ); ?>"  value="1" <?php checked( $this -> data, 1 ); ?> />
 		
 		</p>
 			
