@@ -49,7 +49,6 @@ SmofSwitcher.addEvent = function( prefix ){
 
 jQuery(function() {
 	SmofEvents.register( 'SmofSwitcher' );
-	SmofSwitcher.addEvent();
 
 });
 

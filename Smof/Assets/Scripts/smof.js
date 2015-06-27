@@ -46,12 +46,30 @@ SmofToggle.addEvent = function( prefix ){
 	
 }
 
+jQuery( function(){
+	
+	SmofEvents.register( 'SmofToggle' );
+
+});
+
 // register all fields names
 var SmofFieldRegister = [];
 
 // adds events
 var SmofEvents = function(){
+	this.loadedSections = [];
+	
 }
+
+SmofEvents.prototype.loadSection = function( section_id ){
+	if( this.loadedSections.indexOf( section_id ) == -1 ){
+		this.loadedSections.push( section_id );
+		return true;
+	}else{
+		return false;
+	}
+}
+
 
 SmofEvents.registered_events = [];
 
@@ -86,6 +104,8 @@ SmofEvents.addEvent = function( prefix ){
 	var prefix = SmofEvents.getPrefix( prefix );
 	
 	// execute them here, remove code below
+	
+	console.log( prefix );
 	
 	var registered_events_length = this.registered_events.length;
 	

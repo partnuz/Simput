@@ -195,6 +195,5 @@ SmofFieldTypography.addEvent = function( prefix ){
 jQuery(function() {
 	
 	SmofEvents.register( 'SmofFieldTypography' );
-	SmofFieldTypography.addEvent();
 
 });

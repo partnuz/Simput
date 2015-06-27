@@ -33,6 +33,5 @@ SmofSliderui.addEvent = function( prefix ){
 
 jQuery(function() {
 	SmofEvents.register( 'SmofSliderui' );
-	SmofSliderui.addEvent();
 
 });

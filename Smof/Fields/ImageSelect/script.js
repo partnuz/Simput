@@ -41,6 +41,5 @@ SmofImageSelect.addEvent = function( prefix ){
 jQuery( function(){
 	
 	SmofEvents.register( 'SmofImageSelect' );
-	SmofImageSelect.addEvent();
 
 });

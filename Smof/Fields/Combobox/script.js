@@ -138,7 +138,7 @@ SmofCombobox.addEvent = function( prefix ){
 }
 
 jQuery(function() {
+	
 	SmofEvents.register( 'SmofCombobox' );
-	SmofCombobox.addEvent();
 
 });

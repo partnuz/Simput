@@ -9,21 +9,43 @@ jQuery.noConflict();
 
 /** Fire up jQuery - let's dance! 
  */
-jQuery(document).ready(function($){
+ 
+jQuery(window).load(function(){
+  //your code here
+
+	var $ = jQuery;
+	
+	var smofOptionsPanel = new SmofEvents();
 	
 	$( "#of_container #main" ).tabs(
 		{
 			active : window.sessionStorage.getItem( 'of_container') || 0,
 			// Triggered after a tab has been activated
 			activate : function( event, ui ){
+				
 				//  Get future value
 				var newIndex = ui.newTab.parent().children().index( ui.newTab );
 				//  Set future value
-				window.sessionStorage.setItem( 'of_container', newIndex ) 
+				window.sessionStorage.setItem( 'of_container', newIndex );
+				if( smofOptionsPanel.loadSection( newIndex ) ){
+					SmofEvents.addEvent( ui.newTab.find( 'a.ui-tabs-anchor' ).attr( 'href' ) );
+				}
+				/*
+
+				*/
+			},
+			create: function( event , ui ){
+				var newIndex = ui.tab.parent().children().index( ui.tab );
+				if( smofOptionsPanel.loadSection( newIndex ) ){
+					console.log( ui.tab.find( 'a.ui-tabs-anchor' ).attr( 'href' ) );
+					SmofEvents.addEvent( ui.tab.find( 'a.ui-tabs-anchor' ).attr( 'href' ) );
+				}
+				
 			}
 		}
 	);
 	
+	/*
 	//(un)fold options in a checkbox-group
   	jQuery('.fld').click(function() {
     	var $fold='.f_'+this.id;
@@ -101,29 +123,11 @@ jQuery(document).ready(function($){
 	$('.of-radio-tile-label').hide();
 	$('.of-radio-tile-img').show();
 	$('.of-radio-tile-radio').hide();
-
-
-	
-	/** Aquagraphite Slider MOD */
-
-	//Hide (Collapse) the toggle containers on load
-	$(".slide_body").hide(); 
-
-	//Switch the "Open" and "Close" state per click then slide up/down (depending on open/close state)
-	$(".slide_edit_button").live( 'click', function(){		
-		/*
-		//display as an accordion
-		$(".slide_header").removeClass("active");	
-		$(".slide_body").slideUp("fast");
-		*/
-		//toggle for each
-		$(this).parent().toggleClass("active").next().slideToggle("fast");
-		return false; //Prevent the browser jump to the link anchor
-	});	
+	*/
 
 	
 
-	/**	Tipsy @since v1.3 */
+	/**	Tipsy @since v1.3 
 	if (jQuery().tipsy) {
 		$('.typography-size, .typography-height, .typography-face, .typography-style, .of-typography-color').tipsy({
 			fade: true,
@@ -131,5 +135,7 @@ jQuery(document).ready(function($){
 			opacity: 0.7,
 		});
 	}
+	
+	*/
 	
 });

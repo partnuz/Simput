@@ -136,6 +136,5 @@ SmofUpload.addEvent = function( prefix ){
 jQuery(function() {
 
 	SmofEvents.register( 'SmofUpload' );
-	SmofUpload.addEvent();
 
 });

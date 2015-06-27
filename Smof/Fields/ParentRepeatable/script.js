@@ -305,6 +305,5 @@ SmofRepeatable.addEvent = function( prefix ){
 
 jQuery(function(){
 	SmofEvents.register( 'SmofRepeatable' );
-	SmofRepeatable.addEvent();
 
 });

@@ -37,7 +37,7 @@ module.exports = function(grunt) {
             },
             js: {
                 src: [
-					'<%= meta.srcPath %>Assets/Js/smof.js', 
+					'<%= meta.srcPath %>Assets/Scripts/smof.js', 
 					'<%= meta.srcPath %>Fields/*/*.js'
 				],
                 dest: '<%= meta.deployPath %>Scripts/smof_all.js'
@@ -60,6 +60,6 @@ module.exports = function(grunt) {
 	*/
  
     // Default task
-    grunt.registerTask('default', ['newer:concat']);
+    grunt.registerTask('default', ['concat']);
  
 };
