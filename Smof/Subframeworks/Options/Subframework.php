@@ -125,7 +125,7 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 	}
 	
 	protected function assignAdminData(){
-		if( isset( $_POST[ $this -> subframework_prefix_name ]) ){
+		if( isset( $_POST[ $this -> subframework_prefix_name ] ) ){
 			return;
 		}
 		
@@ -139,18 +139,21 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 			return;
 		}
 		
+		var_dump( 'postActions' );
+		
 		$this -> post_data = $_POST[ $this -> subframework_prefix_name ];
 		
 		$this -> action = $this -> post_data[ 'action' ];
 		unset( $this -> post_data[ 'action' ] );
+		
+		echo var_dump( $_POST );
+		var_dump( htmlspecialchars( '<a>ba</b>' ) );
 
 		
 		switch( $this -> action ){
 			case 'save':
 			
-				if( !empty( $this -> post_data[ 'backup' ] ) ){
-					unset( $this -> post_data[ 'backup' ] );
-				}
+				// here is a problem
 				
 				$this -> setData( $this -> decodeHtmlSpecialCharsLoop( $this -> post_data ) );
 				$this -> createContainerField();
@@ -164,26 +167,20 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 			case 'reset':
 				$data = $this -> getDefaultData() ;
 			break;
-			case 'no_save':
-			
-				$this -> setData( $this -> decodeHtmlSpecialCharsLoop( $post_data ) );
-				$this -> createContainerField();
-			
-			break;
 			case 'import':
 				if( !empty( $this -> post_data[ 'backup' ] ) ){
-					$data = unserialize( $this -> post_data[ 'backup' ] );
+					
+					$data = ( $unserialize_result =  unserialize( base64_decode( $this -> decodeHtmlSpecialCharsLoop( $this -> post_data ) ) ) ) ? $unserialize_result : $this -> post_data;
 					if( !empty( $data[ 'backup' ] ) ){ unset( $data[ 'backup' ] ); };
+					
 				}else{
 					$data = $this -> post_data;
 				}
 			break;
 			case 'export':
-				if( !empty( $this -> post_data[ 'backup' ] ) ){
-					unset( $this -> post_data[ 'backup' ] );
-				}
 				$data = $this -> post_data;
-				$data[ 'backup' ] = serialize( $this -> post_data );
+				if( isset( $this -> post_data[ 'backup' ] ) ){ unset( $this -> post_data[ 'backup' ] ); };
+				$data[ 'backup' ] =  base64_encode( serialize( $this -> decodeHtmlSpecialCharsLoop( $this -> post_data ) ) ) ;
 			break;
 			
 		}
@@ -192,8 +189,10 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 
 		$data = apply_filters( 'smof_'.$this -> args[ 'framework' ] -> args[ 'mode' ] .'_'. $this -> getInstanceNumber() , $data );
 		
-		$this -> setDbData( $data );
 		$this -> setData( $data );
+		
+		if( !empty( $data[ 'backup' ] ) ){ unset( $data[ 'backup' ] ); var_dump( 'backup removed '); }
+		$this -> setDbData( $data );
 		
 	}
 	

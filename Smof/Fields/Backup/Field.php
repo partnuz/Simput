@@ -18,7 +18,10 @@ class Field extends \Smof\Fields\ParentField\Field{
 	}
 	
 	public function obtainData(){
-		return array();
+		
+		$this -> data = '';
+		
+		return parent :: obtainData();
 	}
 	
 	public function controller(){
