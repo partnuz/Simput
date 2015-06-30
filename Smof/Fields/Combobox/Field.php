@@ -42,7 +42,14 @@ class Field extends \Smof\Fields\ParentField\Field{
 					
 					if( !$this -> framework -> dataSourceExists( $name ) ){
 						
-						$this -> options_converted[ $name ] = json_encode( $options );
+						if( is_array( $options ) ){
+							$this -> options_converted[ $name ] = json_encode( $options );
+						}else{
+							
+							$this -> options_converted[ $name ] = $options;
+							
+						}
+						
 					}
 					
 					$this -> data_source_names[] = $this -> varNameToJsVarName( $name );
@@ -53,7 +60,13 @@ class Field extends \Smof\Fields\ParentField\Field{
 				
 			}else{
 				$this -> data_source_names = json_encode( array( $this -> varNameToJsVarName( $this -> subframework -> getFieldId( $this -> args[ 'id' ] ) ) ) );
-				$this -> options_converted = json_encode( array_values( $this -> options[ 'options' ] ) );
+				if( is_array( $this -> options[ 'options' ] ) ){
+					
+					$this -> options_converted = json_encode( array_values( $this -> options[ 'options' ] ) );
+					
+				}else{
+					$this -> options_converted = $this -> options[ 'options' ];
+				}
 				
 			}
 
