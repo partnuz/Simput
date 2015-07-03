@@ -1,12 +1,3 @@
-// @koala-append '../../Fields/Color/script.js';
-// @koala-append '../../Fields/Combobox/script.js';
-// @koala-append '../../Fields/ImageSelect/script.js';
-// @koala-append '../../Fields/ParentRepeatable/script.js';
-// @koala-append '../../Fields/Sliderui/script.js';
-// @koala-append '../../Fields/Switcher/script.js';
-// @koala-append '../../Fields/Typography/script.js';
-// @koala-append '../../Fields/Upload/script.js';
-
 var SmofToggle = function( $container ){
 	
 	var obj = this;
@@ -105,6 +96,8 @@ SmofEvents.addEvent = function( prefix ){
 	
 	// execute them here, remove code below
 	
+	
+	
 	var registered_events_length = this.registered_events.length;
 	
 	for( var i = 0; i < registered_events_length; i++ ){
@@ -190,13 +183,13 @@ SmofEvents.register = function( event_name ){
           // wpColorPicker: change
           change: function( event, ui ) {
 			  
-			console.log( ui.color.toString() ); 
+			 
 
             // update checkerboard background color
             $this.closest('.wp-picker-container').find('.cs-alpha-slider-offset').css('background-color', ui.color.toString());
             $this.trigger('keyup');
-			console.log( 'cs_wpColorPicker' );
-			$this.trigger( 'custom' , [ ui.color.toString() ] );
+			
+			$this.trigger( 'wpColorPicker.change' , [ ui.color.toString() ] );
 			/*
 			throttle( );
 			*/
@@ -346,7 +339,7 @@ $.widget( "ui.combobox", {
 		this.wrapper.append( this.element );
 
 		
-		console.log( this.element );
+		
 		
 	
 		this._createAutocomplete();
@@ -361,7 +354,7 @@ $.widget( "ui.combobox", {
 		for( name_key in source_names ){
 
 			source = source.concat( window[ source_names[ name_key ] ] );
-			
+
 		}
 		
 		var realSource = source;
@@ -389,7 +382,7 @@ $.widget( "ui.combobox", {
 					  }
 				});
 				
-				console.log( currentItemData );
+				
 				$( this ).data( 'smof-combobox' , currentItemData );
 
 				ref._selectTriggerChange();
@@ -434,7 +427,7 @@ $.widget( "ui.combobox", {
 		})
 		.click(function() {
 		input.focus();
-		console.log( wasOpen );
+		
 		// Close if already visible
 		if ( wasOpen ) {
 		return;
@@ -466,7 +459,7 @@ SmofCombobox.addEvent = function( prefix ){
 		}else{
 			jQuery( this ).combobox();
 			/*
-			console.log( jQuery( this ).autocomplete( "search", jQuery( this ).val() ) );
+			
 			*/
 
 		}
@@ -486,7 +479,7 @@ function SmofImageSelect( parentNode ){
 	var obj = this;
 	this._$parentNode = parentNode;
 	this._$imageNodes = this._$parentNode.find( '.smof-field-image_select-image' );
-	console.log( this._$imageNodes );
+	
 	
 	this.setEvents = function(){
 		this._$imageNodes.each(function(index, value) {
@@ -561,11 +554,11 @@ function SmofRepeatable( $parentNode ){
 	
 	this.addNewItem = function(){
 		
-		console.log( 'addNewItem');
+		
 	
 		this.$patternItemClone = this.$patternItemNode.clone( );
 		this.$patternItemClone.removeClass( 'smof-hidden' ).removeClass( 'smof-repeatable-pattern-item' );
-		console.log( this.$patternItemClone );
+		
 		
 		this.obtainParentsNum();
 		
@@ -586,8 +579,8 @@ function SmofRepeatable( $parentNode ){
 	
 	this.newItemAppend = function(){
 		this.$newItem = this.$patternItemClone.appendTo( this.$patternItemNode.parent( 'ul' ) ).get(0);
-		console.log( this.$newItem );
-		console.log( this.$patternItemNode.parent( 'ul' ) );
+		
+		
 	}
 	
 	this.replaceDataName = function( $node ){
@@ -613,13 +606,13 @@ function SmofRepeatable( $parentNode ){
 			if( !$container[ 0 ] ){
 				var $container = jQuery( this ).find( '> .smof-toggle > .body > .smof-container').first();
 			}
-			console.log( 'container' );
-			console.log( $container );
+			
+			
 
 			var currentName = $container.find( '*[name]' ).first().attr('name');
-			console.log( 'currentName' + currentName );
+			
 			var maxItemOrderCurrent = obj.findMaxItemNameOrder( currentName , obj.parentsNum );
-			console.log( 'maxItemOrderCurrent' + maxItemOrderCurrent );
+			
 			
 			if( maxItemOrderCurrent !== null && maxItemOrderCurrent > maxItemOrder ){
 				maxItemOrder = maxItemOrderCurrent;
@@ -627,7 +620,7 @@ function SmofRepeatable( $parentNode ){
 		})
 		
 		this.maxItem = maxItemOrder + 1;
-		console.log( 'maxItemOrder' + this.maxItem );
+		
 		
 	}
 	
@@ -635,8 +628,8 @@ function SmofRepeatable( $parentNode ){
 		
 		// not pattern item
 		this.$items = this.$parentNode.find('ul.ui-sortable').first().find( '> li:not( .smof-repeatable-pattern-item )' );
-		console.log( 'li number' );
-		console.log( this.$items );
+		
+		
 	}
 	
 	this.assignMaxItemIdOrder = function(){
@@ -649,13 +642,13 @@ function SmofRepeatable( $parentNode ){
 			if( !$container[ 0 ] ){
 				var $container = jQuery( this ).find( '> .smof-toggle > .body > .smof-container').first();
 			}
-			console.log( 'containerId' );
-			console.log( $container );
+			
+			
 
 			var currentId = $container.attr('id');
-			console.log( 'currentId' + currentId );
+			
 			var maxItemIdOrderCurrent = obj.findMaxItemIdOrder( currentId , obj.parentsNum );
-			console.log( 'maxItemOrderCurrent' + maxItemIdOrderCurrent );
+			
 			
 			if( maxItemIdOrderCurrent !== null && maxItemIdOrderCurrent > maxItemIdOrder ){
 				maxItemIdOrder = maxItemIdOrderCurrent;
@@ -663,7 +656,7 @@ function SmofRepeatable( $parentNode ){
 		})
 		
 		this.maxItemId = maxItemIdOrder + 1;
-		console.log( 'maxItemIdOrder' + this.maxItemId );
+		
 		
 	}
 	
@@ -672,11 +665,11 @@ function SmofRepeatable( $parentNode ){
 		this.$patternItemClone.find('*[data-smof-name]').each( 
 			function(){
 				
-				console.log( jQuery( this ) );
+				
 				
 				$element = jQuery( this );
-				console.log( 'replaceable' );
-				console.log( $element.attr( 'data-smof-name' ) );
+				
+				
 				
 				$element.attr( 'data-smof-name' , obj.replaceNameOrder( $element.attr( 'data-smof-name' ) , obj.maxItem , obj.parentsNum  ) );
 				
@@ -693,11 +686,11 @@ function SmofRepeatable( $parentNode ){
 		this.$patternItemClone.find('.smof-container').each( 
 			function(){
 				
-				console.log( jQuery( this ) );
+				
 				
 				$element = jQuery( this );
-				console.log( 'replaceable_id' );
-				console.log( $element.attr( 'id' ) );
+				
+				
 				
 				$element.attr( 'id' , obj.replaceIdOrder( $element.attr( 'id' ) , obj.maxItemId , obj.parentsNum  ) );
 				
@@ -713,7 +706,7 @@ function SmofRepeatable( $parentNode ){
 	this.obtainParentsNum = function(){
 
 		this.parentsNum = this.$parentNode.parents( '.smof-repeatable' ).length; // is this right;
-		console.log( 'parentsNum' + this.parentsNum );
+		
 		
 	}
 	
@@ -721,8 +714,8 @@ function SmofRepeatable( $parentNode ){
 
 		var query = new RegExp('\\[[0-9]+\\]' , "g");
 		var allNums = name.match( query );
-		console.log( allNums );
-		console.log( 'NameAllNums' + allNums );
+		
+		
 		
 		// convert to int
 		if( allNums ){
@@ -735,8 +728,8 @@ function SmofRepeatable( $parentNode ){
 
 		var query = /-[0-9]+/g;
 		var allNums = id.match( query );
-		console.log( allNums );
-		console.log( 'IdAllNums' + allNums );
+		
+		
 
 
 			
@@ -750,9 +743,7 @@ function SmofRepeatable( $parentNode ){
 	
 	this.replaceNameOrder = function( name, replaceNum , numOrder ){
 		
-		console.log( name + ' ' + replaceNum + ' ' + numOrder)
-		// all
-		var query = new RegExp('\\[[0-9]+\\]' , "g");
+		
 		var i = -1;
 		var result = name.replace( query , function( m , v){
 			
@@ -761,14 +752,13 @@ function SmofRepeatable( $parentNode ){
 			
 		});
 		
-		console.log( result );
+		
 		
 		return result;
 	}
 	
 	this.replaceIdOrder = function( id, replaceNum , numOrder ){
 		
-		console.log( id + ' ' + replaceNum + ' ' + numOrder)
 		// all
 		var query = /-[0-9]+/g;
 		var i = -1;
@@ -779,7 +769,7 @@ function SmofRepeatable( $parentNode ){
 			
 		});
 		
-		console.log( result );
+		
 		
 		return result;
 	}
@@ -796,7 +786,7 @@ function SmofRepeatable( $parentNode ){
 	this.addNewItemEvent = function(){
 		
 		this.$addNewItem.click( function(){
-			console.log( 'add new item event' );
+			
 			obj.addNewItem();
 		});
 		
@@ -807,7 +797,7 @@ function SmofRepeatable( $parentNode ){
 		$deleteNode.click(
 			function() {
 				jQuery(this).parents( 'li' ).first().remove();
-				console.log( 'bla');
+				
 			}
 		);
 	}
@@ -821,7 +811,7 @@ SmofRepeatable.addEvent = function( prefix ){
 	
 	prefix = SmofEvents.getPrefix( prefix );
 	
-	console.log( prefix );
+	
 	
 	jQuery( prefix.getElementsByClassName( "smof-repeatable" ) ).each(function(index, value) {
 		
@@ -1020,10 +1010,10 @@ function SmofFieldTypography( previewNode ){
 	}
 	
 	this.setColorEvent = function(){
-		this.$colorNode.on( 'custom', {},  function( evt , color ){
+		this.$colorNode.on( 'wpColorPicker.change', {},  function( evt , color ){
 			
-				console.log( 'setColorEvent' );
-				console.log( color );
+				
+				
 				obj.previewColor( color );
 			}
 		)
@@ -1071,13 +1061,13 @@ function SmofFieldTypography( previewNode ){
 	}
 	
 	this.rebuildFontWeight = function(){
-		console.log( obj.$fontWeightNode );
+		
 		if( obj.$fontWeightNode ){
-			console.log( 'rebuildFontWeight' );
+			
 			var fontWeightDefaultValue = obj.$fontWeightNode.data( 'smof-typography-weight-default' );
 			obj.$fontWeightNode.find('option').remove();
 			var font_weight = obj.$fontFamilyNode.data( 'smof-combobox' ).weight;
-			console.log( obj.$fontFamilyNode.data( 'smof-combobox' ).weight );
+			
 
 			for( font_weight_id in font_weight ){
 

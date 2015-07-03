@@ -62,7 +62,7 @@
             $this.closest('.wp-picker-container').find('.cs-alpha-slider-offset').css('background-color', ui.color.toString());
             $this.trigger('keyup');
 			console.log( 'cs_wpColorPicker' );
-			$this.trigger( 'custom' , [ ui.color.toString() ] );
+			$this.trigger( 'wpColorPicker.change' , [ ui.color.toString() ] );
 			/*
 			throttle( );
 			*/

@@ -49,17 +49,29 @@ module.exports = function(grunt) {
 				],
                 dest: '<%= meta.deployPath %>Css/style_all.css'
             }
-        }
+        },
+		
+		removelogging: {
+			dist: {
+			  src: "<%= meta.srcPath %>Assets/Scripts/smof_all.js",
+			  dest: "<%= meta.srcPath %>Assets/Scripts/smof_all.js",
+		 
+			  options: {
+				// see below for options. this is optional. 
+			  }
+			}
+		}
     });
  
     // These plugins provide necessary tasks.
     grunt.loadNpmTasks('grunt-contrib-concat');
 	grunt.loadNpmTasks('grunt-newer');
+	grunt.loadNpmTasks("grunt-remove-logging");
 	/*
 	grunt.loadNpmTasks('grunt-contrib-sass');
 	*/
  
     // Default task
-    grunt.registerTask('default', ['concat']);
+    grunt.registerTask('default', ['concat' , 'removelogging']);
  
 };

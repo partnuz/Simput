@@ -91,7 +91,7 @@ function SmofFieldTypography( previewNode ){
 	}
 	
 	this.setColorEvent = function(){
-		this.$colorNode.on( 'custom', {},  function( evt , color ){
+		this.$colorNode.on( 'wpColorPicker.change', {},  function( evt , color ){
 			
 				console.log( 'setColorEvent' );
 				console.log( color );

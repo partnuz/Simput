@@ -1,12 +1,3 @@
-// @koala-append '../../Fields/Color/script.js';
-// @koala-append '../../Fields/Combobox/script.js';
-// @koala-append '../../Fields/ImageSelect/script.js';
-// @koala-append '../../Fields/ParentRepeatable/script.js';
-// @koala-append '../../Fields/Sliderui/script.js';
-// @koala-append '../../Fields/Switcher/script.js';
-// @koala-append '../../Fields/Typography/script.js';
-// @koala-append '../../Fields/Upload/script.js';
-
 var SmofToggle = function( $container ){
 	
 	var obj = this;
