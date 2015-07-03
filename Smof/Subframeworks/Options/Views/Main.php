@@ -81,11 +81,15 @@ class Main{
 					<div id="of-nav">
 						<ul>
 							<?php 
+							
+							if( isset( $this -> data[ 'menu' ] ) ){
 
-							foreach( $this -> data[ 'menu' ] as $menu_item){
-								?>
-								<li id="<?php echo esc_attr( $menu_item[ 'id' ] ); ?>"><a href="#smof-container-<?php echo $menu_item[ 'id' ]; ?>"><?php if( !empty( $menu_item[ 'icon' ]) ){ ?><span class="<?php echo $menu_item[ 'icon' ]; ?>"></span><?php } ?><?php echo $menu_item[ 'title' ]; ?></a></li>
-								<?php
+								foreach( $this -> data[ 'menu' ] as $menu_item){
+								    	?>
+									<li id="<?php echo esc_attr( $menu_item[ 'id' ] ); ?>"><a href="#smof-container-<?php echo $menu_item[ 'id' ]; ?>"><?php if( !empty( $menu_item[ 'icon' ]) ){ ?><span class="<?php echo $menu_item[ 'icon' ]; ?>"></span><?php } ?><?php echo $menu_item[ 'title' ]; ?></a></li>
+									<?php
+								}
+							
 							}
 							?>
 						</ul>

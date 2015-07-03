@@ -25,6 +25,9 @@ abstract class Field{
 	
 	protected $options_converted = array();
 	protected $data_source_names = array();
+	
+	protected $parent_class;
+
 
 	function __construct( $options , array $args ){
 	
@@ -99,7 +102,8 @@ abstract class Field{
 			'field_class' => array(),
 			'name' => array(),
 			'name_suffix' => array(),
-			'mode' => 'nonrepeatable'
+			'mode' => 'nonrepeatable',
+			'parent_class' => false
 		);
 	}
 	
@@ -117,6 +121,17 @@ abstract class Field{
 	protected function assignArgs( array $args ){
 	
 		$this -> args = array_replace_recursive( $this -> default_args , $args );
+		if( get_parent_class( $this ) === 'Smof\Fields\ParentContainer\Field' ){
+			
+			if( $this -> args[ 'parent_class' ] ){
+				
+				$this -> parent_class = $this -> args[ 'parent_class' ];
+				
+			}
+			
+			$this -> args[ 'parent_class' ] = $this;
+			
+		}
 	}
 	
 	protected function assignFrameworks(){

@@ -82,13 +82,9 @@ class Create{
 		return $data;
 	}
 	
-	public function createFieldsFromOptions( array $options , $data , $args = false ){
+	public function createFieldsFromOptions( array $options , $data , $args = array() ){
 	
 		$fields = array();
-		
-		if( $args === false ){
-			$args = array( 'view' => $this -> subframework -> view , 'subframework' => $this -> subframework );
-		}
 		
 		foreach ( $options as $option ){
 			

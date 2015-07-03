@@ -23,7 +23,7 @@ $.widget( "ui.combobox", {
 		for( name_key in source_names ){
 
 			source = source.concat( window[ source_names[ name_key ] ] );
-			
+
 		}
 		
 		var realSource = source;

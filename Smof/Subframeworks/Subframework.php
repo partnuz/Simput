@@ -109,8 +109,8 @@ abstract class Subframework{
 	protected function containerOptions(){
 		
 		return array(
-			'id' => 'window',
-			'type' => 'window'
+			'id' => 'container',
+			'type' => 'container'
 			
 		);
 		

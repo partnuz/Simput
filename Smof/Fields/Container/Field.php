@@ -1,6 +1,6 @@
 <?php
 
-namespace Smof\Fields\Window; 
+namespace Smof\Fields\Container; 
 class Field extends \Smof\Fields\ParentContainer\Field{
 
 	protected static $properties = array(

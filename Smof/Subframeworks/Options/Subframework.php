@@ -146,10 +146,6 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 		$this -> action = $this -> post_data[ 'action' ];
 		unset( $this -> post_data[ 'action' ] );
 		
-		echo var_dump( $_POST );
-		var_dump( htmlspecialchars( '<a>ba</b>' ) );
-
-		
 		switch( $this -> action ){
 			case 'save':
 			
@@ -244,7 +240,7 @@ class Subframework extends \Smof\Subframeworks\Subframework{
 		$this -> view -> setData( 'name' , $this -> args[ 'framework' ] -> getThemeData( 'name' ) );
 		$this -> view -> setData( 'version' , $this -> args[ 'framework' ] -> getThemeData( 'version' ) );
 		$this -> view -> setData( 'content' , $this -> getFieldsContent() );
-		$this -> view -> setData( 'menu' , $this -> menu );
+		$this -> view -> setData( 'menu' , $this -> getContainerField() -> getMetaData() );
 		$this -> view -> setData( 'nonce' , $this -> getNonce() );
 		
 		$this -> view -> view();

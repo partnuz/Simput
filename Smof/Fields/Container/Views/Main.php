@@ -1,6 +1,6 @@
 <?php
 
-namespace Smof\Fields\Window\Views;
+namespace Smof\Fields\Container\Views;
 
 class Main extends \Smof\Fields\ParentField\Views\Main{
 	

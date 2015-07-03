@@ -26,31 +26,14 @@ class Field extends \Smof\Fields\ParentContainer\Field{
 	function __construct( $options , array $args ){
 	
 		parent :: __construct( $options, $args );
-
-		$this -> view = $args[ 'view' ];
-
 	
-	}
-	
-	protected function headingView(){
-		?>
-		<div class="smof-field-header">
-			<?php
-			if( !empty( $this -> options[ 'title' ] ) ){
-				?>
-				<h2><?php echo $this -> options[ 'title' ]; ?></h2>
-				<?php
-			}
-			?>
-		</div>
-		<?php
 	}
 	
 	public function controller(){
 		
-	$view = new Views\Main( $this -> obtainDefaultViewData() );
-	
-		$this -> args[ 'subframework' ] -> menuItem( array( 
+		$view = new Views\Main( $this -> obtainDefaultViewData() );
+		
+		$this -> parent_class -> appendMetaData( array( 
 			'id' => $this -> options[ 'id' ] ,
 			'title' => $this -> options[ 'title' ],
 			'icon' => $this -> options[ 'icon' ]
