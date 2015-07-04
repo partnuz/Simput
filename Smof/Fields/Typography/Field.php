@@ -64,7 +64,7 @@ class Field extends \Smof\Fields\ParentMulti\Field{
 					'title' => __( 'Font-family' , 'smof'),
 					'options' => $this -> options[ 'options' ][ 'font-family' ],
 					'validate' => $this -> options[ 'validate' ][ 'font-family' ],
-					'multiple_data_sources' => $this -> options[ 'multiple_data_sources' ][ 'font-family' ]
+					'multiple_data_sources' => $this -> options[ 'multiple_data_sources' ][ 'font-family' ],
 				),
 				array(
 					'subframework' => $this -> args[ 'subframework' ],

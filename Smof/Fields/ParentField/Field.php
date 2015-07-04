@@ -100,6 +100,7 @@ abstract class Field{
 			'id_suffix' => array(),
 			'attributes' => array(),
 			'field_class' => array(),
+			'class' => array(),
 			'name' => array(),
 			'name_suffix' => array(),
 			'mode' => 'nonrepeatable',
@@ -321,10 +322,16 @@ abstract class Field{
 	}
 	
 	protected function obtainFieldClass(){
-		if( is_array( $this -> options[ 'class' ] ) && is_array( $this -> args[ 'field_class' ] ) ){
+		if( is_array( $this -> options[ 'field_class' ] ) && is_array( $this -> args[ 'field_class' ] ) ){
 			return implode( ' ' , array_merge( $this -> options[ 'class' ] , $this -> args[ 'field_class' ] ) );
 		}
 		
+	}
+	
+	protected function obtainClass(){
+		if( is_array( $this -> options[ 'class' ] ) && is_array( $this -> args[ 'class' ] ) ){
+			return implode( ' ' , array_merge( $this -> options[ 'class' ] , $this -> args[ 'class' ] ) );
+		}
 	}
 	
 	public function obtainData(){
@@ -371,6 +378,8 @@ abstract class Field{
 		// parsed into string
 		$data[ 'id' ] = $this -> subframework -> getFieldId( $this -> args[ 'id' ] );
 		$data[ 'name' ] = $this -> subframework -> getFieldName( $this -> args[ 'name' ] );
+		
+		$data[ 'class' ] = $this -> obtainClass();
 		
 		$data[ 'show_description' ] = $this -> args[ 'show_description' ];
 		$data[ 'show_data_name' ] = $this -> args[ 'show_data_name' ];
