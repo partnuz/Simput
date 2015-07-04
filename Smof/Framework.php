@@ -222,6 +222,8 @@ class Framework{
 		
 		if( $this -> subframework -> args[ 'debug_mode' ] ){
 			wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style.css' );
+			wp_enqueue_style('unsemantic', $this -> getUri( 'assets' , 'css' ) . 'unsemantic-grid-responsive-no-ie7.css' );
+			
 		}else{
 			wp_enqueue_style('smof-style', $this -> getUri( 'assets' , 'css' ) . 'style_all.css' );
 		}

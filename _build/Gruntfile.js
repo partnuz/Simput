@@ -44,7 +44,8 @@ module.exports = function(grunt) {
             },
 			css: {
                 src: [
-					'<%= meta.srcPath %>Assets/Css/style.css', 
+					'<%= meta.srcPath %>Assets/Css/style.css',
+					'<%= meta.srcPath %>Assets/Css/unsemantic-grid-responsive-no-ie7.css', 
 					'<%= meta.srcPath %>Fields/*/*.css'
 				],
                 dest: '<%= meta.deployPath %>Css/style_all.css'

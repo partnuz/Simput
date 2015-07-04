@@ -33,7 +33,7 @@ class Field extends \Smof\Fields\ParentContainer\Field{
 		
 		$view = new Views\Main( $this -> obtainDefaultViewData() );
 		
-		$this -> parent_class -> appendMetaData( array( 
+		$this -> parent_field -> appendMetaData( array( 
 			'id' => $this -> options[ 'id' ] ,
 			'title' => $this -> options[ 'title' ],
 			'icon' => $this -> options[ 'icon' ]

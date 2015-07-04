@@ -45,7 +45,11 @@ class Field extends \Smof\Fields\ParentField\Field{
 	public function controller(){
 		
 		$view = new Views\Main( 
-			$this -> obtainDefaultViewData()
+			array_replace( $this -> obtainDefaultViewData() , 
+				array(
+					'field_class' => $this -> obtainFieldClass()
+				) 
+			) 
 		);
 		
 		$view -> view();

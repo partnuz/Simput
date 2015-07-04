@@ -29,7 +29,7 @@ abstract class Field extends \Smof\Fields\ParentField\Field{
 		$this -> data,
 		array( 
 			'subframework' => $this -> args[ 'subframework' ],
-			'parent_class' => $this
+			'parent_field' => $this
 
 		) 
 		

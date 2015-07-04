@@ -26,7 +26,7 @@ abstract class Field{
 	protected $options_converted = array();
 	protected $data_source_names = array();
 	
-	protected $parent_class;
+	protected $parent_field;
 
 
 	function __construct( $options , array $args ){
@@ -103,7 +103,7 @@ abstract class Field{
 			'name' => array(),
 			'name_suffix' => array(),
 			'mode' => 'nonrepeatable',
-			'parent_class' => false
+			'parent_field' => false
 		);
 	}
 	
@@ -123,13 +123,13 @@ abstract class Field{
 		$this -> args = array_replace_recursive( $this -> default_args , $args );
 		if( get_parent_class( $this ) === 'Smof\Fields\ParentContainer\Field' ){
 			
-			if( $this -> args[ 'parent_class' ] ){
+			if( $this -> args[ 'parent_field' ] ){
 				
-				$this -> parent_class = $this -> args[ 'parent_class' ];
+				$this -> parent_field = $this -> args[ 'parent_field' ];
 				
 			}
 			
-			$this -> args[ 'parent_class' ] = $this;
+			$this -> args[ 'parent_field' ] = $this;
 			
 		}
 	}
