@@ -5,7 +5,6 @@ namespace Smof\Subframeworks\Options;
 class Subframework extends \Smof\Subframeworks\Subframework{
 	
 	protected $theme_data;
-	public $menu;
 	protected $user_role;
 	protected $page_name;
 
