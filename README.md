@@ -1,4 +1,4 @@
-# Smof
+# Simput
 This is continuation of Slightly Modified Options Framework by syamilmj
 
 New features
