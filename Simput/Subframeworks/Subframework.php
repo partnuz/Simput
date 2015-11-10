@@ -30,7 +30,7 @@ abstract class Subframework{
 		
 		if( !is_admin() ) return;
 		
-		$this -> create = new \Smof\Create( array(
+		$this -> create = new \Simput\Create( array(
 			'framework' => $this -> args[ 'framework' ],
 			'subframework' => $this
 		));

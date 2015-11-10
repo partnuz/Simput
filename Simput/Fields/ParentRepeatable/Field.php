@@ -38,7 +38,7 @@ abstract class Field extends \Simput\Fields\ParentField\Field{
 		
 			if( is_array( $this -> options[ 'validate' ] ) && array_filter( $this -> options[ 'validate' ] ) ){
 		
-				$validate = new \Smof\Validation();
+				$validate = new \Simput\Validation();
 				
 				if( $this -> fields ){
 					

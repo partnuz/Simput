@@ -306,7 +306,7 @@ abstract class Field{
 	public function validateData(){
 		if( $this -> options[ 'validate' ] ){
 		
-			$validate = new \Smof\Validation();
+			$validate = new \Simput\Validation();
 			$this -> validation_results = $validate -> validate( array( 'data' => $this -> data  , 'conditions' => $this -> options[ 'validate' ] ) );
 			
 			if( !empty( $this -> validation_results ) ){

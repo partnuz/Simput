@@ -105,7 +105,7 @@ class Field extends \Simput\Fields\ParentField\Field{
 		
 			if( $this -> options[ 'multiple' ] !== false ){
 				
-				$validate = new \Smof\Validation();
+				$validate = new \Simput\Validation();
 				
 				foreach( $this -> data as $field_key => $field ){
 						

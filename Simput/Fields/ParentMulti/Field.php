@@ -57,7 +57,7 @@ abstract class Field extends \Simput\Fields\ParentField\Field{
 				$this -> getCreate() -> fieldsValidate( $this -> fields );
 			}else{
 				
-				$validate = new \Smof\Validation();
+				$validate = new \Simput\Validation();
 				
 				foreach( $this -> options[ 'validate' ] as $validation_item => $validate_option ){
 					

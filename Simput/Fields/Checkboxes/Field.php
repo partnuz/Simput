@@ -24,7 +24,7 @@ class Field extends \Simput\Fields\ParentMulti\Field{
 		
 		if( $this -> options[ 'validate' ] && $this -> data ){
 			
-			$validate = new \Smof\Validation();
+			$validate = new \Simput\Validation();
 		
 			foreach( $this -> data as $field_key => $field ){
 					
