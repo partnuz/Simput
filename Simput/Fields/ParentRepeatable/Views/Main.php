@@ -2,7 +2,7 @@
 
 namespace Simput\Fields\ParentRepeatable\Views;
 
-abstract class Main extends \Smof\Fields\ParentField\Views\Main{
+abstract class Main extends \Simput\Fields\ParentField\Views\Main{
 	
 	protected function beforeContainerView(){
 	

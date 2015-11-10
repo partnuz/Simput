@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\Checkboxes;
-class Field extends \Smof\Fields\ParentMulti\Field{
+class Field extends \Simput\Fields\ParentMulti\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(

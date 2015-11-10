@@ -2,7 +2,7 @@
 
 namespace Simput\Fields\ImageSelect\Views;
 
-class Main extends \Smof\Fields\ParentField\Views\Main{
+class Main extends \Simput\Fields\ParentField\Views\Main{
 	
 	protected function bodyView(){
 		

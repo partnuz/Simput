@@ -2,7 +2,7 @@
 
 namespace Simput\Subframeworks\Options;
 
-class Subframework extends \Smof\Subframeworks\Subframework{
+class Subframework extends \Simput\Subframeworks\Subframework{
 	
 	protected $theme_data;
 	protected $user_role;

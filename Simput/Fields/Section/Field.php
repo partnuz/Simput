@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\Section;
-class Field extends \Smof\Fields\ParentContainer\Field{
+class Field extends \Simput\Fields\ParentContainer\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(

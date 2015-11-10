@@ -2,7 +2,7 @@
 
 namespace Simput\Fields\Hidden\Views;
 
-class Main extends \Smof\Fields\ParentField\Views\Main{
+class Main extends \Simput\Fields\ParentField\Views\Main{
 	
 	public function view(){
 		

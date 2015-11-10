@@ -1,10 +1,12 @@
 <?php
 
 function smofAutoload( $className ) {
+	
+	$namespace = 'Simput';
 
-	if (0 === strpos($className, 'Smof\\')){
+	if (0 === strpos($className, $namespace . '\\')){
 		
-		$fileName = __DIR__ . '\\' . str_replace( 'Smof\\' , '' , $className ) . '.php';
+		$fileName = __DIR__ . '\\' . str_replace( $namespace . '\\' , '' , $className ) . '.php';
 			
 		if (file_exists( $fileName )) {
 

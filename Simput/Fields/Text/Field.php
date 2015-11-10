@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\Text; 
-class Field extends \Smof\Fields\ParentField\Field{
+class Field extends \Simput\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(

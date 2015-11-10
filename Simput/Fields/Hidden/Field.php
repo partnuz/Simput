@@ -2,7 +2,7 @@
 
 namespace Simput\Fields\Hidden; 
 
-class Field extends \Smof\Fields\ParentField\Field{
+class Field extends \Simput\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(

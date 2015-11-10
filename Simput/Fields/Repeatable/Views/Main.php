@@ -2,7 +2,7 @@
 
 namespace Simput\Fields\Repeatable\Views;
 
-class Main extends \Smof\Fields\ParentRepeatable\Views\Main{
+class Main extends \Simput\Fields\ParentRepeatable\Views\Main{
 	
 	protected function bodyView(){
 

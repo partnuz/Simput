@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\ParentMulti;
-abstract class Field extends \Smof\Fields\ParentField\Field{
+abstract class Field extends \Simput\Fields\ParentField\Field{
 	
 	protected function obtainDefaultOptions(){
 		return array_replace_recursive( parent :: obtainDefaultOptions() , array(

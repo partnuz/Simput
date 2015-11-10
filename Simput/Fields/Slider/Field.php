@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\Slider;
-class Field extends \Smof\Fields\ParentRepeatable\Field{
+class Field extends \Simput\Fields\ParentRepeatable\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(

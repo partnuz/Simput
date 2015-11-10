@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\ParentRepeatable;
-abstract class Field extends \Smof\Fields\ParentField\Field{
+abstract class Field extends \Simput\Fields\ParentField\Field{
 
 	public function setData( $data ){
 	

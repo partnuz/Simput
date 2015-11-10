@@ -1,7 +1,7 @@
 <?php
 
 namespace Simput\Fields\ParentContainer; 
-abstract class Field extends \Smof\Fields\ParentField\Field{
+abstract class Field extends \Simput\Fields\ParentField\Field{
 	
 	protected $meta_data = array();
 	

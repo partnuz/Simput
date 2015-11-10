@@ -1,6 +1,6 @@
 <?php
 
-namespace Simput\Fields\; classGroupSave_Field extends \Smof\Field\ParentMulti\Field{
+namespace Simput\Fields\; classGroupSave_Field extends \Simput\Field\ParentMulti\Field{
 	
 	protected $files_from_dir = array();
 

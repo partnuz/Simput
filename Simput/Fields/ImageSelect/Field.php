@@ -1,6 +1,6 @@
 <?php
 
-namespace Simput\Fields\ImageSelect; class Field extends \Smof\Fields\ParentField\Field{
+namespace Simput\Fields\ImageSelect; class Field extends \Simput\Fields\ParentField\Field{
 
 	protected static $properties = array(
 		'allow_in_fields' => array(
